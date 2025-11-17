@@ -37,6 +37,7 @@ import RankName from "./pages/Admin-Pages/MasterTables/RankName";
 import RankWiseCommission from "./pages/Admin-Pages/MasterTables/RankWiseCommission";
 import Plan from "./pages/Admin-Pages/MasterTables/Plan";
 import Proof from "./pages/Admin-Pages/MasterTables/Proof";
+
 import CompanyBank from "./pages/Admin-Pages/MasterTables/CompanyBank";
 // import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
 
