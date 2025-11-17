@@ -39,6 +39,9 @@ import Plan from "./pages/Admin-Pages/MasterTables/Plan";
 import Proof from "./pages/Admin-Pages/MasterTables/Proof";
 
 import CompanyBank from "./pages/Admin-Pages/MasterTables/CompanyBank";
+import Share from "./pages/Admin-Pages/MasterTables/Share";
+import MemberFee from "./pages/Admin-Pages/MasterTables/MemberFee";
+import AdvisorFee from "./pages/Admin-Pages/MasterTables/AdvisorFee";
 // import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
 
 
@@ -237,6 +240,9 @@ const RoutesProvider = ({
               <Route path="/master/view_rank_master" element={<RankName />} />
               <Route path="/closing/closing_master" element={<RankWiseCommission />} />
               <Route path="/plan_master/view_sub_plan_type_master" element={<Plan />} />
+              <Route path="/master/share" element={<Share />} />
+              <Route path="/master/member-fee" element={<MemberFee />} />
+              <Route path="/master/advisor-fee" element={<AdvisorFee />} />
               <Route path="/master/proof" element={<Proof />} />
               <Route path="/master/company-bank" element={<CompanyBank />} />
             </Route>
