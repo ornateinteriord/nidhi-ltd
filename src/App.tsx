@@ -29,6 +29,15 @@ import ProtectedRoute from "./routeProtecter/RouteProtecter";
 import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
 import UserProvider from "./context/user/userContextProvider";
+import AdminSettings from "./pages/Admin-Pages/AdminSettings";
+import State from "./pages/Admin-Pages/MasterTables/state";
+import City from "./pages/Admin-Pages/MasterTables/city";
+import Branch from "./pages/Admin-Pages/MasterTables/branch";
+import RankName from "./pages/Admin-Pages/MasterTables/RankName";
+import RankWiseCommission from "./pages/Admin-Pages/MasterTables/RankWiseCommission";
+import Plan from "./pages/Admin-Pages/MasterTables/Plan";
+import Proof from "./pages/Admin-Pages/MasterTables/Proof";
+import CompanyBank from "./pages/Admin-Pages/MasterTables/CompanyBank";
 // import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
 
 
@@ -219,7 +228,18 @@ const RoutesProvider = ({
             </Route>
             {/* admin routes */}
 
-            {/* <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+          <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+              <Route path="/master/view_mainconfig" element={<AdminSettings />} />
+              <Route path="/master/view_state" element={<State />} />
+              <Route path="/master/view_city" element={<City />} />
+              <Route path="/master/view_branch_master" element={<Branch />} />
+              <Route path="/master/view_rank_master" element={<RankName />} />
+              <Route path="/closing/closing_master" element={<RankWiseCommission />} />
+              <Route path="/plan_master/view_sub_plan_type_master" element={<Plan />} />
+              <Route path="/master/proof" element={<Proof />} />
+              <Route path="/master/company-bank" element={<CompanyBank />} />
+            </Route>
+            {/* 
               <Route path="/admin/update-password" element={<UpdatePassword />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />{" "}
               <Route path="/admin/members" element={<Members />} />
