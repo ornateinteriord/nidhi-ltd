@@ -30,13 +30,14 @@ import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
 import UserProvider from "./context/user/userContextProvider";
 import AdminSettings from "./pages/Admin-Pages/AdminSettings";
-import State from "./pages/Admin-Pages/MasterTables/state";
-import City from "./pages/Admin-Pages/MasterTables/city";
-import Branch from "./pages/Admin-Pages/MasterTables/branch";
+import State from "./pages/Admin-Pages/MasterTables/StateMaster";
+import City from "./pages/Admin-Pages/MasterTables/CityMaster";
+import Branch from "./pages/Admin-Pages/MasterTables/BranchMaster";
 import RankName from "./pages/Admin-Pages/MasterTables/RankName";
 import RankWiseCommission from "./pages/Admin-Pages/MasterTables/RankWiseCommission";
 import Plan from "./pages/Admin-Pages/MasterTables/Plan";
 import Proof from "./pages/Admin-Pages/MasterTables/Proof";
+
 import CompanyBank from "./pages/Admin-Pages/MasterTables/CompanyBank";
 // import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
 
