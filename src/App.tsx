@@ -30,7 +30,7 @@ import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
 import UserProvider from "./context/user/userContextProvider";
 import AdminSettings from "./pages/Admin-Pages/AdminSettings";
-import State from "./pages/Admin-Pages/MasterTables/state";
+import State from "./pages/Admin-Pages/MasterTables/StateMaster";
 import City from "./pages/Admin-Pages/MasterTables/CityMaster";
 import Branch from "./pages/Admin-Pages/MasterTables/BranchMaster";
 import RankName from "./pages/Admin-Pages/MasterTables/RankName";
