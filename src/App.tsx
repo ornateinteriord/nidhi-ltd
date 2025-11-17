@@ -29,6 +29,7 @@ import ProtectedRoute from "./routeProtecter/RouteProtecter";
 import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
 import UserProvider from "./context/user/userContextProvider";
+import AdminSettings from "./pages/Admin-Pages/AdminSettings";
 // import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
 
 
@@ -219,7 +220,10 @@ const RoutesProvider = ({
             </Route>
             {/* admin routes */}
 
-            {/* <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+          <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+              <Route path="/master/view_mainconfig" element={<AdminSettings />} />
+            </Route>
+            {/* 
               <Route path="/admin/update-password" element={<UpdatePassword />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />{" "}
               <Route path="/admin/members" element={<Members />} />
