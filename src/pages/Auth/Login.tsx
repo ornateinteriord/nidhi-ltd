@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -9,17 +9,24 @@ import {
   Card,
   CardContent,
   InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import { LoadingComponent } from "../../App";
-import { useLoginMutation } from "../../api/Auth";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const [role, setRole] = useState<string>("ADMIN");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,12 +36,47 @@ const Login = () => {
     }));
   };
 
-  const loginMutation = useLoginMutation()
-  const { mutate, isPending} = loginMutation
+  const handleRoleChange = (e: any) => {
+    setRole(e.target.value);
+  };
+
+  // Static credentials map
+  const credentials: Record<string, { username: string; password: string }> = {
+    ADMIN: { username: "Demo@12345.com", password: "123" },
+    BRANCH: { username: "branch@nidhi.com", password: "12345" },
+    ADVISOR: { username: "M101000001", password: "4058065" },
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(formData);
+    setIsSubmitting(true);
+
+    const selected = role.toUpperCase();
+    const creds = credentials[selected];
+    
+    console.log({formData, creds})
+
+    // basic check
+    if (!creds) {
+      toast.error("Invalid role selected");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.username === creds.username && formData.password === creds.password) {
+      // Save role to localStorage so app can pick it up (useAuth falls back to this)
+      localStorage.setItem("userRole", selected);
+      localStorage.setItem("user", JSON.stringify({ username: formData.username, role: selected }));
+      toast.success("Login successful");
+      // navigate to role dashboard
+      setTimeout(() => {
+        setIsSubmitting(false);
+        navigate(`/${selected.toLowerCase()}/dashboard`);
+      }, 300);
+    } else {
+      toast.error("Invalid username or password");
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -46,6 +88,20 @@ const Login = () => {
               Sign In
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+              <FormControl fullWidth>
+                <InputLabel id="role-label">Role</InputLabel>
+                <Select
+                  labelId="role-label"
+                  id="role-select"
+                  value={role}
+                  label="Role"
+                  onChange={handleRoleChange}
+                >
+                  <MenuItem value="ADMIN">Admin</MenuItem>
+                  <MenuItem value="BRANCH">Branch</MenuItem>
+                  <MenuItem value="ADVISOR">Advisor</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 required
                 id="username"
@@ -82,8 +138,8 @@ const Login = () => {
                   ),
                 }}
               />
-              <Button type="submit" fullWidth variant="contained" disabled={isPending} sx={{ backgroundColor: "#7e22ce", "&:hover": { backgroundColor: "#581c87" } }}>
-                Sign In
+              <Button type="submit" fullWidth variant="contained" disabled={isSubmitting} sx={{ backgroundColor: "#7e22ce", "&:hover": { backgroundColor: "#581c87" } }}>
+                {isSubmitting ? "Signing In..." : "Sign In"}
               </Button>
               <Typography variant="body2" sx={{ textAlign: "center", mt: 1 }}>
                 Don't have an account?{" "}
@@ -95,7 +151,7 @@ const Login = () => {
           </CardContent>
         </Card>
       </Box>
-      {isPending && <LoadingComponent />}
+      {isSubmitting && <LoadingComponent />}
     </Container>
   );
 };

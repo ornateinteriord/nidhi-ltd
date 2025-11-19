@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import TokenService from "../api/token/tokenService";
 
 const useAuth = () => {
-  const [userRole, setUserRole] = useState<string | null>(TokenService.getRole());
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!TokenService.getToken());
+  const storedRole = typeof window !== 'undefined' ? localStorage.getItem('userRole') : null;
+  const [userRole, setUserRole] = useState<string | null>(TokenService.getRole() || (storedRole ? storedRole : null));
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!TokenService.getToken() || !!storedRole);
 
   useEffect(() => {
     const handleStorageChange = () => {
       const token = TokenService.getToken();
-      setUserRole(TokenService.getRole());
-      setIsLoggedIn(!!token);
+      const fallbackRole = localStorage.getItem('userRole');
+      setUserRole(TokenService.getRole() || (fallbackRole ? fallbackRole : null));
+      setIsLoggedIn(!!token || !!fallbackRole);
     };
 
     // Update state on render
