@@ -11,20 +11,16 @@ import "./App.css";
 import "./index.css";
 import { Dialog, DialogContent, CircularProgress } from "@mui/material";
 
-// import Members, {
-//   ActiveMembers,
-//   InActiveMembers,
-//   PendingMembers,
-// } from "./pages/Admin-Pages/Members/Members";
-// import {
-//   GeneratePackages,
-//   PackageHistory,
-//   PackageRequests,
-//   UnusedPackages,
-//   UsedPackages,
-// } from "./pages/Admin-Pages/Packages/Packages";
-// import Tree from "./pages/User-Pages/Team/Tree";
-// import Team from "./pages/User-Pages/Team/Team";
+// Admin Pages - Lazy Loaded
+const AdminDashboard = lazy(() => import("./pages/Admin-Pages/AdminDashboard/Dashboard"));
+const AdminPlans = lazy(() => import("./pages/Admin-Pages/Plans"));
+const AdminTeam = lazy(() => import("./pages/Admin-Pages/Team"));
+const AdminPayoutReport = lazy(() => import("./pages/Admin-Pages/Payout"));
+const AdminPlanRecoveryReport = lazy(() => import("./pages/Admin-Pages/PlanRecovery"));
+const AdminLoanRecoveryReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery"));
+// const AdminCollectedLoanReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery").then(module => ({ default: module.CollectedLoanReport })));
+const SelfLoan = lazy(() => import("./pages/Loans/SelfLoan"));
+const AdvisedLoan = lazy(() => import("./pages/Loans/AdvisedLoan"));
 import ProtectedRoute from "./routeProtecter/RouteProtecter";
 import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
@@ -90,52 +86,53 @@ const NotFound = lazy(() => import("./pages/not-found/NotFound"));
 // const ActivatePackage = lazy(() => import("./pages/Admin-Pages/activatePackage/ActivatePackage"));
 
 // // user pages
-// const UserDashboard = lazy(
-//   () => import("./pages/User-Pages/UserDashboard/Dashboard")
-// );
-// const UserPackageHistory = lazy(
-//   () => import("./pages/User-Pages/Packages/PackageHistory")
-// );
-// const UserTransaction = lazy(
-//   () => import("./pages/User-Pages/Transaction/WalletTransaction")
-// );
-// const UserLoanTransaction = lazy(
-//   () => import("./pages/User-Pages/Transaction/LoanTransaction")
-// );
-// const UserMailBox = lazy(() => import("./pages/User-Pages/MailBox/MailBox"));
-// const UserProfile = lazy(() => import("./pages/User-Pages/Profile/Profile"));
-// const UserKYC = lazy(() => import("./pages/User-Pages/KYC/KYC"));
-// const UserChangePassword = lazy(
-//   () => import("./pages/User-Pages/Change-Password/ChangePassword")
-// );
-// const UserActivate = lazy(() => import("./pages/User-Pages/Activate/Activate"));
-// const UserNewResgister = lazy(
-//   () => import("./pages/User-Pages/Team/NewResgister")
-// );
-// const UserUsedPackage = lazy(
-//   () => import("./pages/User-Pages/Packages/UsedPackage")
-// );
-// const UserUnUsedPackage = lazy(
-//   () => import("./pages/User-Pages/Packages/UnUsedPackage")
-// );
-// const UserTransferPackage = lazy(
-//   () => import("./pages/User-Pages/Packages/TransferPackage")
-// );
-// const UserDirect = lazy(() => import("./pages/User-Pages/Team/Direct"));
-// const UserLevelBenifits = lazy(
-//   () => import("./pages/User-Pages/Earnings/LeveBenifits")
-// );
-// const UserDailyPayout = lazy(
-//   () => import("./pages/User-Pages/Earnings/DailyPayout")
-// );
-// const UserWallet = lazy(() => import("./pages/User-Pages/Wallet/Wallet"));
+const UserDashboard = lazy(
+  () => import("./pages/User-Pages/UserDashboard/Dashboard")
+);
+const UserPackageHistory = lazy(
+  () => import("./pages/User-Pages/Packages/PackageHistory")
+);
+const UserTransaction = lazy(
+  () => import("./pages/User-Pages/Transaction/WalletTransaction")
+);
+const UserLoanTransaction = lazy(
+  () => import("./pages/User-Pages/Transaction/LoanTransaction")
+);
+const UserMailBox = lazy(() => import("./pages/User-Pages/MailBox/MailBox"));
+const UserProfile = lazy(() => import("./pages/User-Pages/Profile/Profile"));
+const UserKYC = lazy(() => import("./pages/User-Pages/KYC/KYC"));
+const UserChangePassword = lazy(
+  () => import("./pages/User-Pages/Change-Password/ChangePassword")
+);
+const UserActivate = lazy(() => import("./pages/User-Pages/Activate/Activate"));
+const UserNewResgister = lazy(
+  () => import("./pages/User-Pages/Team/NewResgister")
+);
+const UserUsedPackage = lazy(
+  () => import("./pages/User-Pages/Packages/UsedPackage")
+);
+const UserUnUsedPackage = lazy(
+  () => import("./pages/User-Pages/Packages/UnUsedPackage")
+);
+const UserTransferPackage = lazy(
+  () => import("./pages/User-Pages/Packages/TransferPackage")
+);
+const UserDirect = lazy(() => import("./pages/User-Pages/Team/Direct"));
+const UserLevelBenifits = lazy(
+  () => import("./pages/User-Pages/Earnings/LeveBenifits")
+);
+const UserDailyPayout = lazy(
+  () => import("./pages/User-Pages/Earnings/DailyPayout")
+);
+const UserWallet = lazy(() => import("./pages/User-Pages/Wallet/Wallet"));
+const Tree = lazy(() => import("./pages/User-Pages/Team/Tree"));
+const Team = lazy(() => import("./pages/User-Pages/Team/Team"));
 
 
 
-// const LoansMemberPending = lazy(() => import("./pages/Loans/Loanspending/Pending"));
-// const LoansMemberProcessed = lazy(() => import("./pages/Loans/Loansprocesssed/Processed"));
-// const LoansRepaymentsList = lazy(() => import("./pages/Loans/Repaymentlist/LoansList"));
-// // const LoansRepaymentsPlaceholder = lazy(() => import("./pages/Loans/Repayments/RepaymentPlaceholder"));
+const LoansMemberPending = lazy(() => import("./pages/Loans/Loanspending"));
+const LoansMemberProcessed = lazy(() => import("./pages/Loans/Loansprocesssed"));
+const LoansRepaymentsList = lazy(() => import("./pages/Loans/Repaymentlist"));
 
 export const LoadingComponent = () => {
   return (
@@ -233,6 +230,10 @@ const RoutesProvider = ({
             {/* admin routes */}
 
           <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+              {/* Dashboard */}
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              
+              {/* Master Routes */}
               <Route path="/master/view_mainconfig" element={<AdminSettings />} />
               <Route path="/master/view_state" element={<State />} />
               <Route path="/master/view_city" element={<City />} />
@@ -245,6 +246,27 @@ const RoutesProvider = ({
               <Route path="/master/advisor-fee" element={<AdvisorFee />} />
               <Route path="/master/proof" element={<Proof />} />
               <Route path="/master/company-bank" element={<CompanyBank />} />
+              
+              {/* Plans */}
+              <Route path="/admin/plans" element={<AdminPlans />} />
+              
+              {/* Team */}
+              <Route path="/admin/team" element={<AdminTeam />} />
+              
+              {/* Loan - Self & Advised */}
+              <Route path="/admin/loan/self" element={<SelfLoan />} />
+              <Route path="/admin/loan/advised" element={<AdvisedLoan />} />
+              
+              {/* Payout */}
+              <Route path="/admin/payout/report" element={<AdminPayoutReport />} />
+              
+              {/* Plan Recovery */}
+              <Route path="/admin/plan/recovery" element={<AdminPlanRecoveryReport />} />
+              <Route path="/admin/plan/recovery-report" element={<AdminPlanRecoveryReport />} />
+              
+              {/* Loan Recovery */}
+              <Route path="/admin/loan/recovery" element={<AdminLoanRecoveryReport />} />
+              <Route path="/admin/loan/recovery-report" element={<AdminLoanRecoveryReport />} />
             </Route>
             {/* 
               <Route path="/admin/update-password" element={<UpdatePassword />} />
@@ -311,16 +333,15 @@ const RoutesProvider = ({
               <Route path="/admin/members/:memberId" element={<MembersUpdateForm />} />
 
             </Route> */}
-            {/* <Route element={<ProtectedRoute allowedRoles={["ADMIN", "USER"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["ADMIN", "USER"]} />}>
               <Route path="/admin/member/pending" element={<LoansMemberPending />} />
               <Route path="/admin/member/processed" element={<LoansMemberProcessed />} />
               <Route path="/admin/repayments/list" element={<LoansRepaymentsList />} />
-              <Route path="/loans/repayments/placeholder" element={<LoansRepaymentsPlaceholder />} />
-            </Route> */}
+            </Route>
 
             {/* user routes */}
 
-            {/* <Route element={<ProtectedRoute allowedRoles={["USER"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["USER"]} />}>
               <Route path="/user/dashboard" element={<UserDashboard />} />
               <Route path="/user/account/profile" element={<UserProfile />} />
               <Route path="/user/account/kyc" element={<UserKYC />} />
@@ -362,7 +383,7 @@ const RoutesProvider = ({
               <Route path="/user/mailbox" element={<UserMailBox />} />
               <Route path="/user/wallet" element={<UserWallet />} />
 
-            </Route> */}
+            </Route>
 
 
 

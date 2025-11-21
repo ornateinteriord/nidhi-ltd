@@ -1,4 +1,5 @@
 import { CheckCircleIcon, EditIcon, Home, InfoIcon, ReceiptIcon, SearchIcon } from "lucide-react";
+import { ClipboardCheck } from "lucide-react";
 import { SideBarMenuItemType } from "../../store/store";
 import {
   DashboardIcon,
@@ -473,4 +474,66 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Head Status", path: "/account-head-master/head-status", icon: <InfoIcon /> },
     ],
   }
+];
+
+export const AdviserSideBarMenuItems: SideBarMenuItemType[] = [
+  {
+    name: "Home",
+    icon: <DashboardIcon />,
+    path: "/admin/dashboard",
+    isExpandable: false,
+  },
+
+  {
+    name: "Plans",
+    icon: <ClipboardCheck />,
+    isExpandable: false,
+    path: "/admin/plans"
+  },
+
+  {
+    name: "Team",
+    icon: <GroupIcon />,
+    isExpandable: false,
+    path: "/admin/team",
+  },
+
+  {
+    name: "Loan",
+    icon: <CreditCardIcon />,
+    isExpandable: true,
+    subItems: [
+      { name: "Self Loan", path: "/admin/loan/self", icon: <CreditCardIcon /> },
+      { name: "Advised Loan", path: "/admin/loan/advised", icon: <CreditCardIcon /> },
+    ],
+  },
+
+  {
+    name: "Payout",
+    icon: <PaymentsIcon />,
+    isExpandable: true,
+    subItems: [
+      { name: "Payout Report", path: "/admin/payout/report", icon: <PaymentsIcon /> },
+    ],
+  },
+
+  {
+    name: "Plan Recovery",
+    icon: <TrendingUpIcon />,
+    isExpandable: true,
+    subItems: [
+      { name: "Plan Recovery", path: "/admin/plan/recovery", icon: <TrendingUpIcon /> },
+      { name: "Plan Recovery Report", path: "/admin/plan/recovery-report", icon: <ShowChartIcon /> },
+    ],
+  },
+
+  {
+    name: "Loan Recovery",
+    icon: <MonetizationOnIcon />,
+    isExpandable: true,
+    subItems: [
+      { name: "Loan Recovery", path: "/admin/loan/recovery", icon: <MonetizationOnIcon /> },
+      { name: "Loan Recovery Report", path: "/admin/loan/recovery-report", icon: <ShowChartIcon /> },
+    ],
+  },
 ];
