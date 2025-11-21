@@ -1191,3 +1191,595 @@ export const getLoansListColumns = (onRepayClick: (row: any) => void) => [
     ),
   },
 ];
+
+
+export const getFreshPlansColumns = () => [
+  {
+    name: "S No.",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "80px",
+  },
+  {
+    name: "Member Id/Name",
+    selector: (row: any) => row.memberCode || "-",
+    sortable: true,
+  },
+  {
+    name: "Account No.",
+    selector: (row: any) => row.accountNo || "-",
+    sortable: true,
+  },
+  {
+    name: "Opening Amount",
+    selector: (row: any) => row.openingAmount ? `₹${parseFloat(row.openingAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Plan type",
+    selector: (row: any) => row.planType || "-",
+    sortable: true,
+  },
+  {
+    name: "Action",
+    cell: (_row: any) => (
+      <Button
+        variant="contained"
+        size="small"
+        sx={{
+          backgroundColor: '#7e22ce',
+          '&:hover': { backgroundColor: '#6b1db5' },
+          textTransform: 'capitalize'
+        }}
+      >
+        View
+      </Button>
+    ),
+  },
+];
+
+export const getRenewalPlansColumns = () => [
+  {
+    name: "Sr. No.",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "80px",
+  },
+  {
+    name: "Member Id/Name",
+    selector: (row: any) => row.memberCode || "-",
+    sortable: true,
+  },
+  {
+    name: "Account No.",
+    selector: (row: any) => row.accountNo || "-",
+    sortable: true,
+  },
+  {
+    name: "Plan Amount",
+    selector: (row: any) => row.planAmount ? `₹${parseFloat(row.planAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Plan type",
+    selector: (row: any) => row.planType || "-",
+    sortable: true,
+  },
+  {
+    name: "Deposited Amount",
+    selector: (row: any) => row.depositedAmount ? `₹${parseFloat(row.depositedAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "No. Of Installments",
+    selector: (row: any) => row.noOfInstallments || "-",
+    sortable: true,
+    center: true,
+  },
+  {
+    name: "Total Paid Installments",
+    selector: (row: any) => row.totalPaidInstallments || "-",
+    sortable: true,
+    center: true,
+  },
+  {
+    name: "Total Due Installments",
+    selector: (row: any) => row.totalDueInstallments || "-",
+    sortable: true,
+    center: true,
+  },
+  {
+    name: "Action",
+    cell: (_row: any) => (
+      <Button
+        variant="contained"
+        size="small"
+        sx={{
+          backgroundColor: '#7e22ce',
+          '&:hover': { backgroundColor: '#6b1db5' },
+          textTransform: 'capitalize'
+        }}
+      >
+        View
+      </Button>
+    ),
+  },
+];
+
+
+
+export const getAdminTeamColumns = () => [
+  {
+    name: "S. No.",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "80px",
+  },
+  {
+    name: "Member Id / Name",
+    selector: (row: any) => {
+      const id = row.memberId || "-";
+      const name = row.memberName || "";
+      return name ? `${id} / ${name}` : id;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Rank",
+    selector: (row: any) => row.rank || "-",
+    sortable: true,
+  },
+  {
+    name: "Introducer Id / Name",
+    selector: (row: any) => {
+      const id = row.introducerId || "-";
+      const name = row.introducerName || "";
+      return name ? `${id} / ${name}` : id;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Mobile No.",
+    selector: (row: any) => row.mobileNo || "-",
+    sortable: true,
+  },
+  {
+    name: "Branch Code / Name",
+    selector: (row: any) => {
+      const code = row.branchCode || "-";
+      const name = row.branchName || "";
+      return name ? `${code} / ${name}` : code;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Joining Date",
+    selector: (row: any) => row.joiningDate ? getFormattedDate(row.joiningDate) : "-",
+    sortable: true,
+  },
+];
+
+export const getSelfLoanColumns = () => [
+  {
+    name: "Sn",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "70px",
+  },
+  {
+    name: "Account",
+    selector: (row: any) => row.account || "-",
+    sortable: true,
+  },
+  {
+    name: "Member ID/Name",
+    selector: (row: any) => {
+      const id = row.memberId || "-";
+      const name = row.memberName || "";
+      return name ? `${id} / ${name}` : id;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Loan Amount",
+    selector: (row: any) => row.loanAmount ? `₹${parseFloat(row.loanAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Matured Amount",
+    selector: (row: any) => row.maturedAmount ? `₹${parseFloat(row.maturedAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Installment",
+    selector: (row: any) => row.installment || "-",
+    sortable: true,
+    center: true,
+  },
+  {
+    name: "Mode",
+    selector: (row: any) => row.mode || "-",
+    sortable: true,
+  },
+  {
+    name: "Booked Date",
+    selector: (row: any) => row.bookedDate ? getFormattedDate(row.bookedDate) : "-",
+    sortable: true,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
+    cell: (row: any) => (
+      <div
+        style={{
+          color: row.status?.toLowerCase() === 'active' ? '#569f35' : 
+                 row.status?.toLowerCase() === 'pending' ? '#ffa500' : '#ff3860',
+          padding: '5px 10px',
+          borderRadius: '4px',
+          fontWeight: 500,
+        }}
+      >
+        {row.status?.charAt(0).toUpperCase() + row.status?.slice(1)}
+      </div>
+    ),
+  },
+  {
+    name: "Action",
+    cell: (_row: any) => (
+      <Button
+        variant="contained"
+        size="small"
+        sx={{
+          backgroundColor: '#7e22ce',
+          '&:hover': { backgroundColor: '#6b1db5' },
+          textTransform: 'capitalize'
+        }}
+      >
+        View
+      </Button>
+    ),
+  },
+];
+
+export const getAdvisedLoanColumns = () => [
+  {
+    name: "Sn",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "70px",
+  },
+  {
+    name: "Account",
+    selector: (row: any) => row.account || "-",
+    sortable: true,
+  },
+  {
+    name: "Member ID/Name",
+    selector: (row: any) => {
+      const id = row.memberId || "-";
+      const name = row.memberName || "";
+      return name ? `${id} / ${name}` : id;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Loan Amount",
+    selector: (row: any) => row.loanAmount ? `₹${parseFloat(row.loanAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Matured Amount",
+    selector: (row: any) => row.maturedAmount ? `₹${parseFloat(row.maturedAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Installment",
+    selector: (row: any) => row.installment || "-",
+    sortable: true,
+    center: true,
+  },
+  {
+    name: "Mode",
+    selector: (row: any) => row.mode || "-",
+    sortable: true,
+  },
+  {
+    name: "Booked Date",
+    selector: (row: any) => row.bookedDate ? getFormattedDate(row.bookedDate) : "-",
+    sortable: true,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
+    cell: (row: any) => (
+      <div
+        style={{
+          color: row.status?.toLowerCase() === 'active' ? '#569f35' : 
+                 row.status?.toLowerCase() === 'pending' ? '#ffa500' : '#ff3860',
+          padding: '5px 10px',
+          borderRadius: '4px',
+          fontWeight: 500,
+        }}
+      >
+        {row.status?.charAt(0).toUpperCase() + row.status?.slice(1)}
+      </div>
+    ),
+  },
+  {
+    name: "Action",
+    cell: (_row: any) => (
+      <Button
+        variant="contained"
+        size="small"
+        sx={{
+          backgroundColor: '#7e22ce',
+          '&:hover': { backgroundColor: '#6b1db5' },
+          textTransform: 'capitalize'
+        }}
+      >
+        View
+      </Button>
+    ),
+  },
+];
+
+export const getPayoutReportColumns = () => [
+  {
+    name: "S No.",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "80px",
+  },
+  {
+    name: "Account Id",
+    selector: (row: any) => row.accountId || "-",
+    sortable: true,
+  },
+  {
+    name: "Member Id/Name",
+    selector: (row: any) => {
+      const id = row.memberId || "-";
+      const name = row.memberName || "";
+      return name ? `${id} / ${name}` : id;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Rank",
+    selector: (row: any) => row.rank || "-",
+    sortable: true,
+  },
+  {
+    name: "Business Amount",
+    selector: (row: any) => row.businessAmount ? `₹${parseFloat(row.businessAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Commision",
+    selector: (row: any) => row.commission ? `₹${parseFloat(row.commission).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Commision Amount",
+    selector: (row: any) => row.commissionAmount ? `₹${parseFloat(row.commissionAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Business By",
+    selector: (row: any) => row.businessBy || "-",
+    sortable: true,
+  },
+  {
+    name: "Plan Name/Type",
+    selector: (row: any) => {
+      const name = row.planName || "-";
+      const type = row.planType || "";
+      return type ? `${name} / ${type}` : name;
+    },
+    sortable: true,
+    width: "200px",
+  },
+];
+
+export const getPlanRecoveryReportColumns = () => [
+  {
+    name: "Sn",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "70px",
+  },
+  {
+    name: "Pay Date",
+    selector: (row: any) => row.payDate ? getFormattedDate(row.payDate) : "-",
+    sortable: true,
+  },
+  {
+    name: "Member ID/Name",
+    selector: (row: any) => {
+      const id = row.memberId || "-";
+      const name = row.memberName || "";
+      return name ? `${id} / ${name}` : id;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Account Number",
+    selector: (row: any) => row.accountNumber || "-",
+    sortable: true,
+  },
+  {
+    name: "Paid Amount",
+    selector: (row: any) => row.paidAmount ? `₹${parseFloat(row.paidAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
+    cell: (row: any) => (
+      <div
+        style={{
+          color: row.status?.toLowerCase() === 'active' ? '#569f35' : 
+                 row.status?.toLowerCase() === 'pending' ? '#ffa500' : 
+                 row.status?.toLowerCase() === 'completed' ? '#0066cc' : '#ff3860',
+          padding: '5px 10px',
+          borderRadius: '4px',
+          fontWeight: 500,
+        }}
+      >
+        {row.status?.charAt(0).toUpperCase() + row.status?.slice(1)}
+      </div>
+    ),
+  },
+  {
+    name: "Action",
+    cell: (_row: any) => (
+      <Button
+        variant="contained"
+        size="small"
+        sx={{
+          backgroundColor: '#7e22ce',
+          '&:hover': { backgroundColor: '#6b1db5' },
+          textTransform: 'capitalize'
+        }}
+      >
+        View
+      </Button>
+    ),
+  },
+];
+
+export const getLoanRecoveryReportColumns = () => [
+  {
+    name: "Sn",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "70px",
+  },
+  {
+    name: "Upcoming Inst Date",
+    selector: (row: any) => row.upcomingInstDate ? getFormattedDate(row.upcomingInstDate) : "-",
+    sortable: true,
+  },
+  {
+    name: "Member ID/Name",
+    selector: (row: any) => {
+      const id = row.memberId || "-";
+      const name = row.memberName || "";
+      return name ? `${id} / ${name}` : id;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Loan Id (Book Date)",
+    selector: (row: any) => {
+      const loanId = row.loanId || "-";
+      const bookDate = row.bookDate ? getFormattedDate(row.bookDate) : "";
+      return bookDate ? `${loanId} (${bookDate})` : loanId;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Total Deposit Amount",
+    selector: (row: any) => row.totalDepositAmount || "0",
+    sortable: true,
+    center: true,
+  },
+  {
+    name: "Inst Amount",
+    selector: (row: any) => row.instAmount || "0",
+    sortable: true,
+    center: true,
+  },
+  {
+    name: "Pay Amount",
+    selector: (row: any) => row.payAmount ? `₹${parseFloat(row.payAmount).toLocaleString()}` : "-",
+    sortable: true,
+  },
+  {
+    name: "Mobile No.",
+    selector: (row: any) => row.mobileNo || "-",
+    sortable: true,
+  },
+];
+
+export const getCollectedLoanReportColumns = () => [
+  {
+    name: "Sn",
+    selector: (row: any) => row.sNo || "-",
+    sortable: true,
+    width: "70px",
+  },
+  {
+    name: "Pay Date",
+    selector: (row: any) => row.payDate ? getFormattedDate(row.payDate) : "-",
+    sortable: true,
+  },
+  {
+    name: "Member ID/Name",
+    selector: (row: any) => {
+      const id = row.memberId || "-";
+      const name = row.memberName || "";
+      return name ? `${id} / ${name}` : id;
+    },
+    sortable: true,
+    width: "200px",
+  },
+  {
+    name: "Account Number",
+    selector: (row: any) => row.accountNumber || "-",
+    sortable: true,
+  },
+  {
+    name: "Paid Amount",
+    selector: (row: any) => row.paidAmount || "0",
+    sortable: true,
+    center: true,
+  },
+  {
+    name: "Status",
+    selector: (row: any) => row.status || "-",
+    sortable: true,
+    cell: (row: any) => (
+      <div
+        style={{
+          color: row.status?.toLowerCase() === 'paid' ? '#569f35' : 
+                 row.status?.toLowerCase() === 'pending' ? '#ffa500' : 
+                 row.status?.toLowerCase() === 'completed' ? '#0066cc' : '#ff3860',
+          padding: '5px 10px',
+          borderRadius: '4px',
+          fontWeight: 500,
+        }}
+      >
+        {row.status?.charAt(0).toUpperCase() + row.status?.slice(1)}
+      </div>
+    ),
+  },
+  {
+    name: "Action",
+    cell: (_row: any) => (
+      <Button
+        variant="contained"
+        size="small"
+        sx={{
+          backgroundColor: '#7e22ce',
+          '&:hover': { backgroundColor: '#6b1db5' },
+          textTransform: 'capitalize'
+        }}
+      >
+        View
+      </Button>
+    ),
+  },
+];
