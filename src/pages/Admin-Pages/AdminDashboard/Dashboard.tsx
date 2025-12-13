@@ -10,6 +10,7 @@ import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
 import { useGetAllMembersDetails } from '../../../api/Admin';
+import DashboardCards from './DashboardCards';
 
 const AdminDashboard = () => { 
   const { data: members = [], isLoading, error } = useGetAllMembersDetails();
@@ -155,6 +156,7 @@ const pendingMembers = members.filter((member: any) =>
           </CardContent>
         </Card>
       </div>
+      <DashboardCards />
     </>
   )
 }
