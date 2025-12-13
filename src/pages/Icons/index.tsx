@@ -66,8 +66,6 @@ import People from "@mui/icons-material/People";
 import AccountTree from "@mui/icons-material/AccountTree";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Payments from "@mui/icons-material/Payments";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import ExpandLess from "@mui/icons-material/ExpandLess";
 import Computer from "@mui/icons-material/Computer";
 import Laptop from "@mui/icons-material/Laptop";
 import PhoneAndroid from "@mui/icons-material/PhoneAndroid";
@@ -107,6 +105,7 @@ export const MuiIcons = {
   Person,
   VerifiedUser,
   LockIcon,
+  Lock: LockIcon,
   Inventory,
   SwapHoriz,
   History,
@@ -114,12 +113,11 @@ export const MuiIcons = {
   AccountTree,
   PersonAdd,
   Payments,
-  ExpandMore,
-  ExpandLess,
+  ExpandMore: ExpandMoreIcon,
+  ExpandLess: ExpandLessIcon,
   Computer,
   Laptop,
   PhoneAndroid,
-  ExpandMoreIcon,
   DevicesOther,
   Build,
   Support,
