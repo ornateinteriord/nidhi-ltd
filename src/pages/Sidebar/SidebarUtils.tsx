@@ -50,13 +50,13 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <MuiIcons.ShowChart />,
     isExpandable: true,
     subItems: [
-      { name: "Wallet", path: "/user/transactions", icon: <MuiIcons.CreditCardIcon /> },
+      { name: "Wallet", path: "/user/transactions", icon: <MuiIcons.CreditCard /> },
       { name: "Loan", path: "/user/loantransactions", icon: <MuiIcons.AccountBalance /> },
     ],
   },
   {
     name: "Wallet Balance",
-    icon: <MuiIcons.CreditCardIcon />,
+    icon: <MuiIcons.CreditCard />,
     path: "/user/wallet",
     isExpandable: false,
   },

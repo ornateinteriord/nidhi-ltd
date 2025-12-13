@@ -53,7 +53,7 @@ import CheckCircle from "@mui/icons-material/CheckCircle";
 import Group from "@mui/icons-material/Group";
 import MonetizationOn from "@mui/icons-material/MonetizationOn";
 import ShowChart from "@mui/icons-material/ShowChart";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
+import CreditCard from "@mui/icons-material/CreditCard";
 import MailOutline from "@mui/icons-material/MailOutline";
 import ExitToApp from "@mui/icons-material/ExitToApp";
 import Person from "@mui/icons-material/Person";
@@ -101,7 +101,7 @@ export const MuiIcons = {
   Group,
   MonetizationOn,
   ShowChart,
-  CreditCardIcon,
+  CreditCard,
   MailOutline,
   ExitToApp,
   Person,
