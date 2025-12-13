@@ -112,7 +112,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                     e.stopPropagation();
                     handleToggle(item.name);
                   }}>
-                    {expandedItem === item.name ? <MuiIcons.ExpandLessIcon /> : <MuiIcons.ExpandMoreIcon />}
+                    {expandedItem === item.name ? <MuiIcons.ExpandLess /> : <MuiIcons.ExpandMore />}
                   </span>
                 )}
               </div>

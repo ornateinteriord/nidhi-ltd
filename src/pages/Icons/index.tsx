@@ -84,8 +84,6 @@ import AccountBalance from "@mui/icons-material/AccountBalance";
 import Book from "@mui/icons-material/Book";
 import Cancel from "@mui/icons-material/Cancel";
 import Calculate from "@mui/icons-material/Calculate";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Visibility from "@mui/icons-material/Visibility";
 import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
 import ListAlt from "@mui/icons-material/ListAlt";
@@ -96,7 +94,6 @@ import Savings from "@mui/icons-material/Savings";
 export const MuiIcons = {
   Dashboard,
   AccountCircle,
-  ExpandLessIcon,
   CheckCircle,
   Group,
   MonetizationOn,
@@ -119,7 +116,6 @@ export const MuiIcons = {
   Computer,
   Laptop,
   PhoneAndroid,
-  ExpandMoreIcon,
   DevicesOther,
   Build,
   Support,
