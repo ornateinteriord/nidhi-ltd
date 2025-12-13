@@ -21,7 +21,7 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
       {
         name: "Change Password",
         path: "/user/account/change-password",
-        icon: <MuiIcons.LockIcon />,
+        icon: <MuiIcons.Lock />,
       },
     ],
   },
