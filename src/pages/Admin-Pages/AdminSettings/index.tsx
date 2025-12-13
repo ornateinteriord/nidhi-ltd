@@ -7,7 +7,7 @@ import {
   CardContent,
   Typography,
   Box,
-  Grid2,
+  Grid,
   InputAdornment
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
@@ -75,8 +75,8 @@ const AdminSettings: React.FC = () => {
         </Typography>
         
         <Box component="form" sx={{ mt: 2 }}>
-          <Grid2 container spacing={3}>
-            <Grid2 size={{ xs: 12, md: 6 }}>
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Project Title"
                 name="projectTitle"
@@ -103,9 +103,9 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               />
-            </Grid2>
+            </Grid>
             
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Description"
                 name="description"
@@ -132,9 +132,9 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               />
-            </Grid2>
+            </Grid>
 
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Email Address"
                 name="emailAddress"
@@ -161,9 +161,9 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               />
-            </Grid2>
+            </Grid>
 
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="User/Login Id"
                 name="userLoginId"
@@ -190,9 +190,9 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               />
-            </Grid2>
+            </Grid>
 
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="User Password"
                 name="userPassword"
@@ -220,9 +220,9 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               />
-            </Grid2>
+            </Grid>
 
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Mobile"
                 name="mobile"
@@ -249,9 +249,9 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               />
-            </Grid2>
+            </Grid>
 
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="CIN"
                 name="cin"
@@ -278,9 +278,9 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               />
-            </Grid2>
+            </Grid>
 
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Address"
                 name="address"
@@ -309,8 +309,8 @@ const AdminSettings: React.FC = () => {
                   }
                 }}
               />
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
             <Button

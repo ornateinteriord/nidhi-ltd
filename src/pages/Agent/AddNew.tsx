@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   Typography,
-  ,
   TextField,
   FormControl,
   InputLabel,
@@ -11,6 +10,7 @@ import {
   MenuItem,
   Button,
   Box,
+  Grid
 } from '@mui/material';
 import { toast } from 'react-toastify';
 
@@ -61,28 +61,28 @@ const AddNew: React.FC = () => {
       <Typography variant="h5" sx={{ mb: 2, fontWeight: '600' }}>Add New Customer</Typography>
       <Card>
         <CardContent>
-          <Grid2 container spacing={3}>
-            <Grid2 size={{ xs: 12, md: 6 }}>
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: '600' }}>Member Informations</Typography>
-              <Grid2 container spacing={2}>
-                <Grid2 size={{ xs: 12, md: 8 }}>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, md: 8 }}>
                   <TextField placeholder="Member ID" fullWidth value={memberId} onChange={(e) => setMemberId(e.target.value)} />
-                </Grid2>
-                <Grid2 size={{ xs: 12, md: 4 }}>
+                </Grid>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <Button variant="contained" fullWidth onClick={handleGetInfo}>Get Info</Button>
-                </Grid2>
+                </Grid>
                 {memberInfo && (
-                  <Grid2 size={{ xs: 12 }}>
+                  <Grid size={{ xs: 12 }}>
                     <Typography variant="body2">Name: <strong>{memberInfo.name}</strong></Typography>
-                  </Grid2>
+                  </Grid>
                 )}
-              </Grid2>
-            </Grid2>
+              </Grid>
+            </Grid>
 
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: '600' }}>Account Informations</Typography>
-              <Grid2 container spacing={2}>
-                <Grid2 size={{ xs: 12, md: 6 }}>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel id="account-type-label">Account Type</InputLabel>
                     <Select labelId="account-type-label" label="Account Type" value={form.accountType} onChange={(e) => handleChange('accountType', e.target.value)}>
@@ -91,9 +91,9 @@ const AddNew: React.FC = () => {
                       <MenuItem value="RD">RD</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel id="account-op-label">Account Operation</InputLabel>
                     <Select labelId="account-op-label" label="Account Operation" value={form.accountOperation} onChange={(e) => handleChange('accountOperation', e.target.value)}>
@@ -101,9 +101,9 @@ const AddNew: React.FC = () => {
                       <MenuItem value="Joint">Joint</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel id="interest-slab-label">Interest Slab</InputLabel>
                     <Select labelId="interest-slab-label" label="Interest Slab" value={form.interestSlab} onChange={(e) => handleChange('interestSlab', e.target.value)}>
@@ -112,38 +112,38 @@ const AddNew: React.FC = () => {
                       <MenuItem value={'slab2'}>Slab 2</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField label="Interest Rate" fullWidth value={form.interestRate} disabled />
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField label="Duration" fullWidth value={form.duration} disabled />
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField label="Amount" fullWidth value={form.amount} onChange={(e) => handleChange('amount', e.target.value)} />
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField label="Introducer" fullWidth value={form.introducer} onChange={(e) => handleChange('introducer', e.target.value)} />
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField label="Introducer Name" fullWidth value={form.introducerName} disabled />
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField label="Agent" fullWidth value={form.agent} disabled />
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={{ xs: 12 }} className="flex justify-end">
+                <Grid size={{ xs: 12 }} className="flex justify-end">
                   <Button variant="contained" color="success" onClick={handleSubmit}>Submit</Button>
-                </Grid2>
-              </Grid2>
-            </Grid2>
-          </Grid2>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
     </Box>

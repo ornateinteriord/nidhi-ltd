@@ -11,7 +11,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  
+  Grid
 } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
@@ -169,8 +169,8 @@ const City = () => {
           </Typography>
           
           <Box component="form" sx={{ mt: 2 }}>
-            <Grid2 container spacing={3}>
-              <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid container spacing={3}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl 
                   fullWidth
                   sx={{
@@ -202,9 +202,9 @@ const City = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="City Name"
                   name="cityName"
@@ -231,8 +231,8 @@ const City = () => {
                     ),
                   }}
                 />
-              </Grid2>
-            </Grid2>
+              </Grid>
+            </Grid>
 
             <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
               <Button

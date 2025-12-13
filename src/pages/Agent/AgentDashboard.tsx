@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, , Typography, Avatar, Button } from '@mui/material';
+import { Card, CardContent, Typography, Avatar, Button, Grid } from '@mui/material';
 import { cn } from '../../lib/utils';
 import '../../pages/Dashboard/dashboard.scss';
 
@@ -52,8 +52,8 @@ const AgentDashboard: React.FC = () => {
         </div>
       </div>
 
-      <Grid2 container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
-        <Grid2 size={{ xs: 12, sm: 12, md: 8 }}>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 8 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" style={{ fontWeight: 'bold', color: '#333' }}>
@@ -87,9 +87,9 @@ const AgentDashboard: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </Grid2>
+        </Grid>
 
-        <Grid2 size={{ xs: 12, sm: 12, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 4 }}>
           <Card className="mb-4">
             <CardContent>
               <Typography variant="h6" style={{ fontWeight: 'bold', color: '#333' }}>Agent Summary</Typography>
@@ -124,8 +124,8 @@ const AgentDashboard: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </div>
   );
 }

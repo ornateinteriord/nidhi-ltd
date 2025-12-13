@@ -11,14 +11,14 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  ,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper
+  Paper,
+  Grid
 } from '@mui/material';
 import ExportableTable from '../../../utils/ExportableTable';
 
@@ -202,8 +202,8 @@ const RankWiseCommission = () => {
             📊 CLOSING MASTER (COMMISSION CHARGE)
           </Typography>
           
-          <Grid2 container spacing={3}>
-            <Grid2 size={{ xs: 12, md: 6 }}>
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl 
                 fullWidth
                 sx={{
@@ -231,9 +231,9 @@ const RankWiseCommission = () => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid2>
+            </Grid>
 
-            <Grid2 size={{ xs: 12, md: 6 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl 
                 fullWidth
                 disabled={!formData.planType}
@@ -262,8 +262,8 @@ const RankWiseCommission = () => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
 

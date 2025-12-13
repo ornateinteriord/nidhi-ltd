@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Typography, , Button } from '@mui/material';
+import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Typography, Grid, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExportableTable from '../../../utils/ExportableTable';
 import { getLoanRecoveryReportColumns } from '../../../utils/DataTableColumnsProvider';
@@ -39,11 +39,11 @@ const LoanRecoveryReport = () => {
 
   return (
     <>
-      <Grid2 className="loan-recovery-report-container" sx={{ margin: '2rem', mt: 12 }}>
+      <Grid className="loan-recovery-report-container" sx={{ margin: '2rem', mt: 12 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           Loan Recovery Report
         </Typography>
-      </Grid2>
+      </Grid>
 
       {/* Loan Recovery Table */}
       <Card sx={{ margin: '2rem', mt: 2 }}>
@@ -72,30 +72,30 @@ const LoanRecoveryReport = () => {
               />
               
               {/* Total Row */}
-              <Grid2 container sx={{ mt: 2, pt: 2, borderTop: '2px solid #e0e0e0' }}>
-                <Grid2 size={{ xs: 1 }}>
+              <Grid container sx={{ mt: 2, pt: 2, borderTop: '2px solid #e0e0e0' }}>
+                <Grid size={{ xs: 1 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                     Total
                   </Typography>
-                </Grid2>
-                <Grid2 size={{ xs: 2 }}></Grid2>
-                <Grid2 size={{ xs: 2 }}></Grid2>
-                <Grid2 size={{ xs: 2 }}>
+                </Grid>
+                <Grid size={{ xs: 2 }}></Grid>
+                <Grid size={{ xs: 2 }}></Grid>
+                <Grid size={{ xs: 2 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
                     {totalDepositAmount}
                   </Typography>
-                </Grid2>
-                <Grid2 size={{ xs: 2 }}>
+                </Grid>
+                <Grid size={{ xs: 2 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
                     {totalInstAmount}
                   </Typography>
-                </Grid2>
-                <Grid2 size={{ xs: 3 }}></Grid2>
-              </Grid2>
+                </Grid>
+                <Grid size={{ xs: 3 }}></Grid>
+              </Grid>
 
               {/* Pay Amount Button */}
-              <Grid2 container sx={{ mt: 3 }}>
-                <Grid2 item>
+              <Grid container sx={{ mt: 3 }}>
+                <Grid size={{ xs: 12 }}>
                   <Button
                     variant="contained"
                     onClick={handlePayAmount}
@@ -109,8 +109,8 @@ const LoanRecoveryReport = () => {
                   >
                     Pay Amount
                   </Button>
-                </Grid2>
-              </Grid2>
+                </Grid>
+              </Grid>
             </AccordionDetails>
           </Accordion>
         </CardContent>

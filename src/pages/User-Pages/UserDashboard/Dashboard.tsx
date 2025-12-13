@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { 
   Card, 
   CardContent, 
-  , 
   Typography, 
   Button, 
   Link, 
@@ -16,7 +15,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  CircularProgress 
+  CircularProgress,
+  Grid 
 } from '@mui/material';
 import { cn } from '../../../lib/utils';
 import '../../Dashboard/dashboard.scss';
@@ -648,7 +648,7 @@ const handleRepayment = () => {
       </Box>
 
       {/* Dashboard Cards Grid */}
-      <Grid2 container 
+      <Grid container 
         spacing={{ xs: 2, sm: 3 }} 
         sx={{ 
           mx: { xs: 1, sm: 2 }, 
@@ -661,24 +661,24 @@ const handleRepayment = () => {
           }
         }}
       >
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : levelBenefitsAmount} title="Level Benefits" />
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : directBenefitsAmount} title="Direct Benefits" />
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" />
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
-        </Grid2>
+        </Grid>
         
         {isLoanApproved &&  (
-          <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <DashboardCard
               amount={initialLoanAmount}
               dueAmount={dueAmount}
@@ -688,9 +688,9 @@ const handleRepayment = () => {
               isRepayEnabled={isRepayEnabled}
               alreadyRepaidToday={alreadyRepaidToday}
             />
-          </Grid2>
+          </Grid>
         )}
-      </Grid2>
+      </Grid>
 
       {/* Repayment Dialog */}
       <Dialog

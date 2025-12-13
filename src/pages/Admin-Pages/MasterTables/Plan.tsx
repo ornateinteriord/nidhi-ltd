@@ -11,8 +11,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  ,
-  InputAdornment
+  InputAdornment,
+  Grid
 } from '@mui/material';
 // import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CodeIcon from '@mui/icons-material/Code';
@@ -264,9 +264,9 @@ const Plan = () => {
           </Typography>
           
           <Box component="form" sx={{ mt: 2 }}>
-            <Grid2 container spacing={3}>
+            <Grid container spacing={3}>
               {/* First Row */}
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <FormControl 
                   fullWidth
                   sx={{
@@ -294,9 +294,9 @@ const Plan = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Plan Name"
                   name="planName"
@@ -322,9 +322,9 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Plan Code"
                   name="planCode"
@@ -350,10 +350,10 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
               {/* Second Row */}
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Depository Terms (In Months)"
                   name="depositoryTerms"
@@ -379,9 +379,9 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Reimbursement Terms (In Months)"
                   name="reimbursementTerms"
@@ -407,9 +407,9 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Spot Income (In %)"
                   name="spotIncome"
@@ -435,10 +435,10 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
               {/* Third Row - Interest Rate */}
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Interest Rate (In %) - General"
                   name="interestRateGeneral"
@@ -464,9 +464,9 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Special/Senior Citizen"
                   name="interestRateSpecial"
@@ -492,9 +492,9 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Bonus (%)(Only In MIS Plan)"
                   name="bonus"
@@ -520,10 +520,10 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
               {/* Fourth Row - Pre Maturity */}
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Pre Maturity - Term (In Months)"
                   name="preMaturityTerm"
@@ -549,9 +549,9 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Rate (In %) - (Rate Will be added in your Pre-Matured Amount)"
                   name="preMaturityRate"
@@ -577,14 +577,14 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Box sx={{ height: '56px' }} /> {/* Spacer */}
-              </Grid2>
+              </Grid>
 
               {/* Fifth Row - Pre Pre Maturity */}
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Pre Pre Maturity - Term (In Months)"
                   name="prePreMaturityTerm"
@@ -610,9 +610,9 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
+              </Grid>
 
-              <Grid2 size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Fine (In %) - (Fine Will be Deducted from your Pre-Pre-Matured Amount)"
                   name="prePreMaturityFine"
@@ -638,8 +638,8 @@ const Plan = () => {
                     ),
                   }}
                 />
-              </Grid2>
-            </Grid2>
+              </Grid>
+            </Grid>
 
             <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
               <Button
