@@ -73,29 +73,29 @@ const LoanRecoveryReport = () => {
               
               {/* Total Row */}
               <Grid container sx={{ mt: 2, pt: 2, borderTop: '2px solid #e0e0e0' }}>
-                <Grid item xs={1}>
+                <Grid size={{ xs: 1 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                     Total
                   </Typography>
                 </Grid>
-                <Grid item xs={2}></Grid>
-                <Grid item xs={2}></Grid>
-                <Grid item xs={2}>
+                <Grid size={{ xs: 2 }}></Grid>
+                <Grid size={{ xs: 2 }}></Grid>
+                <Grid size={{ xs: 2 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
                     {totalDepositAmount}
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid size={{ xs: 2 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
                     {totalInstAmount}
                   </Typography>
                 </Grid>
-                <Grid item xs={3}></Grid>
+                <Grid size={{ xs: 3 }}></Grid>
               </Grid>
 
               {/* Pay Amount Button */}
               <Grid container sx={{ mt: 3 }}>
-                <Grid item>
+                <Grid size={{ xs: 12 }}>
                   <Button
                     variant="contained"
                     onClick={handlePayAmount}

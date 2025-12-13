@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { 
   Card, 
   CardContent, 
-  Grid, 
   Typography, 
   Button, 
   Link, 
@@ -16,7 +15,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  CircularProgress 
+  CircularProgress,
+  Grid 
 } from '@mui/material';
 import { cn } from '../../../lib/utils';
 import '../../Dashboard/dashboard.scss';
@@ -648,8 +648,7 @@ const handleRepayment = () => {
       </Box>
 
       {/* Dashboard Cards Grid */}
-      <Grid 
-        container 
+      <Grid container 
         spacing={{ xs: 2, sm: 3 }} 
         sx={{ 
           mx: { xs: 1, sm: 2 }, 
@@ -662,24 +661,24 @@ const handleRepayment = () => {
           }
         }}
       >
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : levelBenefitsAmount} title="Level Benefits" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : directBenefitsAmount} title="Direct Benefits" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
         </Grid>
         
         {isLoanApproved &&  (
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <DashboardCard
               amount={initialLoanAmount}
               dueAmount={dueAmount}

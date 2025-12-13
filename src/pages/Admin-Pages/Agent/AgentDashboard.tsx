@@ -53,7 +53,7 @@ const AgentDashboard: React.FC = () => {
       </div>
 
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
-          <Grid item xs={12} sm={12} md={8}>
+          <Grid size={{ xs: 12, sm: 12, md: 8 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" style={{ fontWeight: 'bold', color: '#333' }}>
@@ -89,7 +89,7 @@ const AgentDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={4}>
+        <Grid size={{ xs: 12, sm: 12, md: 4 }}>
           <Card className="mb-4">
             <CardContent>
               <Typography variant="h6" style={{ fontWeight: 'bold', color: '#333' }}>Agent Summary</Typography>

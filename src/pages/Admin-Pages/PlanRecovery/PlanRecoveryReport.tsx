@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Typography, Grid, Button, TextField, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Typography, Button, TextField, MenuItem, Select, FormControl, InputLabel, Grid } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExportableTable from '../../../utils/ExportableTable';
 import { getPlanRecoveryReportColumns } from '../../../utils/DataTableColumnsProvider';
@@ -69,7 +69,7 @@ const PlanRecoveryReport = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} md={2.5}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     From Date
                   </Typography>
@@ -84,7 +84,7 @@ const PlanRecoveryReport = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={2.5}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     To Date
                   </Typography>
@@ -99,7 +99,7 @@ const PlanRecoveryReport = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={2.5}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     Plan Account No.
                   </Typography>
@@ -111,7 +111,7 @@ const PlanRecoveryReport = () => {
                     placeholder="Enter Account No."
                   />
                 </Grid>
-                <Grid item xs={12} md={2.5}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <FormControl fullWidth size="small">
                     <InputLabel>Status</InputLabel>
                     <Select
@@ -126,7 +126,7 @@ const PlanRecoveryReport = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} md={2} sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+                <Grid size={{ xs: 12, md: 2 }} sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
                   <Button
                     variant="contained"
                     onClick={handleSearch}
@@ -186,12 +186,12 @@ const PlanRecoveryReport = () => {
               
               {/* Total Row */}
               <Grid container sx={{ mt: 2, pt: 2, borderTop: '2px solid #e0e0e0' }}>
-                <Grid item xs={8}>
+                <Grid size={{ xs: 8 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                     Total
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid size={{ xs: 4 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'right' }}>
                     ₹{totalPaidAmount.toLocaleString()}
                   </Typography>

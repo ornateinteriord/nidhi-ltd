@@ -76,7 +76,7 @@ const AdminSettings: React.FC = () => {
         
         <Box component="form" sx={{ mt: 2 }}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Project Title"
                 name="projectTitle"
@@ -105,7 +105,7 @@ const AdminSettings: React.FC = () => {
               />
             </Grid>
             
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Description"
                 name="description"
@@ -134,7 +134,7 @@ const AdminSettings: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Email Address"
                 name="emailAddress"
@@ -163,7 +163,7 @@ const AdminSettings: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="User/Login Id"
                 name="userLoginId"
@@ -192,7 +192,7 @@ const AdminSettings: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="User Password"
                 name="userPassword"
@@ -222,7 +222,7 @@ const AdminSettings: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Mobile"
                 name="mobile"
@@ -251,7 +251,7 @@ const AdminSettings: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="CIN"
                 name="cin"
@@ -280,7 +280,7 @@ const AdminSettings: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Address"
                 name="address"

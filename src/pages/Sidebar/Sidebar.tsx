@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { UserSideBarMenuItems, AdminSideBarMenuItems, AdviserSideBarMenuItems, AgentSideBarMenuItems } from './SidebarUtils'
 import { Avatar, Toolbar, Typography } from '@mui/material';
 import { SideBarMenuItemType } from '../../store/store';
-import { ExpandMoreIcon, ExpandLessIcon } from '../Icons';
+import { MuiIcons } from '../Icons';
 import { deepOrange } from '@mui/material/colors';
 import { useGetMemberDetails } from '../../api/Memeber';
 import { LoadingComponent } from '../../App';
@@ -42,7 +42,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       onClose();
     }
   };
-  const menuItems = role === "ADMIN" ?AgentSideBarMenuItems  : role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ? AdminSideBarMenuItems : UserSideBarMenuItems;
+  const menuItems = role === "ADMIN" ? AdminSideBarMenuItems  : role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ? AgentSideBarMenuItems : UserSideBarMenuItems;
   const userId = TokenService.getUserId()
   const memberMutatation = useGetMemberDetails(userId!)
   const {data : fethedUser , isLoading , isError , error} = memberMutatation
@@ -112,7 +112,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                     e.stopPropagation();
                     handleToggle(item.name);
                   }}>
-                    {expandedItem === item.name ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    {expandedItem === item.name ? <MuiIcons.ExpandLess /> : <MuiIcons.ExpandMore />}
                   </span>
                 )}
               </div>

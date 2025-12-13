@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Grid,
   TextField,
   FormControl,
   RadioGroup,
@@ -16,6 +15,7 @@ import {
   Avatar,
   Box,
   CircularProgress,
+  Grid
 } from '@mui/material';
 import { toast } from 'react-toastify';
 
@@ -92,9 +92,9 @@ const Profile: React.FC = () => {
       <Card>
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     label="Name"
                     fullWidth
@@ -103,7 +103,7 @@ const Profile: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <FormControl component="fieldset">
                     <Typography variant="body2" sx={{ mb: 1 }}>Gender</Typography>
                     <RadioGroup
@@ -117,7 +117,7 @@ const Profile: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Date Of Birth"
                     type="date"
@@ -128,7 +128,7 @@ const Profile: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Email ID"
                     fullWidth
@@ -137,7 +137,7 @@ const Profile: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Contact No"
                     fullWidth
@@ -146,7 +146,7 @@ const Profile: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     label="Address"
                     multiline
@@ -159,9 +159,9 @@ const Profile: React.FC = () => {
               </Grid>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel id="designation-label">Designation</InputLabel>
                     <Select
@@ -177,7 +177,7 @@ const Profile: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Pan No"
                     fullWidth
@@ -186,7 +186,7 @@ const Profile: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Aadharcard No"
                     fullWidth
@@ -195,7 +195,7 @@ const Profile: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Branch Code"
                     fullWidth
@@ -204,11 +204,11 @@ const Profile: React.FC = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TextField label="Introducer" fullWidth value={form.introducer || ''} InputProps={{ readOnly: true }} />
                 </Grid>
 
-                <Grid item xs={12} md={6} className="flex items-center gap-3">
+                <Grid size={{ xs: 12, md: 6 }} className="flex items-center gap-3">
                   <Box>
                     <Typography variant="body2">Profile Image</Typography>
                     <input type="file" onChange={handleFileChange} />
@@ -216,7 +216,7 @@ const Profile: React.FC = () => {
                   <Avatar src={form.profileImage || ''} sx={{ width: 56, height: 56 }} />
                 </Grid>
 
-                <Grid item xs={12} className="flex justify-end">
+                <Grid size={{ xs: 12 }} className="flex justify-end">
                   <Button variant="contained" color="success" onClick={handleSubmit} disabled={saving}>
                     {saving ? <CircularProgress size={20} color="inherit" /> : 'Update'}
                   </Button>

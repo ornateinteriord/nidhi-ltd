@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Typography, Grid, Button, TextField } from '@mui/material';
+import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Typography, Button, TextField, Grid } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExportableTable from '../../../utils/ExportableTable';
 import { getPayoutReportColumns } from '../../../utils/DataTableColumnsProvider';
@@ -62,7 +62,7 @@ const PayoutReport = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                   <Typography variant="body1" sx={{ mb: 1 }}>
                     Select Payout Date
                   </Typography>
@@ -77,7 +77,7 @@ const PayoutReport = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={9} sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
+                <Grid size={{ xs: 12, md: 9 }} sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
                   <Button
                     variant="contained"
                     onClick={handleGetPayout}

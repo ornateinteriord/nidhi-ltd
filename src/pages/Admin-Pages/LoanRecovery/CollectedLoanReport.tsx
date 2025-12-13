@@ -69,7 +69,7 @@ const CollectedLoanReport = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} md={2.5}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     From Date
                   </Typography>
@@ -84,7 +84,7 @@ const CollectedLoanReport = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={2.5}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     To Date
                   </Typography>
@@ -99,7 +99,7 @@ const CollectedLoanReport = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={2.5}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>
                     Loan Id
                   </Typography>
@@ -111,7 +111,7 @@ const CollectedLoanReport = () => {
                     placeholder="Enter Loan Id"
                   />
                 </Grid>
-                <Grid item xs={12} md={2.5}>
+                <Grid size={{ xs: 12, md: 2.5 }}>
                   <FormControl fullWidth size="small">
                     <InputLabel>Status</InputLabel>
                     <Select
@@ -126,7 +126,7 @@ const CollectedLoanReport = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} md={2} sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+                <Grid size={{ xs: 12, md: 2 }} sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
                   <Button
                     variant="contained"
                     onClick={handleSearch}
@@ -186,12 +186,12 @@ const CollectedLoanReport = () => {
               
               {/* Total Row */}
               <Grid container sx={{ mt: 2, pt: 2, borderTop: '2px solid #e0e0e0' }}>
-                <Grid item xs={8}>
+                <Grid size={{ xs: 8 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                     Total
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid size={{ xs: 4 }}>
                   <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'right' }}>
                     {totalPaidAmount}
                   </Typography>

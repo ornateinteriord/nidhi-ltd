@@ -147,7 +147,7 @@ const CompanyBank = () => {
           </Typography>
           
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
               <TextField
                 label="Bank Name"
                 name="bankName"
@@ -176,7 +176,7 @@ const CompanyBank = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
               <TextField
                 label="Bank Account No."
                 name="bankAccountNo"
@@ -205,7 +205,7 @@ const CompanyBank = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
               <TextField
                 label="Bank IFSC"
                 name="bankIFSC"
@@ -234,7 +234,7 @@ const CompanyBank = () => {
               />
             </Grid>
 
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid size={{ xs: 12, md: 6, lg: 3 }}>
               <TextField
                 label="Bank Address"
                 name="bankAddress"

@@ -11,8 +11,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid,
-  InputAdornment
+  InputAdornment,
+  Grid
 } from '@mui/material';
 // import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CodeIcon from '@mui/icons-material/Code';
@@ -266,7 +266,7 @@ const Plan = () => {
           <Box component="form" sx={{ mt: 2 }}>
             <Grid container spacing={3}>
               {/* First Row */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <FormControl 
                   fullWidth
                   sx={{
@@ -296,7 +296,7 @@ const Plan = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Plan Name"
                   name="planName"
@@ -324,7 +324,7 @@ const Plan = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Plan Code"
                   name="planCode"
@@ -353,7 +353,7 @@ const Plan = () => {
               </Grid>
 
               {/* Second Row */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Depository Terms (In Months)"
                   name="depositoryTerms"
@@ -381,7 +381,7 @@ const Plan = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Reimbursement Terms (In Months)"
                   name="reimbursementTerms"
@@ -409,7 +409,7 @@ const Plan = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Spot Income (In %)"
                   name="spotIncome"
@@ -438,7 +438,7 @@ const Plan = () => {
               </Grid>
 
               {/* Third Row - Interest Rate */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Interest Rate (In %) - General"
                   name="interestRateGeneral"
@@ -466,7 +466,7 @@ const Plan = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Special/Senior Citizen"
                   name="interestRateSpecial"
@@ -494,7 +494,7 @@ const Plan = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Bonus (%)(Only In MIS Plan)"
                   name="bonus"
@@ -523,7 +523,7 @@ const Plan = () => {
               </Grid>
 
               {/* Fourth Row - Pre Maturity */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Pre Maturity - Term (In Months)"
                   name="preMaturityTerm"
@@ -551,7 +551,7 @@ const Plan = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Rate (In %) - (Rate Will be added in your Pre-Matured Amount)"
                   name="preMaturityRate"
@@ -579,12 +579,12 @@ const Plan = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Box sx={{ height: '56px' }} /> {/* Spacer */}
               </Grid>
 
               {/* Fifth Row - Pre Pre Maturity */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Pre Pre Maturity - Term (In Months)"
                   name="prePreMaturityTerm"
@@ -612,7 +612,7 @@ const Plan = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Fine (In %) - (Fine Will be Deducted from your Pre-Pre-Matured Amount)"
                   name="prePreMaturityFine"

@@ -11,14 +11,14 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper
+  Paper,
+  Grid
 } from '@mui/material';
 import ExportableTable from '../../../utils/ExportableTable';
 
@@ -203,7 +203,7 @@ const RankWiseCommission = () => {
           </Typography>
           
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl 
                 fullWidth
                 sx={{
@@ -233,7 +233,7 @@ const RankWiseCommission = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl 
                 fullWidth
                 disabled={!formData.planType}

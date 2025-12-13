@@ -7,7 +7,6 @@ import {
   AccordionDetails,
   TextField,
   Typography,
-  Grid,
   Box,
   Button,
   FormControl,
@@ -15,6 +14,7 @@ import {
   Select,
   MenuItem,
   CircularProgress,
+  Grid
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
@@ -160,7 +160,7 @@ const Wallet = () => {
         >
           <AccordionDetails>
             <Grid container spacing={3} sx={{ mb: 3 }}>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Box
                   sx={{
                     p: 3,
@@ -220,7 +220,7 @@ const Wallet = () => {
                 </Box>
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Box
                   sx={{
                     p: 3,
@@ -242,7 +242,7 @@ const Wallet = () => {
                 </Box>
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Box
                   sx={{
                     p: 3,

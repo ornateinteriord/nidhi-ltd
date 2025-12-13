@@ -148,7 +148,7 @@ const RankName = () => {
           
           <Box component="form" sx={{ mt: 2 }}>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Advisor Designation"
                   name="advisorDesignation"
@@ -177,7 +177,7 @@ const RankName = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Rank"
                   name="rank"
@@ -206,7 +206,7 @@ const RankName = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <FormControl component="fieldset">
                   <FormLabel 
                     component="legend" 

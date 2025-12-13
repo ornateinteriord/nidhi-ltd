@@ -276,7 +276,7 @@ const Branch = () => {
           
           <Box component="form" sx={{ mt: 2 }}>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Branch Name"
                   name="branchName"
@@ -305,7 +305,7 @@ const Branch = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Branch Code"
                   name="branchCode"
@@ -334,7 +334,7 @@ const Branch = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Contact Person Name"
                   name="contactPersonName"
@@ -363,7 +363,7 @@ const Branch = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Mobile"
                   name="mobile"
@@ -392,7 +392,7 @@ const Branch = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Email/User Id"
                   name="email"
@@ -421,7 +421,7 @@ const Branch = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Password"
                   name="password"
@@ -450,7 +450,7 @@ const Branch = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl 
                   fullWidth
                   sx={{
@@ -484,7 +484,7 @@ const Branch = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl 
                   fullWidth
                   sx={{
@@ -518,7 +518,7 @@ const Branch = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField
                   label="Address"
                   name="address"
