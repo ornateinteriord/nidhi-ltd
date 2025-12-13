@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { 
   Card, 
   CardContent, 
-  Grid, 
+  , 
   Typography, 
   Button, 
   Link, 
@@ -648,8 +648,7 @@ const handleRepayment = () => {
       </Box>
 
       {/* Dashboard Cards Grid */}
-      <Grid 
-        container 
+      <Grid2 container 
         spacing={{ xs: 2, sm: 3 }} 
         sx={{ 
           mx: { xs: 1, sm: 2 }, 
@@ -662,24 +661,24 @@ const handleRepayment = () => {
           }
         }}
       >
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : levelBenefitsAmount} title="Level Benefits" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : directBenefitsAmount} title="Direct Benefits" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : totalEarningsAmount} title="Total Earnings" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : totalWithdrawsAmount} title="Total Withdraws" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
           <DashboardCard amount={loading ? 0 : walletBalanceAmount} title="Wallet Balance" />
-        </Grid>
+        </Grid2>
         
         {isLoanApproved &&  (
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
             <DashboardCard
               amount={initialLoanAmount}
               dueAmount={dueAmount}
@@ -689,9 +688,9 @@ const handleRepayment = () => {
               isRepayEnabled={isRepayEnabled}
               alreadyRepaidToday={alreadyRepaidToday}
             />
-          </Grid>
+          </Grid2>
         )}
-      </Grid>
+      </Grid2>
 
       {/* Repayment Dialog */}
       <Dialog

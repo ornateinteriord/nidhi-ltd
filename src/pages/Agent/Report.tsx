@@ -4,7 +4,7 @@ import {
   Card,
   CardContent,
   Typography,
-  Grid,
+  ,
   TextField,
   Button,
   Paper,
@@ -52,32 +52,32 @@ const Report: React.FC = () => {
 
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={3}>
+          <Grid2 container spacing={2}>
+            <Grid2 size={{ xs: 12, md: 3 }}>
               <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
                 <Typography variant="h6">₹ 0.0</Typography>
                 <Typography variant="caption">Opening Balance</Typography>
               </Paper>
-            </Grid>
-            <Grid item xs={12} md={3}>
+            </Grid2>
+            <Grid2 size={{ xs: 12, md: 3 }}>
               <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
                 <Typography variant="h6">₹ 0.0</Typography>
                 <Typography variant="caption">Debit Amount</Typography>
               </Paper>
-            </Grid>
-            <Grid item xs={12} md={3}>
+            </Grid2>
+            <Grid2 size={{ xs: 12, md: 3 }}>
               <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
                 <Typography variant="h6">₹ 0.0</Typography>
                 <Typography variant="caption">Credit Amount</Typography>
               </Paper>
-            </Grid>
-            <Grid item xs={12} md={3}>
+            </Grid2>
+            <Grid2 size={{ xs: 12, md: 3 }}>
               <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
                 <Typography variant="h6">₹ 0.0</Typography>
                 <Typography variant="caption">Closing Balance</Typography>
               </Paper>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 

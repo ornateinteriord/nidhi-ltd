@@ -7,7 +7,7 @@ import {
   AccordionDetails,
   TextField,
   Typography,
-  Grid,
+  ,
   Box,
   Button,
   FormControl,
@@ -15,7 +15,7 @@ import {
   Select,
   MenuItem,
   CircularProgress,
-} from "@mui/material";
+} from '@mui/material';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DataTable from "react-data-table-component";
 import { useMediaQuery } from "@mui/material";
@@ -159,8 +159,8 @@ const Wallet = () => {
           }}
         >
           <AccordionDetails>
-            <Grid container spacing={3} sx={{ mb: 3 }}>
-              <Grid item xs={12} md={4}>
+            <Grid2 container spacing={3} sx={{ mb: 3 }}>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                 <Box
                   sx={{
                     p: 3,
@@ -218,9 +218,9 @@ const Wallet = () => {
                     </Typography>
                   )}
                 </Box>
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={4}>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                 <Box
                   sx={{
                     p: 3,
@@ -240,9 +240,9 @@ const Wallet = () => {
                     {walletData?.totalIncome ? `₹${walletData?.totalIncome}` : "₹0.00"}
                   </Typography>
                 </Box>
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={4}>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                 <Box
                   sx={{
                     p: 3,
@@ -262,8 +262,8 @@ const Wallet = () => {
                     {walletData?.totalWithdrawal ? `₹${walletData?.totalWithdrawal}` : "₹0.00"}
                   </Typography>
                 </Box>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </AccordionDetails>
         </Accordion>
 

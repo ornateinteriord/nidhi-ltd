@@ -3,7 +3,7 @@ import {
   Card,
   CardContent,
   Typography,
-  Grid,
+  ,
   TextField,
   FormControl,
   RadioGroup,
@@ -91,19 +91,19 @@ const Profile: React.FC = () => {
 
       <Card>
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
+          <Grid2 container spacing={3}>
+            <Grid2 size={{ xs: 12, md: 6 }}>
+              <Grid2 container spacing={2}>
+                <Grid2 size={{ xs: 12 }}>
                   <TextField
                     label="Name"
                     fullWidth
                     value={form.name || ''}
                     onChange={(e) => handleChange('name', e.target.value)}
                   />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12}>
+                <Grid2 size={{ xs: 12 }}>
                   <FormControl component="fieldset">
                     <Typography variant="body2" sx={{ mb: 1 }}>Gender</Typography>
                     <RadioGroup
@@ -115,9 +115,9 @@ const Profile: React.FC = () => {
                       <FormControlLabel value="Female" control={<Radio />} label="Female" />
                     </RadioGroup>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Date Of Birth"
                     type="date"
@@ -126,27 +126,27 @@ const Profile: React.FC = () => {
                     value={form.dob || ''}
                     onChange={(e) => handleChange('dob', e.target.value)}
                   />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Email ID"
                     fullWidth
                     value={form.email || ''}
                     onChange={(e) => handleChange('email', e.target.value)}
                   />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Contact No"
                     fullWidth
                     value={form.contact || ''}
                     onChange={(e) => handleChange('contact', e.target.value)}
                   />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12}>
+                <Grid2 size={{ xs: 12 }}>
                   <TextField
                     label="Address"
                     multiline
@@ -155,13 +155,13 @@ const Profile: React.FC = () => {
                     value={form.address || ''}
                     onChange={(e) => handleChange('address', e.target.value)}
                   />
-                </Grid>
-              </Grid>
-            </Grid>
+                </Grid2>
+              </Grid2>
+            </Grid2>
 
-            <Grid item xs={12} md={6}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+            <Grid2 size={{ xs: 12, md: 6 }}>
+              <Grid2 container spacing={2}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel id="designation-label">Designation</InputLabel>
                     <Select
@@ -175,55 +175,55 @@ const Profile: React.FC = () => {
                       <MenuItem value="Agent">Agent</MenuItem>
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Pan No"
                     fullWidth
                     value={form.pan || ''}
                     onChange={(e) => handleChange('pan', e.target.value)}
                   />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Aadharcard No"
                     fullWidth
                     value={form.aadhar || ''}
                     onChange={(e) => handleChange('aadhar', e.target.value)}
                   />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                   <TextField
                     label="Branch Code"
                     fullWidth
                     value={form.branchCode || ''}
                     onChange={(e) => handleChange('branchCode', e.target.value)}
                   />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} md={6}>
+                <Grid2 size={{ xs: 12, md: 6 }}>
                   <TextField label="Introducer" fullWidth value={form.introducer || ''} InputProps={{ readOnly: true }} />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} md={6} className="flex items-center gap-3">
+                <Grid2 item xs={12} md={6} className="flex items-center gap-3">
                   <Box>
                     <Typography variant="body2">Profile Image</Typography>
                     <input type="file" onChange={handleFileChange} />
                   </Box>
                   <Avatar src={form.profileImage || ''} sx={{ width: 56, height: 56 }} />
-                </Grid>
+                </Grid2>
 
-                <Grid item xs={12} className="flex justify-end">
+                <Grid2 size={{ xs: 12 }} className="flex justify-end">
                   <Button variant="contained" color="success" onClick={handleSubmit} disabled={saving}>
                     {saving ? <CircularProgress size={20} color="inherit" /> : 'Update'}
                   </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+                </Grid2>
+              </Grid2>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
     </div>

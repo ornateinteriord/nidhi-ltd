@@ -12,7 +12,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid
+  
 } from '@mui/material';
 import BusinessIcon from '@mui/icons-material/Business';
 import CodeIcon from '@mui/icons-material/Code';
@@ -275,8 +275,8 @@ const Branch = () => {
           </Typography>
           
           <Box component="form" sx={{ mt: 2 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+            <Grid2 container spacing={3}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Branch Name"
                   name="branchName"
@@ -303,9 +303,9 @@ const Branch = () => {
                     ),
                   }}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={6}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Branch Code"
                   name="branchCode"
@@ -332,9 +332,9 @@ const Branch = () => {
                     ),
                   }}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={6}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Contact Person Name"
                   name="contactPersonName"
@@ -361,9 +361,9 @@ const Branch = () => {
                     ),
                   }}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={6}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Mobile"
                   name="mobile"
@@ -390,9 +390,9 @@ const Branch = () => {
                     ),
                   }}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={6}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Email/User Id"
                   name="email"
@@ -419,9 +419,9 @@ const Branch = () => {
                     ),
                   }}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={6}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <TextField
                   label="Password"
                   name="password"
@@ -448,9 +448,9 @@ const Branch = () => {
                     ),
                   }}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={6}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <FormControl 
                   fullWidth
                   sx={{
@@ -482,9 +482,9 @@ const Branch = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={6}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <FormControl 
                   fullWidth
                   sx={{
@@ -516,9 +516,9 @@ const Branch = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12}>
+              <Grid2 size={{ xs: 12 }}>
                 <TextField
                   label="Address"
                   name="address"
@@ -547,8 +547,8 @@ const Branch = () => {
                     ),
                   }}
                 />
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
 
             <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
               <Button

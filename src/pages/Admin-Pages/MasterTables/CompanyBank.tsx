@@ -8,7 +8,7 @@ import {
   Typography,
   Box,
   InputAdornment,
-  Grid
+  
 } from '@mui/material';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
@@ -146,8 +146,8 @@ const CompanyBank = () => {
             🏦 BANK MASTER
           </Typography>
           
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={3}>
+          <Grid2 container spacing={3}>
+            <Grid2 size={{ xs: 12, md: 6, lg: 3 }}>
               <TextField
                 label="Bank Name"
                 name="bankName"
@@ -174,9 +174,9 @@ const CompanyBank = () => {
                   ),
                 }}
               />
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid2 size={{ xs: 12, md: 6, lg: 3 }}>
               <TextField
                 label="Bank Account No."
                 name="bankAccountNo"
@@ -203,9 +203,9 @@ const CompanyBank = () => {
                   ),
                 }}
               />
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid2 size={{ xs: 12, md: 6, lg: 3 }}>
               <TextField
                 label="Bank IFSC"
                 name="bankIFSC"
@@ -232,9 +232,9 @@ const CompanyBank = () => {
                   ),
                 }}
               />
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid2 size={{ xs: 12, md: 6, lg: 3 }}>
               <TextField
                 label="Bank Address"
                 name="bankAddress"
@@ -261,8 +261,8 @@ const CompanyBank = () => {
                   ),
                 }}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
             <Button

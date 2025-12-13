@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid2 from '@mui/material/Grid2';
 import DashboardCard from './DashboardCard';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -146,50 +146,50 @@ const DashboardCards = () => {
   return (
     <Box sx={{ p: 3 }}>
       {/* Stats Cards Row */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
+      <Grid2 container spacing={2} sx={{ mb: 3 }}>
         {/* Total Members Card */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
             icon={<ShieldIcon />}
             title="Total Members"
             status="Active"
             description="48 Members"
           />
-        </Grid>
+        </Grid2>
 
         {/* Total Accounts Card */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
             icon={<DescriptionIcon />}
             title="Total Accounts"
             status="Active"
             description="1 Accounts"
           />
-        </Grid>
+        </Grid2>
 
         {/* Cash Balance Card */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
             icon={<AccountBalanceWalletIcon />}
             title="Cash balance"
             description="₹ 200.0"
           />
-        </Grid>
+        </Grid2>
 
         {/* Bank Balance Card - No Footer */}
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
             icon={<AccountBalanceIcon />}
             title="Bank balance"
             description="₹"
           />
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
       {/* Second Row with Two Cards */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
+      <Grid2 container spacing={2} sx={{ mb: 3 }}>
         {/* Members Card with Table as Footer */}
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <DashboardCard
             icon={<StorageIcon />}
             title="Members"
@@ -206,10 +206,10 @@ const DashboardCards = () => {
               background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
             }}
           />
-        </Grid>
+        </Grid2>
 
         {/* Accounts Card with Timeline as Footer */}
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <DashboardCard
             icon={<DescriptionIcon />}
             title="Accounts"
@@ -224,8 +224,8 @@ const DashboardCards = () => {
               background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
             }}
           />
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 };

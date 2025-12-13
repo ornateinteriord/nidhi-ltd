@@ -11,7 +11,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid
+  
 } from '@mui/material';
 // import DescriptionIcon from '@mui/icons-material/Description';
 import ExportableTable from '../../../utils/ExportableTable';
@@ -144,8 +144,8 @@ const Proof = () => {
             📄 ADD NEW PROOF
           </Typography>
           
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth variant="outlined">
                 <InputLabel>Proof Type</InputLabel>
                 <Select
@@ -168,9 +168,9 @@ const Proof = () => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={12} md={6}>
+            <Grid2 size={{ xs: 12, md: 6 }}>
               <TextField
                 label="Proof Name"
                 name="proofName"
@@ -190,8 +190,8 @@ const Proof = () => {
                   }
                 }}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
             <Button

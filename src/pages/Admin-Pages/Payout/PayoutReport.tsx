@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Typography, Grid, Button, TextField } from '@mui/material';
+import { Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Typography, , Button, TextField } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExportableTable from '../../../utils/ExportableTable';
 import { getPayoutReportColumns } from '../../../utils/DataTableColumnsProvider';
@@ -38,11 +38,11 @@ const PayoutReport = () => {
 
   return (
     <>
-      <Grid className="payout-report-container" sx={{ margin: '2rem', mt: 12 }}>
+      <Grid2 className="payout-report-container" sx={{ margin: '2rem', mt: 12 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           Payout Report
         </Typography>
-      </Grid>
+      </Grid2>
 
       {/* Payout Date Selection */}
       <Card sx={{ margin: '2rem', mt: 2 }}>
@@ -61,8 +61,8 @@ const PayoutReport = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} md={3}>
+              <Grid2 container spacing={2} alignItems="center">
+                <Grid2 size={{ xs: 12, md: 3 }}>
                   <Typography variant="body1" sx={{ mb: 1 }}>
                     Select Payout Date
                   </Typography>
@@ -76,8 +76,8 @@ const PayoutReport = () => {
                       shrink: true,
                     }}
                   />
-                </Grid>
-                <Grid item xs={12} md={9} sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
+                </Grid2>
+                <Grid2 size={{ xs: 12, md: 9 }} sx={{ display: 'flex', gap: 2, alignItems: 'flex-end' }}>
                   <Button
                     variant="contained"
                     onClick={handleGetPayout}
@@ -102,8 +102,8 @@ const PayoutReport = () => {
                   >
                     Cancel
                   </Button>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Grid2>
             </AccordionDetails>
           </Accordion>
         </CardContent>

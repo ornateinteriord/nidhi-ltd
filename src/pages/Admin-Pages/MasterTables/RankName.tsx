@@ -13,7 +13,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Grid
+  
 } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import WorkIcon from '@mui/icons-material/Work';
@@ -147,8 +147,8 @@ const RankName = () => {
           </Typography>
           
           <Box component="form" sx={{ mt: 2 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={4}>
+            <Grid2 container spacing={3}>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Advisor Designation"
                   name="advisorDesignation"
@@ -175,9 +175,9 @@ const RankName = () => {
                     ),
                   }}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={4}>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                 <TextField
                   label="Rank"
                   name="rank"
@@ -204,9 +204,9 @@ const RankName = () => {
                     ),
                   }}
                 />
-              </Grid>
+              </Grid2>
 
-              <Grid item xs={12} md={4}>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                 <FormControl component="fieldset">
                   <FormLabel 
                     component="legend" 
@@ -236,8 +236,8 @@ const RankName = () => {
                     />
                   </RadioGroup>
                 </FormControl>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
 
             <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
               <Button

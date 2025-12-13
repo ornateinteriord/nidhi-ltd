@@ -11,7 +11,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid,
+  ,
   Table,
   TableBody,
   TableCell,
@@ -202,8 +202,8 @@ const RankWiseCommission = () => {
             📊 CLOSING MASTER (COMMISSION CHARGE)
           </Typography>
           
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+          <Grid2 container spacing={3}>
+            <Grid2 size={{ xs: 12, md: 6 }}>
               <FormControl 
                 fullWidth
                 sx={{
@@ -231,9 +231,9 @@ const RankWiseCommission = () => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid2>
 
-            <Grid item xs={12} md={6}>
+            <Grid2 size={{ xs: 12, md: 6 }}>
               <FormControl 
                 fullWidth
                 disabled={!formData.planType}
@@ -262,8 +262,8 @@ const RankWiseCommission = () => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </CardContent>
       </Card>
 
