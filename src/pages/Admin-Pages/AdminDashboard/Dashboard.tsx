@@ -1,10 +1,6 @@
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { cn } from '../../../lib/utils';
 import '../../Dashboard/dashboard.scss';
-import DashboardTable from '../../Dashboard/DashboardTable';
-import DashboardCard from '../../../components/common/DashboardCard';
-import { getAdminDashboardTableColumns } from '../../../utils/DataTableColumnsProvider';
-import PersonIcon from '@mui/icons-material/Person';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -14,21 +10,6 @@ import DashboardCards from './DashboardCards';
 
 const AdminDashboard = () => { 
   const { data: members = [], isLoading, error } = useGetAllMembersDetails();
-
-  // Sort members by most recent registration date
-  const sortedMembers = [...members].sort((a, b) => {
-    return new Date(b.createdAt || b.Date_of_joining).getTime() - 
-           new Date(a.createdAt || a.Date_of_joining).getTime();
-  });
-
-  const totalMembers = members.length;
-  const activeMembers = members.filter((member: any) => 
-  member.status?.toLowerCase() === 'active'
-).length;
-
-const pendingMembers = members.filter((member: any) => 
-  member.status?.toLowerCase() === 'pending'
-).length;
 
   const totalCities = new Set(members.map((member: any) =>  member.location).filter(Boolean)).size;
   const totalDegrees = new Set(members.map((member: any) => member.degree || member.education).filter(Boolean)).size;
@@ -99,62 +80,6 @@ const pendingMembers = members.filter((member: any) =>
             </div>
           </div>
         </div>
-      </div>
-      
-      <Grid 
-        container 
-        spacing={{ xs: 2, sm: 3 }} 
-        sx={{ 
-          mx: { xs: 1, sm: 2 }, 
-          my: 2,
-          pt: 5,
-          pr: 7,
-          width: 'auto',
-          '& .MuiGrid-item': {
-            display: 'flex',
-          }
-        }}
-      >
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard 
-            amount={totalMembers} 
-            title="Total Members" 
-            subTitle={`${totalMembers} members in total`} 
-            IconComponent={PersonIcon} 
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard 
-            amount={activeMembers} 
-            title="Active Members" 
-            subTitle={`${activeMembers} active members`} 
-            IconComponent={PersonIcon} 
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard 
-            amount={pendingMembers} 
-            title="Pending Members" 
-            subTitle={`${pendingMembers} pending activation`} 
-            IconComponent={PersonIcon} 
-          />
-        </Grid>
-      </Grid>
-      
-      <div className='mt-10 p-4 rounded shadow'>    
-        <Card className='bg-gray-300'>
-          <CardContent>
-            <div className="flex justify-between items-center mb-4">
-              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#7e22ce' }}>
-                Member Statistics ({sortedMembers.length} members)
-              </Typography>
-            </div>
-            <DashboardTable 
-              data={sortedMembers} 
-              columns={getAdminDashboardTableColumns()} 
-            />
-          </CardContent>
-        </Card>
       </div>
       <DashboardCards />
     </>

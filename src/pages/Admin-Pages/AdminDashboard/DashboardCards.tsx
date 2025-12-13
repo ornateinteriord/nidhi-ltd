@@ -5,7 +5,9 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import StorageIcon from '@mui/icons-material/Storage';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import DashboardTable from '../../../pages/Dashboard/DashboardTable';
+import TimelineComponent from '../../../utils/TimeLineComponent';
 
 const DashboardCards = () => {
   // Sample members data
@@ -65,6 +67,15 @@ const DashboardCards = () => {
       emailId: 'RAMACHANDRAGUPTHA123@GMAIL.COM',
       mobileNo: '6363551105',
       status: 'active',
+    },
+  ];
+
+  // Sample accounts timeline data
+  const accountsTimelineData = [
+    {
+      title: 'Account',
+      highlight: '105600002',
+      date: 'Created On 02-02-2021',
     },
   ];
 
@@ -137,7 +148,7 @@ const DashboardCards = () => {
       {/* Stats Cards Row */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {/* Total Members Card */}
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
             icon={<ShieldIcon />}
             title="Total Members"
@@ -147,7 +158,7 @@ const DashboardCards = () => {
         </Grid>
 
         {/* Total Accounts Card */}
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
             icon={<DescriptionIcon />}
             title="Total Accounts"
@@ -157,32 +168,64 @@ const DashboardCards = () => {
         </Grid>
 
         {/* Cash Balance Card */}
-        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
             icon={<AccountBalanceWalletIcon />}
             title="Cash balance"
             description="₹ 200.0"
           />
         </Grid>
+
+        {/* Bank Balance Card - No Footer */}
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <DashboardCard
+            icon={<AccountBalanceIcon />}
+            title="Bank balance"
+            description="₹"
+          />
+        </Grid>
       </Grid>
 
-      {/* Members Card with Table as Footer */}
-      <DashboardCard
-        icon={<StorageIcon />}
-        title="Members"
-        status="Summary of recent members"
-        showActionButton={true}
-        actionButtonLabel="More Information"
-        showFooterContent={true}
-        footerContent={
-          <Box sx={{ backgroundColor: 'white', borderRadius: 2, mt: 2, overflow: 'hidden' }}>
-            <DashboardTable data={membersData} columns={membersColumns} />
-          </Box>
-        }
-        sx={{
-          background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
-        }}
-      />
+      {/* Second Row with Two Cards */}
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        {/* Members Card with Table as Footer */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <DashboardCard
+            icon={<StorageIcon />}
+            title="Members"
+            status="Summary of recent members"
+            showActionButton={true}
+            actionButtonLabel="More Information"
+            showFooterContent={true}
+            footerContent={
+              <Box sx={{ backgroundColor: 'white', borderRadius: 2, mt: 2, overflow: 'hidden' }}>
+                <DashboardTable data={membersData} columns={membersColumns} />
+              </Box>
+            }
+            sx={{
+              background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
+            }}
+          />
+        </Grid>
+
+        {/* Accounts Card with Timeline as Footer */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <DashboardCard
+            icon={<DescriptionIcon />}
+            title="Accounts"
+            status="Latest created accounts"
+            showFooterContent={true}
+            footerContent={
+              <Box sx={{ backgroundColor: 'white', borderRadius: 2, mt: 2, p: 2 }}>
+                <TimelineComponent data={accountsTimelineData} />
+              </Box>
+            }
+            sx={{
+              background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
+            }}
+          />
+        </Grid>
+      </Grid>
     </Box>
   );
 };
