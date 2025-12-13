@@ -42,7 +42,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       onClose();
     }
   };
-  const menuItems = role === "ADMIN" ? AdminSideBarMenuItems  : role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ? AgentSideBarMenuItems : AgentSideBarMenuItems;
+  const menuItems = role === "ADMIN" ? AdminSideBarMenuItems  : role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ? AgentSideBarMenuItems : UserSideBarMenuItems;
   const userId = TokenService.getUserId()
   const memberMutatation = useGetMemberDetails(userId!)
   const {data : fethedUser , isLoading , isError , error} = memberMutatation
