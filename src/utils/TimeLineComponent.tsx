@@ -32,7 +32,7 @@ const TimelineComponent: React.FC<TimelineComponentProps> = ({ data }) => {
       }}
     >
       {data.map((item, index) => (
-        <TimelineItem key={index}>
+        <TimelineItem key={`${item.title}-${item.date}${item.highlight ? '-' + item.highlight : ''}`}>
           <TimelineSeparator>
             <TimelineDot
               sx={{
