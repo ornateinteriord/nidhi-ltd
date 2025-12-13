@@ -18,6 +18,15 @@ const AdminTeam = lazy(() => import("./pages/Admin-Pages/Team"));
 const AdminPayoutReport = lazy(() => import("./pages/Admin-Pages/Payout"));
 const AdminPlanRecoveryReport = lazy(() => import("./pages/Admin-Pages/PlanRecovery"));
 const AdminLoanRecoveryReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery"));
+const AssignMenuBranch = lazy(() => import("./pages/Admin-Pages/AssignMenu/AssignMenuBranch"));
+const AdminAgentDashboard = lazy(() => import("./pages/Admin-Pages/Agent"));
+const AdminAgentList = lazy(() => import("./pages/Admin-Pages/Agent/AgentList"));
+const AgentDashboard = lazy(() => import("./pages/Agent/AgentDashboard"));
+// const AgentList = lazy(() => import("./pages/Agent/AgentList"));
+const AgentProfile = lazy(() => import("./pages/Agent/Profile"));
+const AgentCollections = lazy(() => import("./pages/Agent/Collections"));
+const AgentAddNew = lazy(() => import("./pages/Agent/AddNew"));
+const AgentReport = lazy(() => import("./pages/Agent/Report"));
 // const AdminCollectedLoanReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery").then(module => ({ default: module.CollectedLoanReport })));
 const SelfLoan = lazy(() => import("./pages/Loans/SelfLoan"));
 const AdvisedLoan = lazy(() => import("./pages/Loans/AdvisedLoan"));
@@ -227,11 +236,22 @@ const RoutesProvider = ({
               <Route path="/recover-password" element={<RecoverPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
+            {/* agent routes */}
+            {/* <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}> */}
+              <Route path="/agent/dashboard" element={<AgentDashboard />} />
+              {/* <Route path="/agent/list" element={<AgentList />} /> */}
+              <Route path="/agent/profile" element={<AgentProfile />} />
+              <Route path="/agent/collections" element={<AgentCollections />} />
+              <Route path="/agent/add-new" element={<AgentAddNew />} />
+              <Route path="/agent/report" element={<AgentReport />} />
+            {/* </Route> */}
             {/* admin routes */}
 
           <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
               {/* Dashboard */}
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/agent/dashboard" element={<AdminAgentDashboard />} />
+              <Route path="/admin/agent/list" element={<AdminAgentList />} />
               
               {/* Master Routes */}
               <Route path="/master/view_mainconfig" element={<AdminSettings />} />
@@ -267,6 +287,7 @@ const RoutesProvider = ({
               {/* Loan Recovery */}
               <Route path="/admin/loan/recovery" element={<AdminLoanRecoveryReport />} />
               <Route path="/admin/loan/recovery-report" element={<AdminLoanRecoveryReport />} />
+              <Route path="/assign-menu/branch" element={<AssignMenuBranch />} />
             </Route>
             {/* 
               <Route path="/admin/update-password" element={<UpdatePassword />} />

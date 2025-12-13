@@ -2,7 +2,7 @@ import './sidebar.scss';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserSideBarMenuItems, AdminSideBarMenuItems, AdviserSideBarMenuItems } from './SidebarUtils'
+import { UserSideBarMenuItems, AdminSideBarMenuItems, AdviserSideBarMenuItems, AgentSideBarMenuItems } from './SidebarUtils'
 import { Avatar, Toolbar, Typography } from '@mui/material';
 import { SideBarMenuItemType } from '../../store/store';
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons';
@@ -42,7 +42,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       onClose();
     }
   };
-  const menuItems = role === "ADMIN" ?AdminSideBarMenuItems   : role === "ADVISER" ?AdviserSideBarMenuItems  : UserSideBarMenuItems;
+  const menuItems = role === "ADMIN" ?AgentSideBarMenuItems  : role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ? AdminSideBarMenuItems : UserSideBarMenuItems;
   const userId = TokenService.getUserId()
   const memberMutatation = useGetMemberDetails(userId!)
   const {data : fethedUser , isLoading , isError , error} = memberMutatation

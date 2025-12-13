@@ -240,6 +240,7 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Advisor's Self & Team Bus.", path: "/advisor/self-team-business", icon: <BusinessCenterIcon /> },
     ],
   },
+  
   {
     name: "Fixed Deposit A/C",
     icon: <AccountBalanceWalletIcon />,
@@ -535,5 +536,44 @@ export const AdviserSideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Loan Recovery", path: "/admin/loan/recovery", icon: <MonetizationOnIcon /> },
       { name: "Loan Recovery Report", path: "/admin/loan/recovery-report", icon: <ShowChartIcon /> },
     ],
+  },
+];
+
+export const AgentSideBarMenuItems: SideBarMenuItemType[] = [
+  {
+    name: "Dashboard",
+    icon: <DashboardIcon />,
+    path: "/agent/dashboard",
+    isExpandable: false,
+  },
+  {
+    name: "Profile",
+    icon: <AccountCircleIcon />,
+    path: "/agent/profile",
+    isExpandable: false,
+  },
+  {
+    name: "Collections",
+    icon: <ListAltIcon />,
+    path: "/agent/collections",
+    isExpandable: false,
+  },
+  {
+    name: "Add New",
+    icon: <AddCircleIcon />,
+    path: "/agent/add-new",
+    isExpandable: false,
+  },
+  {
+    name: "Report",
+    icon: <AssessmentIcon />,
+    path: "/agent/report",
+    isExpandable: false,
+  },
+  {
+    name: "Logout",
+    icon: <InfoIcon />,
+    path: "/",
+    isExpandable: false,
   },
 ];
