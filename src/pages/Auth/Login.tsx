@@ -56,7 +56,7 @@ const Login = () => {
       // Set token and role in localStorage
       TokenService.setToken("static-token-" + validCredential.role);
       TokenService.setRole(validCredential.role);
-      TokenService.setUserId("67a5b63601cfc2962cec9622");
+      TokenService.setUserId("static-user-id");
       
       toast.success(`Logged in as ${validCredential.role}`);
       
