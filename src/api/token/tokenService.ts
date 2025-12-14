@@ -25,14 +25,7 @@ class TokenService {
   }
 
   static getRole(): string | null {
-    const decodedRole = this.decodeToken()?.role || null;
-    if (decodedRole) return decodedRole;
-    // Fallback to localStorage for static testing
-    return localStorage.getItem("role");
-  }
-
-  static setRole(role: string): void {
-    localStorage.setItem("role", role);
+    return this.decodeToken()?.role || null;
   }
 
   static getMemberId() : string | null {
@@ -40,14 +33,7 @@ class TokenService {
   }
 
   static getUserId(): string | null {
-    const decodedId = this.decodeToken()?.id || null;
-    if (decodedId) return decodedId;
-    // Fallback to localStorage for static testing
-    return localStorage.getItem("userId");
-  }
-
-  static setUserId(userId: string): void {
-    localStorage.setItem("userId", userId);
+    return this.decodeToken()?.id || null;
   }
 
   static removeToken(): void {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -13,23 +13,13 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import { LoadingComponent } from "../../App";
-import { toast } from "react-toastify";
-import TokenService from "../../api/token/tokenService";
-// import { useLoginMutation } from "../../api/Auth";
+import { useLoginMutation } from "../../api/Auth";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-  const [isPending, setIsPending] = useState(false);
-  const navigate = useNavigate();
-
-  // Static credentials
-  const VALID_CREDENTIALS = [
-    { username: "admin", password: "admin@123", role: "ADMIN" },
-    { username: "A20001", password: "123", role: "AGENT" },
-  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,40 +29,12 @@ const Login = () => {
     }));
   };
 
-  // const loginMutation = useLoginMutation()
-  // const { mutate, isPending} = loginMutation
+  const loginMutation = useLoginMutation()
+  const { mutate, isPending} = loginMutation
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Validate credentials against static credentials
-    setIsPending(true);
-    
-    const validCredential = VALID_CREDENTIALS.find(
-      (cred) => cred.username === formData.username && cred.password === formData.password
-    );
-
-    if (validCredential) {
-      // Set token and role in localStorage
-      TokenService.setToken("static-token-" + validCredential.role);
-      TokenService.setRole(validCredential.role);
-      TokenService.setUserId("67a5b63601cfc2962cec9622");
-      
-      toast.success(`Logged in as ${validCredential.role}`);
-      
-      // Navigate to appropriate dashboard
-      if (validCredential.role === "ADMIN") {
-        navigate("/admin/dashboard");
-      } else if (validCredential.role === "AGENT") {
-        navigate("/agent/dashboard");
-      } else {
-        navigate("/user/dashboard");
-      }
-    } else {
-      toast.error("Invalid username or password");
-    }
-    
-    setIsPending(false);
+    mutate(formData);
   };
 
   return (
