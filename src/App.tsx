@@ -27,6 +27,10 @@ const AgentProfile = lazy(() => import("./pages/Agent/Profile"));
 const AgentCollections = lazy(() => import("./pages/Agent/Collections"));
 const AgentAddNew = lazy(() => import("./pages/Agent/AddNew"));
 const AgentReport = lazy(() => import("./pages/Agent/Report"));
+const BankingMembers = lazy(() => import("./pages/Banking/Members"));
+const BankingAgents = lazy(() => import("./pages/Banking/Agents"));
+// Agent Assignment Component
+const AgentAssignment = lazy(() => import("./pages/Admin-Pages/AgentAssignment/AgentAssignment"));
 // const AdminCollectedLoanReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery").then(module => ({ default: module.CollectedLoanReport })));
 const SelfLoan = lazy(() => import("./pages/Loans/SelfLoan"));
 const AdvisedLoan = lazy(() => import("./pages/Loans/AdvisedLoan"));
@@ -252,6 +256,9 @@ const RoutesProvider = ({
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/agent/dashboard" element={<AdminAgentDashboard />} />
               <Route path="/admin/agent/list" element={<AdminAgentList />} />
+              <Route path="/banking/members" element={<BankingMembers />} />
+              <Route path="/banking/agents" element={<BankingAgents />} />
+              <Route path="/agentassignemt/agent-assignment" element={<AgentAssignment />} />
               
               {/* Master Routes */}
               <Route path="/master/view_mainconfig" element={<AdminSettings />} />

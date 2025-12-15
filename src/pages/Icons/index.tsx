@@ -90,6 +90,11 @@ import ListAlt from "@mui/icons-material/ListAlt";
 import AddCircle from "@mui/icons-material/AddCircle";
 import Assessment from "@mui/icons-material/Assessment";
 import Savings from "@mui/icons-material/Savings";
+// Add missing MUI icons for new menu items
+import Refresh from "@mui/icons-material/Refresh";
+import BarChart from "@mui/icons-material/BarChart";
+import FileCopy from "@mui/icons-material/FileCopy";
+import Undo from "@mui/icons-material/Undo";
 
 export const MuiIcons = {
   Dashboard,
@@ -137,4 +142,9 @@ export const MuiIcons = {
   AddCircle,
   Assessment,
   Savings,
+  Refresh,
+  PiggyBank: AccountBalance,
+  BarChart,
+  FileCopy,
+  Undo,
 };
