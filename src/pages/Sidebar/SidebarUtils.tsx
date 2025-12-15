@@ -101,11 +101,11 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <LucideIcons.Landmark />,
     isExpandable: true,
     subItems: [
-      { name: "Receipts", path: "/receipts", icon: <MuiIcons.Receipt /> },
-      { name: "Payments", path: "/payments", icon: <MuiIcons.Payments /> },
-      { name: "Cash Transaction", path: "/cash-transaction", icon: <LucideIcons.IndianRupee /> },
-      { name: "Bank Transaction", path:"/bank-transaction", icon: <MuiIcons.AccountBalance /> },
-      { name: "Journal Entries", path: "/journal-entries", icon: <MuiIcons.Book /> },
+      { name: "Receipts", path: "/admin/banking/receipts", icon: <MuiIcons.Receipt /> },
+      { name: "Payments", path: "/admin/banking/payments", icon: <MuiIcons.Payments /> },
+      { name: "Cash Transaction", path: "/admin/banking/cash-transaction", icon: <LucideIcons.IndianRupee /> },
+      { name: "Bank Transaction", path: "/admin/banking/bank-transaction", icon: <MuiIcons.AccountBalance /> },
+      { name: "Journal Entries", path: "/admin/banking/journal-entries", icon: <MuiIcons.Book /> },
     ],
   },
   {
@@ -113,9 +113,9 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <LucideIcons.Wallet />,
     isExpandable: true,
     subItems: [
-      { name: "SB Opening", path: "/banking/sb-opening", icon: <LucideIcons.PlusCircle /> },
-      { name: "Search SB A/C", path: "/banking/search-sb-acc", icon: <LucideIcons.Search /> },
-      { name: "Close SB", path: "/banking/close-sb", icon: <LucideIcons.XCircle /> },
+      { name: "SB Opening", path: "/SBaccount/sb-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "Search SB A/C", path: "/SBaccount/search-sb-acc", icon: <LucideIcons.Search /> },
+      { name: "Close SB", path: "/SBaccount/close-sb", icon: <LucideIcons.XCircle /> },
     ],
   },
   {
@@ -123,9 +123,9 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <LucideIcons.CreditCard />,
     isExpandable: true,
     subItems: [
-      { name: "CA Opening", path: "/banking/ca-opening", icon: <LucideIcons.PlusCircle /> },
-      { name: "Search CA A/C", path: "/banking/search-ca-acc", icon: <LucideIcons.Search /> },
-      { name: "Close CA", path: "/banking/close-ca", icon: <LucideIcons.XCircle /> },
+      { name: "CA Opening", path: "/CAaccount/ca-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "Search CA A/C", path: "/CAaccount/search-ca-acc", icon: <LucideIcons.Search /> },
+      { name: "Close CA", path: "/CAaccount/close-ca", icon: <LucideIcons.XCircle /> },
     ],
   },
   {

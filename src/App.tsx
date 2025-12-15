@@ -27,8 +27,19 @@ const AgentProfile = lazy(() => import("./pages/Agent/Profile"));
 const AgentCollections = lazy(() => import("./pages/Agent/Collections"));
 const AgentAddNew = lazy(() => import("./pages/Agent/AddNew"));
 const AgentReport = lazy(() => import("./pages/Agent/Report"));
-const BankingMembers = lazy(() => import("./pages/Banking/Members"));
-const BankingAgents = lazy(() => import("./pages/Banking/Agents"));
+const BankingMembers = lazy(() => import("./pages/Administration/Members"));
+const BankingAgents = lazy(() => import("./pages/Administration/Agents"));
+const AdminReceipts = lazy(() => import("./pages/Admin-Pages/Banking/Receipts"));
+const AdminPayments = lazy(() => import("./pages/Admin-Pages/Banking/Payments"));
+const AdminCashTransaction = lazy(() => import("./pages/Admin-Pages/Banking/CashTransaction"));
+const AdminBankTransaction = lazy(() => import("./pages/Admin-Pages/Banking/BankTransaction"));
+const AdminJournalEntries = lazy(() => import("./pages/Admin-Pages/Banking/JournalEntries"));
+const SBOpening = lazy(() => import("./pages/Admin-Pages/AccountForm/SBOpening"));
+const CAOpening = lazy(() => import("./pages/Admin-Pages/AccountForm/CAOpening"));
+const SBDetails = lazy(() => import("./pages/Admin-Pages/AccountDetails/SBDetails"));
+const CADetails = lazy(() => import("./pages/Admin-Pages/AccountDetails/CADetails"));
+const CloseSBTable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseSBTable"));
+const CloseCATable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseCATable"));
 // Agent Assignment Component
 const AgentAssignment = lazy(() => import("./pages/Admin-Pages/AgentAssignment/AgentAssignment"));
 // const AdminCollectedLoanReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery").then(module => ({ default: module.CollectedLoanReport })));
@@ -295,6 +306,19 @@ const RoutesProvider = ({
               <Route path="/admin/loan/recovery" element={<AdminLoanRecoveryReport />} />
               <Route path="/admin/loan/recovery-report" element={<AdminLoanRecoveryReport />} />
               <Route path="/assign-menu/branch" element={<AssignMenuBranch />} />
+
+              {/* Banking - Receipts / Payments / Transactions */}
+              <Route path="/admin/banking/receipts" element={<AdminReceipts />} />
+              <Route path="/admin/banking/payments" element={<AdminPayments />} />
+              <Route path="/admin/banking/cash-transaction" element={<AdminCashTransaction />} />
+              <Route path="/admin/banking/bank-transaction" element={<AdminBankTransaction />} />
+              <Route path="/admin/banking/journal-entries" element={<AdminJournalEntries />} />
+              <Route path="/SBaccount/sb-opening" element={<SBOpening />} />
+              <Route path="/CAaccount/ca-opening" element={<CAOpening />} />
+               <Route path="/SBaccount/search-sb-acc" element={<SBDetails />} />
+               <Route path="/CAaccount/search-ca-acc" element={<CADetails />} />
+               <Route path="/SBaccount/close-sb" element={<CloseSBTable />} />
+               <Route path="/CAaccount/close-ca" element={<CloseCATable />} />
             </Route>
             {/* 
               <Route path="/admin/update-password" element={<UpdatePassword />} />
