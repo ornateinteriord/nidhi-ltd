@@ -79,12 +79,14 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Agents", path: "/banking/agents", icon: <MuiIcons.Person /> },
     ],
   },
-  {
+
+   {
     name: "Agent Assignment",
     icon: <LucideIcons.ClipboardCheck />,
-    path: "/banking/agent-assignment",
+    path: "/agentassignemt/agent-assignment",
     isExpandable: false,
   },
+  
   {
     name: "Shares",
     icon: <LucideIcons.TrendingUp />,
@@ -99,11 +101,11 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <LucideIcons.Landmark />,
     isExpandable: true,
     subItems: [
-      { name: "Receipts", path: "/banking/receipts", icon: <MuiIcons.Receipt /> },
-      { name: "Payments", path: "/banking/payments", icon: <MuiIcons.Payments /> },
-      { name: "Cash Transaction", path: "/banking/cash-transaction", icon: <LucideIcons.IndianRupee /> },
-      { name: "Bank Transaction", path: "/banking/bank-transaction", icon: <MuiIcons.AccountBalance /> },
-      { name: "Journal Entries", path: "/banking/journal-entries", icon: <MuiIcons.Book /> },
+      { name: "Receipts", path: "/receipts", icon: <MuiIcons.Receipt /> },
+      { name: "Payments", path: "/payments", icon: <MuiIcons.Payments /> },
+      { name: "Cash Transaction", path: "/cash-transaction", icon: <LucideIcons.IndianRupee /> },
+      { name: "Bank Transaction", path:"/bank-transaction", icon: <MuiIcons.AccountBalance /> },
+      { name: "Journal Entries", path: "/journal-entries", icon: <MuiIcons.Book /> },
     ],
   },
   {
@@ -127,6 +129,54 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     ],
   },
   {
+    name: "Recurring Deposit",
+    icon: <LucideIcons.RefreshCcw />,
+    isExpandable: true,
+    subItems: [
+      { name: "RD Opening", path: "/banking/rd-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "ViewAll / Search", path: "/banking/rd-viewall", icon: <LucideIcons.Search /> },
+      { name: "RD Prematurity", path: "/banking/rd-prematurity", icon: <LucideIcons.Undo2 /> },
+      { name: "Pay Maturity", path: "/banking/rd-pay-maturity", icon: <MuiIcons.Payments /> },
+      { name: "RD Calculator", path: "/banking/rd-calculator", icon: <LucideIcons.Calculator /> },
+    ],
+  },
+  {
+    name: "Fixed Deposit",
+    icon: <MuiIcons.Lock />,
+    isExpandable: true,
+    subItems: [
+      { name: "FD Opening", path: "/banking/fd-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "ViewAll / Search", path: "/banking/fd-viewall", icon: <LucideIcons.Search /> },
+      { name: "FD Prematurity", path: "/banking/fd-prematurity", icon: <LucideIcons.Undo2 /> },
+      { name: "Pay Maturity", path: "/banking/fd-pay-maturity", icon: <MuiIcons.Payments /> },
+      { name: "FD Calculator", path: "/banking/fd-calculator", icon: <LucideIcons.Calculator /> },
+    ],
+  },
+  {
+    name: "PIGMY",
+    icon: <MuiIcons.PiggyBank />,
+    isExpandable: true,
+    subItems: [
+      { name: "Account Opening", path: "/banking/pigmy-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "ViewAll / Search", path: "/banking/pigmy-viewall", icon: <LucideIcons.Search /> },
+      { name: "Pre Maturity", path: "/banking/pigmy-prematurity", icon: <LucideIcons.Undo2 /> },
+      { name: "Pay Maturity", path: "/banking/pigmy-pay-maturity", icon: <MuiIcons.Payments /> },
+      { name: "Calculator", path: "/banking/pigmy-calculator", icon: <LucideIcons.Calculator /> },
+    ],
+  },
+  {
+    name: "MIS",
+    icon: <MuiIcons.BarChart />,
+    isExpandable: true,
+    subItems: [
+      { name: "MIS Opening", path: "/banking/mis-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "ViewAll / Search", path: "/banking/mis-viewall", icon: <LucideIcons.Search /> },
+      { name: "Pre Maturity", path: "/banking/mis-prematurity", icon: <LucideIcons.Undo2 /> },
+      { name: "Pay Maturity", path: "/banking/mis-pay-maturity", icon: <MuiIcons.Payments /> },
+      { name: "Calculator", path: "/banking/mis-calculator", icon: <LucideIcons.Calculator /> },
+    ],
+  },
+  {
     name: "Loan",
     icon: <LucideIcons.HandCoins />,
     isExpandable: true,
@@ -136,6 +186,18 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Disbursement", path: "/banking/loan-disbursement", icon: <MuiIcons.Payments /> },
       { name: "Receive Payments", path: "/banking/loan-recieve-payments", icon: <MuiIcons.Receipt /> },
       { name: "Close", path: "/banking/loan-close", icon: <LucideIcons.XCircle /> },
+    ],
+  },
+  {
+    name: "Overdraft",
+    icon: <MuiIcons.FileCopy />,
+    isExpandable: true,
+    subItems: [
+      { name: "Opening", path: "/banking/od-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "ViewAll / Search", path: "/banking/od-viewall", icon: <LucideIcons.Search /> },
+      { name: "Disbursement", path: "/banking/od-disbursement", icon: <MuiIcons.Payments /> },
+      { name: "Receive Payments", path: "/banking/od-recieve-payments", icon: <MuiIcons.Receipt /> },
+      { name: "Close", path: "/banking/od-close", icon: <LucideIcons.XCircle /> },
     ],
   },
 ];
