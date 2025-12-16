@@ -190,10 +190,10 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
               minWidth: 200,
               '& .MuiOutlinedInput-root': {
                 '&:hover fieldset': {
-                  borderColor: '#7e22ce',
+                  borderColor: '#042f2e ',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#7e22ce',
+                  borderColor: '#042f2e ',
                 }
               }
             }}
@@ -217,7 +217,7 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
         paginationRowsPerPageOptions={paginationRowsPerPageOptions}
         progressPending={isLoading}
         progressComponent={
-          <CircularProgress size="4rem" sx={{ color: "#7e22ce" }} />
+          <CircularProgress size="4rem" sx={{ color: "#042f2e " }} />
         }
         highlightOnHover
         pointerOnHover

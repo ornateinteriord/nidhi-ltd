@@ -34,12 +34,30 @@ const AdminPayments = lazy(() => import("./pages/Admin-Pages/Banking/Payments"))
 const AdminCashTransaction = lazy(() => import("./pages/Admin-Pages/Banking/CashTransaction"));
 const AdminBankTransaction = lazy(() => import("./pages/Admin-Pages/Banking/BankTransaction"));
 const AdminJournalEntries = lazy(() => import("./pages/Admin-Pages/Banking/JournalEntries"));
+
+// Account Form Components
 const SBOpening = lazy(() => import("./pages/Admin-Pages/AccountForm/SBOpening"));
 const CAOpening = lazy(() => import("./pages/Admin-Pages/AccountForm/CAOpening"));
 const SBDetails = lazy(() => import("./pages/Admin-Pages/AccountDetails/SBDetails"));
 const CADetails = lazy(() => import("./pages/Admin-Pages/AccountDetails/CADetails"));
 const CloseSBTable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseSBTable"));
 const CloseCATable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseCATable"));
+const CloseLoanTable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseLoanTable"));
+const CloseODTable = lazy(() => import("./pages/Admin-Pages/AccountClose/CloseODTable"));
+
+// Banking view-all pages using reusable table
+const RDViewAll = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDViewAll"));
+const FDViewAll = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDViewAll"));
+const PigmyViewAll = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyViewAll"));
+const MISViewAll = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISViewAll"));
+
+const RDOpening = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDOpening"));
+const FDOpening = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDOpening"));
+const PigmyOpening = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyOpening"));
+const MISOpening = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISOpening"));
+const LoanViewAll = lazy(() => import("./pages/Admin-Pages/Loan/LoanViewAll"));
+const ODViewAll = lazy(() => import("./pages/Admin-Pages/Overdraft/ODViewAll"));
+
 // Agent Assignment Component
 const AgentAssignment = lazy(() => import("./pages/Admin-Pages/AgentAssignment/AgentAssignment"));
 // const AdminCollectedLoanReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery").then(module => ({ default: module.CollectedLoanReport })));
@@ -71,8 +89,8 @@ import AdvisorFee from "./pages/Admin-Pages/MasterTables/AdvisorFee";
 // const Home = lazy(() => import("./pages/Home/Home"));
 const Login = lazy(() => import("./pages/Auth/Login"));
 const Register = lazy(() => import("./pages/Auth/Register"));
-const RecoverPassword = lazy(() => import("./pages/Auth/RecoverPassword"))
-const ResetPassword = lazy(() => import("./pages/Auth/ResetPassword"))
+const RecoverPassword = lazy(() => import("./pages/Auth/RecoverPassword"));
+const ResetPassword = lazy(() => import("./pages/Auth/ResetPassword"));
 const Navbar = lazy(() => import("./pages/Navbar/Navbar"));
 const Sidebar = lazy(() => import("./pages/Sidebar/Sidebar"));
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
@@ -319,6 +337,22 @@ const RoutesProvider = ({
                <Route path="/CAaccount/search-ca-acc" element={<CADetails />} />
                <Route path="/SBaccount/close-sb" element={<CloseSBTable />} />
                <Route path="/CAaccount/close-ca" element={<CloseCATable />} />
+               <Route path="/loan-close" element={<CloseLoanTable />} />
+               <Route path="/od-close" element={<CloseODTable />} />
+
+               {/* Banking - Reusable view-all pages */}
+               <Route path="/banking/rd-viewall" element={<RDViewAll />} />
+               <Route path="/banking/fd-viewall" element={<FDViewAll />} />
+               <Route path="/banking/pigmy-viewall" element={<PigmyViewAll />} />
+               <Route path="/banking/mis-viewall" element={<MISViewAll />} />
+               <Route path="/loan-viewall" element={<LoanViewAll />} />
+               <Route path="/od-viewall" element={<ODViewAll />} />
+
+               {/* Opening pages for accounts */}
+               <Route path="/banking/rd-opening" element={<RDOpening />} />
+               <Route path="/banking/fd-opening" element={<FDOpening />} />
+               <Route path="/banking/pigmy-opening" element={<PigmyOpening />} />
+               <Route path="/banking/mis-opening" element={<MISOpening />} />
             </Route>
             {/* 
               <Route path="/admin/update-password" element={<UpdatePassword />} />

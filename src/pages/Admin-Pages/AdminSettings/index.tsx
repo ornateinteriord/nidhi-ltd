@@ -63,7 +63,7 @@ const AdminSettings: React.FC = () => {
         <Typography 
           variant="h6" 
           sx={{ 
-            color: '#04112f', 
+            color: '#042f2e ',
             mb: 3, 
             fontWeight: 'bold',
             display: 'flex',
@@ -88,17 +88,17 @@ const AdminSettings: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonIcon sx={{ color: '#04112f' }} />
+                      <PersonIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     }
                   }
                 }}
@@ -117,17 +117,17 @@ const AdminSettings: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <DescriptionIcon sx={{ color: '#04112f' }} />
+                      <DescriptionIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     }
                   }
                 }}
@@ -146,17 +146,17 @@ const AdminSettings: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <EmailIcon sx={{ color: '#04112f' }} />
+                      <EmailIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     }
                   }
                 }}
@@ -175,17 +175,17 @@ const AdminSettings: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <AccountCircleIcon sx={{ color: '#04112f' }} />
+                      <AccountCircleIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     }
                   }
                 }}
@@ -205,17 +205,17 @@ const AdminSettings: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LockIcon sx={{ color: '#04112f' }} />
+                      <LockIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     }
                   }
                 }}
@@ -234,17 +234,17 @@ const AdminSettings: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PhoneIcon sx={{ color: '#04112f' }} />
+                      <PhoneIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     }
                   }
                 }}
@@ -263,17 +263,17 @@ const AdminSettings: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <CreditCardIcon sx={{ color: '#04112f' }} />
+                      <CreditCardIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     }
                   }
                 }}
@@ -294,17 +294,17 @@ const AdminSettings: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <HomeIcon sx={{ color: '#04112f' }} />
+                      <HomeIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#04112f',
+                      borderColor: '#042f2e '
                     }
                   }
                 }}

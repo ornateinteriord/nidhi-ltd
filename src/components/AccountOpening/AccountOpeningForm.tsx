@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { toast } from 'react-toastify';
 
-export type AccountType = 'SB' | 'CA' | string;
+export type AccountType = 'SB' | 'CA' | 'RD' | 'FD' | 'PIGMY' | 'MIS' | string;
 
 interface Props {
   defaultAccountType?: AccountType;
@@ -28,10 +28,13 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
   const [form, setForm] = useState<any>({
     accountType: defaultAccountType,
     accountOperation: 'Single',
+    openingDate: new Date().toISOString().split('T')[0], // Today's date by default
     interestSlab: '',
     interestRate: '',
     duration: '',
     amount: '',
+    maturityDate: '',
+    maturityValue: '',
     introducer: '',
     introducerName: '',
     agent: '',
@@ -65,7 +68,7 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
     }
   };
 
-  const showInterestFields = form.accountType === 'SB';
+  const showInterestFields = ['SB', 'RD', 'FD', 'PIGMY', 'MIS'].includes(form.accountType);
 
   return (
     <Box sx={{ mt: 10, px: 3 }}>
@@ -77,7 +80,14 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
               <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: '600' }}>Member Informations</Typography>
               <Grid container spacing={2}>
                 <Grid component="div" size={{ xs: 12, md: 8 }}>
-                  <TextField placeholder="Member ID" size='small' fullWidth value={memberId} onChange={(e) => setMemberId(e.target.value)} />
+                  <TextField 
+                    placeholder="Member ID" 
+                    size='small' 
+                    fullWidth 
+                    value={memberId} 
+                    onChange={(e) => setMemberId(e.target.value)} 
+                    label="Member ID"
+                  />
                 </Grid>
                 <Grid component="div" size={{ xs: 12, md: 4 }}>
                   <Button variant="contained" size='medium' fullWidth onClick={handleGetInfo}>Get Info</Button>
@@ -96,9 +106,18 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
                 <Grid component="div" size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel id="account-type-label">Account Type</InputLabel>
-                    <Select labelId="account-type-label" label="Account Type" value={form.accountType} onChange={(e) => handleChange('accountType', e.target.value)}>
+                    <Select 
+                      labelId="account-type-label" 
+                      label="Account Type" 
+                      value={form.accountType} 
+                      onChange={(e) => handleChange('accountType', e.target.value)}
+                    >
                       <MenuItem value="SB">SB</MenuItem>
                       <MenuItem value="CA">CA</MenuItem>
+                      <MenuItem value="RD">RD</MenuItem>
+                      <MenuItem value="FD">FD</MenuItem>
+                      <MenuItem value="PIGMY">PIGMY</MenuItem>
+                      <MenuItem value="MIS">MIS</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -106,11 +125,29 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
                 <Grid component="div" size={{ xs: 12, md: 6 }}>
                   <FormControl fullWidth>
                     <InputLabel id="account-op-label">Account Operation</InputLabel>
-                    <Select labelId="account-op-label" label="Account Operation" value={form.accountOperation} onChange={(e) => handleChange('accountOperation', e.target.value)}>
+                    <Select 
+                      labelId="account-op-label" 
+                      label="Account Operation" 
+                      value={form.accountOperation} 
+                      onChange={(e) => handleChange('accountOperation', e.target.value)}
+                    >
                       <MenuItem value="Single">Single</MenuItem>
                       <MenuItem value="Joint">Joint</MenuItem>
                     </Select>
                   </FormControl>
+                </Grid>
+
+                <Grid component="div" size={{ xs: 12, md: 6 }}>
+                  <TextField 
+                    label="Opening Date" 
+                    type="date" 
+                    fullWidth 
+                    value={form.openingDate} 
+                    onChange={(e) => handleChange('openingDate', e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
                 </Grid>
 
                 {showInterestFields && (
@@ -118,7 +155,12 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
                     <Grid component="div" size={{ xs: 12, md: 6 }}>
                       <FormControl fullWidth>
                         <InputLabel id="interest-slab-label">Interest Slab</InputLabel>
-                        <Select labelId="interest-slab-label" label="Interest Slab" value={form.interestSlab} onChange={(e) => handleChange('interestSlab', e.target.value)}>
+                        <Select 
+                          labelId="interest-slab-label" 
+                          label="Interest Slab" 
+                          value={form.interestSlab} 
+                          onChange={(e) => handleChange('interestSlab', e.target.value)}
+                        >
                           <MenuItem value={''}>Select Interest Slab</MenuItem>
                           <MenuItem value={'slab1'}>Slab 1</MenuItem>
                           <MenuItem value={'slab2'}>Slab 2</MenuItem>
@@ -127,29 +169,81 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
                     </Grid>
 
                     <Grid component="div" size={{ xs: 12, md: 6 }}>
-                      <TextField label="Interest Rate" fullWidth value={form.interestRate} disabled />
+                      <TextField 
+                        label="Interest Rate" 
+                        fullWidth 
+                        value={form.interestRate} 
+                        onChange={(e) => handleChange('interestRate', e.target.value)} 
+                      />
                     </Grid>
 
                     <Grid component="div" size={{ xs: 12, md: 6 }}>
-                      <TextField label="Duration" fullWidth value={form.duration} disabled />
+                      <TextField 
+                        label="Duration" 
+                        fullWidth 
+                        value={form.duration} 
+                        onChange={(e) => handleChange('duration', e.target.value)} 
+                      />
                     </Grid>
                   </>
                 )}
 
                 <Grid component="div" size={{ xs: 12, md: 6 }}>
-                  <TextField label="Amount" fullWidth value={form.amount} onChange={(e) => handleChange('amount', e.target.value)} />
+                  <TextField 
+                    label="Amount" 
+                    fullWidth 
+                    value={form.amount} 
+                    onChange={(e) => handleChange('amount', e.target.value)} 
+                  />
                 </Grid>
 
                 <Grid component="div" size={{ xs: 12, md: 6 }}>
-                  <TextField label="Introducer" fullWidth value={form.introducer} onChange={(e) => handleChange('introducer', e.target.value)} />
+                  <TextField 
+                    label="Maturity Date" 
+                    type="date" 
+                    fullWidth 
+                    value={form.maturityDate} 
+                    onChange={(e) => handleChange('maturityDate', e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
                 </Grid>
 
                 <Grid component="div" size={{ xs: 12, md: 6 }}>
-                  <TextField label="Introducer Name" fullWidth value={form.introducerName} disabled />
+                  <TextField 
+                    label="Maturity Value" 
+                    fullWidth 
+                    value={form.maturityValue} 
+                    onChange={(e) => handleChange('maturityValue', e.target.value)} 
+                  />
                 </Grid>
 
                 <Grid component="div" size={{ xs: 12, md: 6 }}>
-                  <TextField label="Agent" fullWidth value={form.agent} onChange={(e) => handleChange('agent', e.target.value)} />
+                  <TextField 
+                    label="Introducer" 
+                    fullWidth 
+                    value={form.introducer} 
+                    onChange={(e) => handleChange('introducer', e.target.value)} 
+                  />
+                </Grid>
+
+                <Grid component="div" size={{ xs: 12, md: 6 }}>
+                  <TextField 
+                    label="Introducer Name" 
+                    fullWidth 
+                    value={form.introducerName} 
+                    onChange={(e) => handleChange('introducerName', e.target.value)} 
+                  />
+                </Grid>
+
+                <Grid component="div" size={{ xs: 12, md: 6 }}>
+                  <TextField 
+                    label="Agent" 
+                    fullWidth 
+                    value={form.agent} 
+                    onChange={(e) => handleChange('agent', e.target.value)} 
+                  />
                 </Grid>
 
                 <Grid component="div" size={{ xs: 12 }} className="flex justify-end">

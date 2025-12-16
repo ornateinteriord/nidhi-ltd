@@ -229,7 +229,7 @@ export default function LoansList() {
             onClick={handleSearch}
             sx={{
               textTransform: 'capitalize',
-              backgroundColor: '#7e22ce',
+              backgroundColor: '#042f2e ',
               '&:hover': { backgroundColor: '#6b21a8' },
             }}
           >
@@ -244,7 +244,7 @@ export default function LoansList() {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#042f2e ',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' },
               }}
@@ -281,7 +281,7 @@ export default function LoansList() {
                   <TableContainer component={Paper}>
                     <Table>
                       <TableHead>
-                        <TableRow sx={{ backgroundColor: '#7e22ce' }}>
+                        <TableRow sx={{ backgroundColor: '#042f2e ' }}>
                           {columns.map((col) => (
                             <TableCell key={col.name} sx={{ color: 'white', fontWeight: 'bold' }}>
                               {col.sortable ? (
@@ -346,7 +346,7 @@ export default function LoansList() {
         <DialogTitle 
           sx={{ 
             textAlign: 'center',
-            color: '#7e22ce',
+            color: '#042f2e ',
             fontWeight: 'bold',
             fontSize: '1.5rem',
             pb: 1

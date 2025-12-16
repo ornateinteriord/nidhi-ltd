@@ -128,7 +128,7 @@ export default function PendingLoans() {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#042f2e ',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -156,7 +156,7 @@ export default function PendingLoans() {
               <TableContainer component={Paper} elevation={1}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: '#7e22ce' }}>
+                    <TableRow sx={{ backgroundColor: '#042f2e ' }}>
                       {columns.map((column) => (
                         <TableCell 
                           key={column.name}

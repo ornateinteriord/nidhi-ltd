@@ -66,7 +66,7 @@ const TransferPackage: React.FC = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-              backgroundColor: '#7e22ce',
+              backgroundColor: '#042f2e ',
               color: '#fff',
               '& .MuiSvgIcon-root': { color: '#fff' }
             }}
@@ -91,10 +91,10 @@ const TransferPackage: React.FC = () => {
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     }
                   }
                 }}
@@ -111,10 +111,10 @@ const TransferPackage: React.FC = () => {
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     }
                   }
                 }}
@@ -125,7 +125,7 @@ const TransferPackage: React.FC = () => {
                 variant="contained"
                 onClick={handleSubmit}
                 sx={{
-                  backgroundColor: '#7e22ce',
+                  backgroundColor: '#042f2e ',
                   alignSelf: 'flex-end',
                   '&:hover': {
                     backgroundColor: '#581c87'

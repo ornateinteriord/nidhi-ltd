@@ -181,11 +181,11 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <LucideIcons.HandCoins />,
     isExpandable: true,
     subItems: [
-      { name: "Opening", path: "/banking/loan-opening", icon: <LucideIcons.PlusCircle /> },
-      { name: "ViewAll / Search", path: "/banking/loan-viewall", icon: <LucideIcons.Search /> },
-      { name: "Disbursement", path: "/banking/loan-disbursement", icon: <MuiIcons.Payments /> },
-      { name: "Receive Payments", path: "/banking/loan-recieve-payments", icon: <MuiIcons.Receipt /> },
-      { name: "Close", path: "/banking/loan-close", icon: <LucideIcons.XCircle /> },
+      { name: "Opening", path: "/loan-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "ViewAll / Search", path: "/loan-viewall", icon: <LucideIcons.Search /> },
+      { name: "Disbursement", path: "/loan-disbursement", icon: <MuiIcons.Payments /> },
+      { name: "Receive Payments", path: "/loan-recieve-payments", icon: <MuiIcons.Receipt /> },
+      { name: "Close", path: "/loan-close", icon: <LucideIcons.XCircle /> },
     ],
   },
   {
@@ -193,11 +193,11 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     icon: <MuiIcons.FileCopy />,
     isExpandable: true,
     subItems: [
-      { name: "Opening", path: "/banking/od-opening", icon: <LucideIcons.PlusCircle /> },
-      { name: "ViewAll / Search", path: "/banking/od-viewall", icon: <LucideIcons.Search /> },
-      { name: "Disbursement", path: "/banking/od-disbursement", icon: <MuiIcons.Payments /> },
-      { name: "Receive Payments", path: "/banking/od-recieve-payments", icon: <MuiIcons.Receipt /> },
-      { name: "Close", path: "/banking/od-close", icon: <LucideIcons.XCircle /> },
+      { name: "Opening", path: "/od-opening", icon: <LucideIcons.PlusCircle /> },
+      { name: "ViewAll / Search", path: "/od-viewall", icon: <LucideIcons.Search /> },
+      { name: "Disbursement", path: "/od-disbursement", icon: <MuiIcons.Payments /> },
+      { name: "Receive Payments", path: "/od-recieve-payments", icon: <MuiIcons.Receipt /> },
+      { name: "Close", path: "/od-close", icon: <LucideIcons.XCircle /> },
     ],
   },
 ];

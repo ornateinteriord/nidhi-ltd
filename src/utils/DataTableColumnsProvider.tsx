@@ -513,7 +513,7 @@ export const getSupportTicketColumns = (handleOpenDialog : any) =>  [
         variant="contained"
         onClick={() => handleOpenDialog(row)}
         sx={{
-          backgroundColor: '#7e22ce',
+          backgroundColor: '#042f2e ',
           '&:hover': { backgroundColor: '#581c87' }
         }}
       >
@@ -616,7 +616,7 @@ export const getMailBoxColumns = (handleOpenDialog : any) => [
         onClick={() => handleOpenDialog(row)}
         size="medium"
         sx={{
-          color: '#7e22ce',
+          color: '#042f2e ',
           '&:hover': {
             backgroundColor: 'rgba(4, 17, 47, 0.04)'
           }
@@ -1020,7 +1020,7 @@ export const DASHBOARD_CUTSOM_STYLE = {
     style: {
       fontSize: "16px",
       fontWeight: "Bogle-Bold",
-      backgroundColor: "#7e22ce",
+      backgroundColor: "#042f2e ",
       color: "#fff",
       border: "none",
     },
@@ -1177,7 +1177,7 @@ export const getLoansListColumns = (onRepayClick: (row: any) => void) => [
       <button
         onClick={() => onRepayClick(row)}
         style={{
-          background: "#7e22ce",
+          background: "#042f2e ",
           color: "white",
           padding: "5px 12px",
           border: "none",
@@ -1227,7 +1227,7 @@ export const getFreshPlansColumns = () => [
         variant="contained"
         size="small"
         sx={{
-          backgroundColor: '#7e22ce',
+          backgroundColor: '#042f2e ',
           '&:hover': { backgroundColor: '#6b1db5' },
           textTransform: 'capitalize'
         }}
@@ -1295,7 +1295,7 @@ export const getRenewalPlansColumns = () => [
         variant="contained"
         size="small"
         sx={{
-          backgroundColor: '#7e22ce',
+          backgroundColor: '#042f2e ',
           '&:hover': { backgroundColor: '#6b1db5' },
           textTransform: 'capitalize'
         }}
@@ -1435,7 +1435,7 @@ export const getSelfLoanColumns = () => [
         variant="contained"
         size="small"
         sx={{
-          backgroundColor: '#7e22ce',
+          backgroundColor: '#042f2e ',
           '&:hover': { backgroundColor: '#6b1db5' },
           textTransform: 'capitalize'
         }}
@@ -1519,7 +1519,7 @@ export const getAdvisedLoanColumns = () => [
         variant="contained"
         size="small"
         sx={{
-          backgroundColor: '#7e22ce',
+          backgroundColor: '#042f2e ',
           '&:hover': { backgroundColor: '#6b1db5' },
           textTransform: 'capitalize'
         }}
@@ -1647,7 +1647,7 @@ export const getPlanRecoveryReportColumns = () => [
         variant="contained"
         size="small"
         sx={{
-          backgroundColor: '#7e22ce',
+          backgroundColor: '#042f2e ',
           '&:hover': { backgroundColor: '#6b1db5' },
           textTransform: 'capitalize'
         }}
@@ -1773,7 +1773,7 @@ export const getCollectedLoanReportColumns = () => [
         variant="contained"
         size="small"
         sx={{
-          backgroundColor: '#7e22ce',
+          backgroundColor: '#042f2e ',
           '&:hover': { backgroundColor: '#6b1db5' },
           textTransform: 'capitalize'
         }}

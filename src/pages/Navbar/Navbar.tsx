@@ -68,7 +68,7 @@ const Navbar = ({
         position="fixed"
         className="navbar"
         style={{
-          background: "#6b21a8",
+          background: "#042f2e "
         }}
       >
         <Toolbar className="navbar-toolbar">
