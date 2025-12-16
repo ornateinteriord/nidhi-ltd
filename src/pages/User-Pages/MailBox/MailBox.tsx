@@ -140,7 +140,7 @@ const MailBox = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#042f2e ",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
                 minHeight: "64px",
@@ -169,11 +169,11 @@ const MailBox = () => {
                     sx={{
                       "& .MuiOutlinedInput-notchedOutline": {
                         "&:hover": {
-                          borderColor: "#7e22ce",
+                          borderColor: "#042f2e ",
                         },
                       },
                       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#042f2e ",
                       },
                     }}
                   >
@@ -198,10 +198,10 @@ const MailBox = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "&:hover fieldset": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#042f2e ",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#042f2e ",
                       },
                     },
                   }}
@@ -220,10 +220,10 @@ const MailBox = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       "&:hover fieldset": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#042f2e ",
                       },
                       "&.Mui-focused fieldset": {
-                        borderColor: "#7e22ce",
+                        borderColor: "#042f2e ",
                       },
                     },
                   }}
@@ -234,7 +234,7 @@ const MailBox = () => {
                   variant="contained"
                   size="medium"
                   sx={{
-                    backgroundColor: "#7e22ce",
+                    backgroundColor: "#042f2e ",
                     alignSelf: "flex-end",
                     "&:hover": {
                       backgroundColor: "#581c87",
@@ -252,7 +252,7 @@ const MailBox = () => {
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               sx={{
-                backgroundColor: "#7e22ce",
+                backgroundColor: "#042f2e ",
                 color: "#fff",
                 "& .MuiSvgIcon-root": { color: "#fff" },
                 minHeight: "64px",
@@ -269,7 +269,7 @@ const MailBox = () => {
                 paginationPerPage={25}
                 progressPending={isLoading || createTicketMutation.isPending}
                 progressComponent={
-                  <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }} />
+                  <CircularProgress size={"4rem"} sx={{ color: "#042f2e " }} />
                 }
                 paginationRowsPerPageOptions={[25, 50, 100]}
                 highlightOnHover
@@ -309,7 +309,7 @@ const MailBox = () => {
       >
         <DialogTitle
           sx={{
-            backgroundColor: "#7e22ce",
+            backgroundColor: "#042f2e ",
             color: "#fff",
             display: "flex",
             justifyContent: "space-between",
@@ -330,7 +330,7 @@ const MailBox = () => {
           {selectedTicket && (
             <>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Typography variant="h6" sx={{ color: "#7e22ce" }}>
+                <Typography variant="h6" sx={{ color: "#042f2e " }}>
                   Ticket Information
                 </Typography>
                 <Box
@@ -374,7 +374,7 @@ const MailBox = () => {
 
                 <Divider sx={{ my: 2 }} />
 
-                <Typography variant="h6" sx={{ color: "#7e22ce" }}>
+                <Typography variant="h6" sx={{ color: "#042f2e " }}>
                   Reply Details
                 </Typography>
                 <Box

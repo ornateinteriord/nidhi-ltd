@@ -72,7 +72,7 @@ const AdvisorFee = () => {
           <Typography 
             variant="h6" 
             sx={{ 
-              color: '#04112f', 
+              color: '#042f2e ',
               mb: 3, 
               fontWeight: 'bold',
               display: 'flex',
@@ -97,17 +97,17 @@ const AdvisorFee = () => {
                 maxWidth: '400px',
                 '& .MuiOutlinedInput-root': {
                   '&:hover fieldset': {
-                    borderColor: '#04112f',
+                    borderColor: '#042f2e '
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#04112f',
+                    borderColor: '#042f2e '
                   }
                 }
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <MonetizationOnIcon sx={{ color: '#04112f' }} />
+                    <MonetizationOnIcon sx={{ color: '#042f2e ' }} />
                   </InputAdornment>
                 ),
               }}
@@ -149,7 +149,7 @@ const AdvisorFee = () => {
           <Typography 
             variant="h6" 
             sx={{ 
-              color: '#04112f', 
+              color: '#042f2e ',
               mb: 3, 
               fontWeight: 'bold',
               display: 'flex',

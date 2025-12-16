@@ -42,7 +42,7 @@ const Login = () => {
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
         <Card sx={{ width: "100%", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", backgroundColor: "#fff" }}>
           <CardContent sx={{ padding: "2rem" }}>
-            <Typography component="h1" variant="h5" sx={{ color: "#7e22ce", mb: 3, textAlign: "center" }}>
+            <Typography component="h1" variant="h5" sx={{ color: "#042f2e ", mb: 3, textAlign: "center" }}>
               Sign In
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
@@ -59,7 +59,7 @@ const Login = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonIcon sx={{ color: "#7e22ce" }} />
+                      <PersonIcon sx={{ color: "#042f2e " }} />
                     </InputAdornment>
                   ),
                 }}
@@ -77,17 +77,17 @@ const Login = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LockIcon sx={{ color: "#7e22ce" }} />
+                      <LockIcon sx={{ color: "#042f2e " }} />
                     </InputAdornment>
                   ),
                 }}
               />
-              <Button type="submit" fullWidth variant="contained" disabled={isPending} sx={{ backgroundColor: "#7e22ce", "&:hover": { backgroundColor: "#581c87" } }}>
+              <Button type="submit" fullWidth variant="contained" disabled={isPending} sx={{ backgroundColor: "#042f2e ", "&:hover": { backgroundColor: "#581c87" } }}>
                 Sign In
               </Button>
               <Typography variant="body2" sx={{ textAlign: "center", mt: 1 }}>
                 Don't have an account?{" "}
-                <Link to="/register" style={{ color: "#7e22ce", textDecoration: "none", fontWeight: "bold" }}>
+                <Link to="/register" style={{ color: "#042f2e ", textDecoration: "none", fontWeight: "bold" }}>
                   Register
                 </Link>
               </Typography>

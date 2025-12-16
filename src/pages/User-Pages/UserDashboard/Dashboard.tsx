@@ -436,7 +436,7 @@ const handleRepayment = () => {
           id="claim-reward-dialog-title"
           sx={{ 
             textAlign: 'center',
-            color: '#7e22ce',
+            color: '#042f2e ',
             fontWeight: 'bold',
             fontSize: '1.5rem',
             pb: 1
@@ -524,7 +524,7 @@ const handleRepayment = () => {
           variant="h6" 
           sx={{ 
             mb: 1, 
-            color: '#7e22ce',
+            color: '#042f2e ',
             fontWeight: 'bold',
             textAlign: 'center'
           }}
@@ -709,7 +709,7 @@ const handleRepayment = () => {
         <DialogTitle 
           sx={{ 
             textAlign: 'center',
-            color: '#7e22ce',
+            color: '#042f2e ',
             fontWeight: 'bold',
             fontSize: '1.5rem',
             pb: 1
@@ -881,7 +881,7 @@ const handleRepayment = () => {
         <Card className='bg-gray-300'>
           <CardContent>
             <div className="flex justify-between items-center mb-4">
-              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#7e22ce' }}>Member Statistics</Typography>
+              <Typography variant="h6" style={{ fontWeight: 'bold', color: '#042f2e ' }}>Member Statistics</Typography>
               <MuiDatePicker
                 date={selectedDate}
                 setDate={handleDateChange}

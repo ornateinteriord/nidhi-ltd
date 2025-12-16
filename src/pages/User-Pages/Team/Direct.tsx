@@ -27,7 +27,7 @@ const memberId = TokenService.getMemberId();
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{
-                backgroundColor: '#7e22ce',
+                backgroundColor: '#042f2e ',
                 color: '#fff',
                 '& .MuiSvgIcon-root': { color: '#fff' }
               }}
@@ -41,7 +41,7 @@ const memberId = TokenService.getMemberId();
               pagination
               progressPending={isLoading}
               progressComponent={
-                <CircularProgress size={"4rem"} sx={{ color: "#7e22ce" }} />
+                <CircularProgress size={"4rem"} sx={{ color: "#042f2e " }} />
               }
               paginationPerPage={25}
               paginationRowsPerPageOptions={[25, 50, 100]}

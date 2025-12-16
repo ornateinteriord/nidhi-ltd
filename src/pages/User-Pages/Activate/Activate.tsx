@@ -63,7 +63,7 @@ const Activate: React.FC = () => {
             aria-controls="basic-details-content"
             id="basic-details-header"
             sx={{
-              backgroundColor: '#7e22ce',
+              backgroundColor: '#042f2e ',
               color: '#fff',
               '& .MuiSvgIcon-root': {
                 color: '#fff'
@@ -85,17 +85,17 @@ const Activate: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonIcon sx={{ color: '#7e22ce' }} />
+                      <PersonIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     }
                   }
                 }}
@@ -111,17 +111,17 @@ const Activate: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <InventoryIcon sx={{ color: '#7e22ce' }} />
+                      <InventoryIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     }
                   }
                 }}
@@ -136,10 +136,10 @@ const Activate: React.FC = () => {
                   onChange={handleSelectChange}
                   sx={{
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     }
                   }}
                 >
@@ -159,17 +159,17 @@ const Activate: React.FC = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <ConfirmationNumberIcon sx={{ color: '#7e22ce' }} />
+                      <ConfirmationNumberIcon sx={{ color: '#042f2e ' }} />
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#7e22ce',
+                      borderColor: '#042f2e ',
                     }
                   }
                 }}
@@ -178,7 +178,7 @@ const Activate: React.FC = () => {
                 variant="contained"
                 onClick={handleSubmit}
                 sx={{
-                  backgroundColor: '#7e22ce',
+                  backgroundColor: '#042f2e ',
                   alignSelf: 'flex-end',
                   '&:hover': {
                     backgroundColor: '#581c87'
