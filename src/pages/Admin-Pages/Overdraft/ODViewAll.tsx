@@ -28,7 +28,7 @@ const MOCK_DATA: ODRow[] = [];
 
 const ODViewAll: React.FC = () => {
   return (
-    <div style={{ marginTop: 8 }}>
+    <div style={{ marginTop: 60 }}>
       <ViewAllTemplate title="Overdraft Account Details" columns={OD_COLUMNS} data={MOCK_DATA} />
     </div>
   );

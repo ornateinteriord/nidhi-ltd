@@ -29,7 +29,7 @@ const MOCK_DATA: LoanRow[] = [];
 
 const LoanViewAll: React.FC = () => {
   return (
-    <div style={{ marginTop: 8 }}>
+    <div style={{ marginTop: 60 }}>
       <ViewAllTemplate title="Loan Account Details" columns={LOAN_COLUMNS} data={MOCK_DATA} />
     </div>
   );

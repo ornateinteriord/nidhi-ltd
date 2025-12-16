@@ -23,6 +23,7 @@ interface Column {
 
 interface Props {
   title?: string;
+  accountType?: string;
   columns?: Column[];
   data?: any[];
 }
@@ -71,7 +72,7 @@ const AccountDetailsTable: React.FC<Props> = ({ title = 'Account Details', colum
 
   return (
     <Box sx={{ mt: 9, px: 3 }}>
-      <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>{title}</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>{title}</Typography>
       <Paper sx={{ p: 2, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
           <Grid size={{ xs: 12, md: 2 }}>

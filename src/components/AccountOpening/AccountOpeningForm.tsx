@@ -72,7 +72,7 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
 
   return (
     <Box sx={{ mt: 10, px: 3 }}>
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: '600' }}>{title ?? `${form.accountType} Account Opening`}</Typography>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>{title ?? `${form.accountType} Account Opening`}</Typography>
       <Card>
         <CardContent>
           <Grid container spacing={3}>

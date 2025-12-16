@@ -36,7 +36,7 @@
   padding-left: 20px;
   margin-top: 5px;
   overflow: hidden;
-  background-color: #059669;
+  background-color: #166534;
 }
 
 .sub-items a {
@@ -49,10 +49,10 @@
   transition: color 0.3s ease;
 
   &:hover {
-    color: #2ee349;
+    color: #33b1ff;
   }
   &.selected {
-    color: #2ee349;
+    color: #33b1ff;
   }
 }
 
@@ -77,11 +77,11 @@
 }
 
 .menu-item:hover {
-  color: #2ee349;
+  color: #33b1ff;
 }
 
 .menu-item.selected {
-  background-color: #059669  ;
+  background-color: #166534  ;
   color: #fff;
 }
 

@@ -55,7 +55,7 @@ const AgentAssignment: React.FC = () => {
         alignItems="center"
         sx={{ mb: 2 }}
       >
-        <Typography variant="h6" fontWeight={600}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>
           List of Agents
         </Typography>
 
