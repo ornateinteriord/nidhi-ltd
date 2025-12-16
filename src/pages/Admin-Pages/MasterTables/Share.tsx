@@ -146,17 +146,7 @@ const Share = () => {
       {/* Share Price Table */}
       <Card sx={{ boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}>
         <CardContent sx={{ padding: '2rem' }}>
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              color: '#04112f', 
-              mb: 3, 
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1
-            }}
-          >
+          <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>
             📊 SHARE
           </Typography>
           

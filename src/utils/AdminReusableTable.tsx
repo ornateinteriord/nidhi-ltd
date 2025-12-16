@@ -92,11 +92,12 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         borderTopRightRadius: 8,
       }}
     >
+      
       {/* Title and Actions Row */}
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Box>
           {title && (
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a237e' }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>
               {title}
             </Typography>
           )}
@@ -173,7 +174,8 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         </Button>
       </Stack>
     </Box>
-  );
+ 
+);
 };
 
 const AdminReusableTable = <T extends Record<string, any>>({

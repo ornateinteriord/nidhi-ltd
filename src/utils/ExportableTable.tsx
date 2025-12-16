@@ -72,7 +72,7 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
   return (
     <Box sx={{ width: '100%' }}>
       {title && (
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>
           {title}
         </Typography>
       )}
