@@ -1,10 +1,11 @@
 import { Button, IconButton } from "@mui/material";
-import  VisibilityIcon  from '@mui/icons-material/Visibility';
-import {  Edit } from "lucide-react";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { getFormattedDate } from './common';
 import { MemberDetails } from "../store/store";
-
-
+import { ColumnDefinition } from "../utils/AdminReusableTable";
+import { Edit } from "@mui/icons-material";
 
 export const getUserDashboardTableColumns = () => [
   {
@@ -846,8 +847,7 @@ export const getProccessedColumns = () =>[
     name: "Deducted",
     selector: (row: any) => row.deduction || "-",
     sortable: true,
-  },
-  
+  }
 ]
 
 export const getPayblesColumns = () =>[
@@ -1782,4 +1782,231 @@ export const getCollectedLoanReportColumns = () => [
       </Button>
     ),
   },
+];
+
+export const getCashTransactionColumns = (): ColumnDefinition<{ tranNo: string; tranDate: string; details: string; accountNo: string; refNo: string; withdrawal: number; deposits: number; balance: number }>[] => [
+  { id: "tranNo", label: "Tran. No", sortable: true },
+  { id: "tranDate", label: "Tran. Date", sortable: true },
+  { id: "details", label: "Transaction Details", sortable: true },
+  { id: "accountNo", label: "Account No", sortable: true },
+  { id: "refNo", label: "Ref. No", sortable: true },
+  { id: "withdrawal", label: "Withdrawal", sortable: true, align: "right" as const },
+  { id: "deposits", label: "Deposits", sortable: true, align: "right" as const },
+  { id: "balance", label: "Balance", sortable: true, align: "right" as const },
+];
+
+export const getBankTransactionColumns = (): ColumnDefinition<{ accountName: string; accountNo: string; bank: string; branch: string; ifsc: string }>[] => [
+  { id: "accountName", label: "Account Name", sortable: true },
+  { id: "accountNo", label: "Account No", sortable: true },
+  { id: "bank", label: "Bank", sortable: true },
+  { id: "branch", label: "Branch", sortable: true },
+  { id: "ifsc", label: "IFSC Code", sortable: true },
+];
+
+export const getReceiptsColumns = (): ColumnDefinition<{ voucherNo: string; date: string; receivedFrom: string; description: string; modeOfReceipt: string; amount: number; status: string }>[] => [
+  { id: "voucherNo", label: "Voucher No", sortable: true },
+  { id: "date", label: "Date", sortable: true },
+  { id: "receivedFrom", label: "Received From", sortable: true },
+  { id: "description", label: "Description", sortable: true },
+  { id: "modeOfReceipt", label: "Mode Of Receipt", sortable: true },
+  { id: "amount", label: "Amount", sortable: true },
+  { id: "status", label: "Status", sortable: true },
+  {
+    id: "actions",
+    label: "Actions",
+    align: "center" as const,
+    renderCell: () => (
+      <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#2563eb'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle view action
+            console.log('View action');
+          }}
+        >
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#f59e0b',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#d97706'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle edit action
+            console.log('Edit action');
+          }}
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#ef4444',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#dc2626'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle delete action
+            console.log('Delete action');
+          }}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </div>
+    )
+  }
+];
+
+export const getPaymentsColumns = (): ColumnDefinition<{ voucherNo: string; date: string; paidTo: string; description: string; modeOfPayment: string; amount: number; status: string }>[] => [
+  { id: "voucherNo", label: "Voucher No", sortable: true },
+  { id: "date", label: "Date", sortable: true },
+  { id: "paidTo", label: "Paid To", sortable: true },
+  { id: "description", label: "Description", sortable: true },
+  { id: "modeOfPayment", label: "Mode Of Payment", sortable: true },
+  { id: "amount", label: "Amount", sortable: true },
+  { id: "status", label: "Status", sortable: true },
+  {
+    id: "actions",
+    label: "Actions",
+    align: "center" as const,
+    renderCell: () => (
+      <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#2563eb'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle view action
+            console.log('View action');
+          }}
+        >
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#f59e0b',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#d97706'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle edit action
+            console.log('Edit action');
+          }}
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#ef4444',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#dc2626'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle delete action
+            console.log('Delete action');
+          }}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </div>
+    )
+  }
+];
+
+export const getJournalEntriesColumns = (): ColumnDefinition<{ date: string; journalId: string; debitFrom: string; creditTo: string; amount: number }>[] => [
+  { id: "date", label: "Date", sortable: true },
+  { id: "journalId", label: "Journal Id", sortable: true },
+  { id: "debitFrom", label: "Debit From", sortable: true },
+  { id: "creditTo", label: "Credit To", sortable: true },
+  { id: "amount", label: "Amount", sortable: true, align: "right" as const },
+  {
+    id: "actions",
+    label: "Actions",
+    align: "center" as const,
+    renderCell: () => (
+      <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#2563eb'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle view action
+            console.log('View action');
+          }}
+        >
+          <VisibilityIcon fontSize="small" />
+        </IconButton>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#f59e0b',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#d97706'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle edit action
+            console.log('Edit action');
+          }}
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
+        <IconButton 
+          size="small" 
+          sx={{ 
+            backgroundColor: '#ef4444',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#dc2626'
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle delete action
+            console.log('Delete action');
+          }}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </div>
+    )
+  }
 ];
