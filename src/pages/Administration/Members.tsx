@@ -386,6 +386,9 @@ const Members: React.FC = () => {
         actions={tableActions}
         onExport={handleExportMembers}
         emptyMessage="No members found"
+        totalCount={membersData?.pagination?.total}
+        currentPage={page - 1}
+        onPageChange={(newPage) => setPage(newPage + 1)}
       />
 
       {/* Modify Dialog */}

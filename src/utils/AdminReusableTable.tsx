@@ -15,7 +15,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TablePagination,
   TableSortLabel,
   Checkbox,
   alpha,
@@ -26,7 +25,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import AddIcon from '@mui/icons-material/Add';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { visuallyHidden } from '@mui/utils';
 
 // Define proper interfaces
@@ -372,9 +374,16 @@ const AdminReusableTable = <T extends Record<string, any>>({
   }, [data, order, orderBy]);
 
   const paginatedData = useMemo(() => {
+    // If totalCount is provided, it means server-side pagination is being used
+    // and the data array already contains only the items for the current page
+    if (totalCount !== undefined) {
+      return sortedData;
+    }
+
+    // Otherwise, do client-side pagination
     const start = page * rowsPerPage;
     return sortedData.slice(start, start + rowsPerPage);
-  }, [sortedData, page, rowsPerPage]);
+  }, [sortedData, page, rowsPerPage, totalCount]);
 
   return (
     <Paper
@@ -462,9 +471,6 @@ const AdminReusableTable = <T extends Record<string, any>>({
                     <Typography color="#64748b" sx={{ mb: 2 }}>
                       {emptyMessage}
                     </Typography>
-                    <Button variant="outlined" startIcon={<AddIcon />}>
-                      Add New Entry
-                    </Button>
                   </Box>
                 </TableCell>
               </TableRow>
@@ -528,26 +534,108 @@ const AdminReusableTable = <T extends Record<string, any>>({
       </TableContainer>
 
       {/* Pagination */}
-      <TablePagination
-        rowsPerPageOptions={paginationRowsPerPageOptions}
-        component="div"
-        count={totalCount || data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+      <Box
         sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           borderTop: '1px solid #e2e8f0',
-          '& .MuiTablePagination-selectLabel': {
-            fontSize: '0.875rem',
-            color: '#64748b',
-          },
-          '& .MuiTablePagination-displayedRows': {
-            fontSize: '0.875rem',
-            color: '#334155',
-          },
+          p: 2,
         }}
-      />
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body2" sx={{ fontSize: '0.875rem', color: '#64748b' }}>
+            Rows per page:
+          </Typography>
+          <TextField
+            select
+            size="small"
+            value={rowsPerPage}
+            onChange={handleChangeRowsPerPage}
+            SelectProps={{
+              native: true,
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                fontSize: '0.875rem',
+              },
+              width: 70,
+            }}
+          >
+            {paginationRowsPerPageOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </TextField>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Typography variant="body2" sx={{ fontSize: '0.875rem', color: '#334155' }}>
+            {Math.min(page * rowsPerPage + 1, totalCount || data.length)}–
+            {Math.min((page + 1) * rowsPerPage, totalCount || data.length)} of{' '}
+            {totalCount || data.length}
+          </Typography>
+
+          <Box sx={{ display: 'flex', gap: 0.5 }}>
+            <IconButton
+              onClick={(e) => handleChangePage(e, 0)}
+              disabled={page === 0}
+              size="small"
+              sx={{
+                border: '1px solid #e2e8f0',
+                borderRadius: 1,
+                '&:hover': { backgroundColor: '#f8fafc' },
+                '&.Mui-disabled': { opacity: 0.4 },
+              }}
+            >
+              <FirstPageIcon fontSize="small" />
+            </IconButton>
+
+            <IconButton
+              onClick={(e) => handleChangePage(e, page - 1)}
+              disabled={page === 0}
+              size="small"
+              sx={{
+                border: '1px solid #e2e8f0',
+                borderRadius: 1,
+                '&:hover': { backgroundColor: '#f8fafc' },
+                '&.Mui-disabled': { opacity: 0.4 },
+              }}
+            >
+              <KeyboardArrowLeft fontSize="small" />
+            </IconButton>
+
+            <IconButton
+              onClick={(e) => handleChangePage(e, page + 1)}
+              disabled={page >= Math.ceil((totalCount || data.length) / rowsPerPage) - 1}
+              size="small"
+              sx={{
+                border: '1px solid #e2e8f0',
+                borderRadius: 1,
+                '&:hover': { backgroundColor: '#f8fafc' },
+                '&.Mui-disabled': { opacity: 0.4 },
+              }}
+            >
+              <KeyboardArrowRight fontSize="small" />
+            </IconButton>
+
+            <IconButton
+              onClick={(e) => handleChangePage(e, Math.ceil((totalCount || data.length) / rowsPerPage) - 1)}
+              disabled={page >= Math.ceil((totalCount || data.length) / rowsPerPage) - 1}
+              size="small"
+              sx={{
+                border: '1px solid #e2e8f0',
+                borderRadius: 1,
+                '&:hover': { backgroundColor: '#f8fafc' },
+                '&.Mui-disabled': { opacity: 0.4 },
+              }}
+            >
+              <LastPageIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
+      </Box>
     </Paper>
   );
 };
