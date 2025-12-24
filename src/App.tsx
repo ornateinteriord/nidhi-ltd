@@ -61,6 +61,7 @@ const ODViewAll = lazy(() => import("./pages/Admin-Pages/Overdraft/ODViewAll"));
 // Agent Assignment Component
 const AgentAssignment = lazy(() => import("./pages/Admin-Pages/AgentAssignment/AgentAssignment"));
 // const AdminCollectedLoanReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery").then(module => ({ default: module.CollectedLoanReport })));
+const UserDashboard = lazy(() => import("./user/Dashboard/UserDashboard"));
 import ProtectedRoute from "./routeProtecter/RouteProtecter";
 import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
@@ -254,6 +255,11 @@ const RoutesProvider = ({
               <Route path="/banking/fd-opening" element={<FDOpening />} />
               <Route path="/banking/pigmy-opening" element={<PigmyOpening />} />
               <Route path="/banking/mis-opening" element={<MISOpening />} />
+            </Route>
+
+            {/* User routes */}
+            <Route element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
+              <Route path="/user/dashboard" element={<UserDashboard />} />
             </Route>
 
 
