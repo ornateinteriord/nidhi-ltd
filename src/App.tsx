@@ -61,8 +61,6 @@ const ODViewAll = lazy(() => import("./pages/Admin-Pages/Overdraft/ODViewAll"));
 // Agent Assignment Component
 const AgentAssignment = lazy(() => import("./pages/Admin-Pages/AgentAssignment/AgentAssignment"));
 // const AdminCollectedLoanReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery").then(module => ({ default: module.CollectedLoanReport })));
-const SelfLoan = lazy(() => import("./pages/Loans/SelfLoan"));
-const AdvisedLoan = lazy(() => import("./pages/Loans/AdvisedLoan"));
 import ProtectedRoute from "./routeProtecter/RouteProtecter";
 import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
@@ -94,87 +92,6 @@ const ResetPassword = lazy(() => import("./pages/Auth/ResetPassword"));
 const Navbar = lazy(() => import("./pages/Navbar/Navbar"));
 const Sidebar = lazy(() => import("./pages/Sidebar/Sidebar"));
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
-
-// admin pages
-// const UpdatePassword = lazy(()=>import("./pages/Admin-Pages/admin-panel/UpdatePassword"));
-// const AdminDashboard = lazy(
-//   () => import("./pages/Admin-Pages/AdminDashboard/Dashboard")
-// );
-// const AdminCashBack = lazy(
-//   () => import("./pages/Admin-Pages/Incomes/CashBack")
-// );
-// const AdminDailyBenifitsPayouts = lazy(
-//   () => import("./pages/Admin-Pages/Incomes/DailyBenifitsPayouts")
-// );
-// const AdminLevelBenifits = lazy(
-//   () => import("./pages/Admin-Pages/Incomes/LevelBenifits")
-// );
-// const AdminPayout = lazy(() => import("./pages/Admin-Pages/Payout/Payout"));
-
-// const AdminTransactions = lazy(
-//   () => import("./pages/Admin-Pages/Transactions/Transactions")
-// );
-// const AdminSMSTransactions = lazy(
-//   () => import("./pages/Admin-Pages/Transactions/SMS-Transactions")
-// );
-// const AdminSupportTickets = lazy(
-//   () => import("./pages/Admin-Pages/SupportTicket/SupportTickets")
-// );
-// const AdminNews = lazy(() => import("./pages/Admin-Pages/News/News"));
-// const AdminHolidays = lazy(
-//   () => import("./pages/Admin-Pages/Holidays/Holidays")
-// );
-// const Activate = lazy(() => import("./pages/Admin-Pages/Activate/Activate"));
-// const ActivatePackage = lazy(() => import("./pages/Admin-Pages/activatePackage/ActivatePackage"));
-
-// // user pages
-const UserDashboard = lazy(
-  () => import("./pages/User-Pages/UserDashboard/Dashboard")
-);
-const UserPackageHistory = lazy(
-  () => import("./pages/User-Pages/Packages/PackageHistory")
-);
-const UserTransaction = lazy(
-  () => import("./pages/User-Pages/Transaction/WalletTransaction")
-);
-const UserLoanTransaction = lazy(
-  () => import("./pages/User-Pages/Transaction/LoanTransaction")
-);
-const UserMailBox = lazy(() => import("./pages/User-Pages/MailBox/MailBox"));
-const UserProfile = lazy(() => import("./pages/User-Pages/Profile/Profile"));
-const UserKYC = lazy(() => import("./pages/User-Pages/KYC/KYC"));
-const UserChangePassword = lazy(
-  () => import("./pages/User-Pages/Change-Password/ChangePassword")
-);
-const UserActivate = lazy(() => import("./pages/User-Pages/Activate/Activate"));
-const UserNewResgister = lazy(
-  () => import("./pages/User-Pages/Team/NewResgister")
-);
-const UserUsedPackage = lazy(
-  () => import("./pages/User-Pages/Packages/UsedPackage")
-);
-const UserUnUsedPackage = lazy(
-  () => import("./pages/User-Pages/Packages/UnUsedPackage")
-);
-const UserTransferPackage = lazy(
-  () => import("./pages/User-Pages/Packages/TransferPackage")
-);
-const UserDirect = lazy(() => import("./pages/User-Pages/Team/Direct"));
-const UserLevelBenifits = lazy(
-  () => import("./pages/User-Pages/Earnings/LeveBenifits")
-);
-const UserDailyPayout = lazy(
-  () => import("./pages/User-Pages/Earnings/DailyPayout")
-);
-const UserWallet = lazy(() => import("./pages/User-Pages/Wallet/Wallet"));
-const Tree = lazy(() => import("./pages/User-Pages/Team/Tree"));
-const Team = lazy(() => import("./pages/User-Pages/Team/Team"));
-
-
-
-const LoansMemberPending = lazy(() => import("./pages/Loans/Loanspending"));
-const LoansMemberProcessed = lazy(() => import("./pages/Loans/Loansprocesssed"));
-const LoansRepaymentsList = lazy(() => import("./pages/Loans/Repaymentlist"));
 
 export const LoadingComponent = () => {
   return (
@@ -271,16 +188,16 @@ const RoutesProvider = ({
             </Route>
             {/* agent routes */}
             {/* <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}> */}
-              <Route path="/agent/dashboard" element={<AgentDashboard />} />
-              {/* <Route path="/agent/list" element={<AgentList />} /> */}
-              <Route path="/agent/profile" element={<AgentProfile />} />
-              <Route path="/agent/collections" element={<AgentCollections />} />
-              <Route path="/agent/add-new" element={<AgentAddNew />} />
-              <Route path="/agent/report" element={<AgentReport />} />
+            <Route path="/agent/dashboard" element={<AgentDashboard />} />
+            {/* <Route path="/agent/list" element={<AgentList />} /> */}
+            <Route path="/agent/profile" element={<AgentProfile />} />
+            <Route path="/agent/collections" element={<AgentCollections />} />
+            <Route path="/agent/add-new" element={<AgentAddNew />} />
+            <Route path="/agent/report" element={<AgentReport />} />
             {/* </Route> */}
             {/* admin routes */}
 
-          <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
               {/* Dashboard */}
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/agent/dashboard" element={<AdminAgentDashboard />} />
@@ -288,7 +205,7 @@ const RoutesProvider = ({
               <Route path="/banking/members" element={<BankingMembers />} />
               <Route path="/banking/agents" element={<BankingAgents />} />
               <Route path="/agentassignemt/agent-assignment" element={<AgentAssignment />} />
-              
+
               {/* Master Routes */}
               <Route path="/master/view_mainconfig" element={<AdminSettings />} />
               <Route path="/master/view_state" element={<State />} />
@@ -302,24 +219,20 @@ const RoutesProvider = ({
               <Route path="/master/advisor-fee" element={<AdvisorFee />} />
               <Route path="/master/proof" element={<Proof />} />
               <Route path="/master/company-bank" element={<CompanyBank />} />
-              
+
               {/* Plans */}
               <Route path="/admin/plans" element={<AdminPlans />} />
-              
+
               {/* Team */}
               <Route path="/admin/team" element={<AdminTeam />} />
-              
-              {/* Loan - Self & Advised */}
-              <Route path="/admin/loan/self" element={<SelfLoan />} />
-              <Route path="/admin/loan/advised" element={<AdvisedLoan />} />
-              
+
               {/* Payout */}
               <Route path="/admin/payout/report" element={<AdminPayoutReport />} />
-              
+
               {/* Plan Recovery */}
               <Route path="/admin/plan/recovery" element={<AdminPlanRecoveryReport />} />
               <Route path="/admin/plan/recovery-report" element={<AdminPlanRecoveryReport />} />
-              
+
               {/* Loan Recovery */}
               <Route path="/admin/loan/recovery" element={<AdminLoanRecoveryReport />} />
               <Route path="/admin/loan/recovery-report" element={<AdminLoanRecoveryReport />} />
@@ -333,144 +246,27 @@ const RoutesProvider = ({
               <Route path="/admin/banking/journal-entries" element={<AdminJournalEntries />} />
               <Route path="/SBaccount/sb-opening" element={<SBOpening />} />
               <Route path="/CAaccount/ca-opening" element={<CAOpening />} />
-               <Route path="/SBaccount/search-sb-acc" element={<SBDetails />} />
-               <Route path="/CAaccount/search-ca-acc" element={<CADetails />} />
-               <Route path="/SBaccount/close-sb" element={<CloseSBTable />} />
-               <Route path="/CAaccount/close-ca" element={<CloseCATable />} />
-               <Route path="/loan-close" element={<CloseLoanTable />} />
-               <Route path="/od-close" element={<CloseODTable />} />
+              <Route path="/SBaccount/search-sb-acc" element={<SBDetails />} />
+              <Route path="/CAaccount/search-ca-acc" element={<CADetails />} />
+              <Route path="/SBaccount/close-sb" element={<CloseSBTable />} />
+              <Route path="/CAaccount/close-ca" element={<CloseCATable />} />
+              <Route path="/loan-close" element={<CloseLoanTable />} />
+              <Route path="/od-close" element={<CloseODTable />} />
 
-               {/* Banking - Reusable view-all pages */}
-               <Route path="/banking/rd-viewall" element={<RDViewAll />} />
-               <Route path="/banking/fd-viewall" element={<FDViewAll />} />
-               <Route path="/banking/pigmy-viewall" element={<PigmyViewAll />} />
-               <Route path="/banking/mis-viewall" element={<MISViewAll />} />
-               <Route path="/loan-viewall" element={<LoanViewAll />} />
-               <Route path="/od-viewall" element={<ODViewAll />} />
+              {/* Banking - Reusable view-all pages */}
+              <Route path="/banking/rd-viewall" element={<RDViewAll />} />
+              <Route path="/banking/fd-viewall" element={<FDViewAll />} />
+              <Route path="/banking/pigmy-viewall" element={<PigmyViewAll />} />
+              <Route path="/banking/mis-viewall" element={<MISViewAll />} />
+              <Route path="/loan-viewall" element={<LoanViewAll />} />
+              <Route path="/od-viewall" element={<ODViewAll />} />
 
-               {/* Opening pages for accounts */}
-               <Route path="/banking/rd-opening" element={<RDOpening />} />
-               <Route path="/banking/fd-opening" element={<FDOpening />} />
-               <Route path="/banking/pigmy-opening" element={<PigmyOpening />} />
-               <Route path="/banking/mis-opening" element={<MISOpening />} />
+              {/* Opening pages for accounts */}
+              <Route path="/banking/rd-opening" element={<RDOpening />} />
+              <Route path="/banking/fd-opening" element={<FDOpening />} />
+              <Route path="/banking/pigmy-opening" element={<PigmyOpening />} />
+              <Route path="/banking/mis-opening" element={<MISOpening />} />
             </Route>
-            {/* 
-              <Route path="/admin/update-password" element={<UpdatePassword />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />{" "}
-              <Route path="/admin/members" element={<Members />} />
-
-
-              <Route
-                path="/admin/members/pending"
-                element={<PendingMembers />}
-              />
-              <Route path="/admin/Activate" element={<Activate />} />
-              <Route path="/admin/ActivatePackage" element={<ActivatePackage />} />
-              <Route path="/admin/members/active" element={<ActiveMembers />} />
-              <Route
-                path="/admin/members/inactive"
-                element={<InActiveMembers />}
-              />
-              <Route
-                path="/admin/package/generate"
-                element={<GeneratePackages />}
-              />
-              <Route
-                path="/admin/package/requests"
-                element={<PackageRequests />}
-              />
-              <Route path="/admin/package/used" element={<UsedPackages />} />
-              <Route
-                path="/admin/package/unused"
-                element={<UnusedPackages />}
-              />
-              <Route
-                path="/admin/package/history"
-                element={<PackageHistory />}
-              />
-              <Route
-                path="/admin/income/cashback"
-                element={<AdminCashBack />}
-              />
-              <Route
-                path="/admin/income/level-benefits"
-                element={<AdminLevelBenifits />}
-              />
-              <Route
-                path="/admin/income/daily-payouts"
-                element={<AdminDailyBenifitsPayouts />}
-              />
-              <Route path="/admin/payout" element={<AdminPayout />} />
-
-              <Route
-                path="/admin/transactions"
-                element={<AdminTransactions />}
-              />
-              <Route
-                path="/admin/transactions/sms"
-                element={<AdminSMSTransactions />}
-              />
-              <Route
-                path="/admin/support-tickets"
-                element={<AdminSupportTickets />}
-              />
-              <Route path="/admin/news" element={<AdminNews />} />
-              <Route path="/admin/holidays" element={<AdminHolidays />} />
-              <Route path="/admin/members/:memberId" element={<MembersUpdateForm />} />
-
-            </Route> */}
-            <Route element={<ProtectedRoute allowedRoles={["ADMIN", "USER"]} />}>
-              <Route path="/admin/member/pending" element={<LoansMemberPending />} />
-              <Route path="/admin/member/processed" element={<LoansMemberProcessed />} />
-              <Route path="/admin/repayments/list" element={<LoansRepaymentsList />} />
-            </Route>
-
-            {/* user routes */}
-
-            <Route element={<ProtectedRoute allowedRoles={["USER"]} />}>
-              <Route path="/user/dashboard" element={<UserDashboard />} />
-              <Route path="/user/account/profile" element={<UserProfile />} />
-              <Route path="/user/account/kyc" element={<UserKYC />} />
-              <Route
-                path="/user/account/change-password"
-                element={<UserChangePassword />}
-              />
-              <Route path="/user/activate" element={<UserActivate />} />
-              <Route path="/user/package/used" element={<UserUsedPackage />} />
-              <Route
-                path="/user/package/unused"
-                element={<UserUnUsedPackage />}
-              />
-              <Route
-                path="/user/package/transfer"
-                element={<UserTransferPackage />}
-              />
-              <Route
-                path="/user/package/history"
-                element={<UserPackageHistory />}
-              />
-              <Route path="/user/team/tree" element={<Tree />} />
-              <Route path="/user/team" element={<Team />} />
-              <Route
-                path="/user/team/new-register"
-                element={<UserNewResgister />}
-              />
-              <Route path="/user/team/direct" element={<UserDirect />} />
-              <Route
-                path="/user/earnings/level-benefits"
-                element={<UserLevelBenifits />}
-              />
-              <Route
-                path="/user/earnings/daily-payout"
-                element={<UserDailyPayout />}
-              />
-              <Route path="/user/transactions" element={<UserTransaction />} />
-              <Route path="/user/loantransactions" element={<UserLoanTransaction />} />
-              <Route path="/user/mailbox" element={<UserMailBox />} />
-              <Route path="/user/wallet" element={<UserWallet />} />
-
-            </Route>
-
 
 
             {/* not found route */}

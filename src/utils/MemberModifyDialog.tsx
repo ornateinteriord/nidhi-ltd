@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -6,7 +6,6 @@ import {
   DialogActions,
   Button,
   TextField,
- 
   FormControl,
   InputLabel,
   Select,
@@ -16,42 +15,50 @@ import {
   Box,
   Typography,
   Grid,
-
+  CircularProgress,
+  Backdrop,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { useGetMemberById } from '../queries/admin/index';
 
 interface MemberFormData {
+  member_id?: string;
   name: string;
-  fatherName: string;
+  father_name: string;
   gender: string;
-  dateOfBirth: string;
+  dob: string;
   age: string;
-  email: string;
-  contactNo: string;
+  emailid: string;
+  contactno: string;
   occupation: string;
   address: string;
-  panNo: string;
-  aadharCardNo: string;
-  voterId: string;
-  branchCode: string;
-  receiptNo: string;
+  pan_no: string;
+  aadharcard_no: string;
+  voter_id: string;
+  branch_id: string;
+  receipt_no: string;
   nominee: string;
   relation: string;
   introducer: string;
+  introducer_name: string;
+  member_image: string;
+  member_signature: string;
+  date_of_joining: string;
+  entered_by: string;
 }
 
 interface AgentFormData {
   name: string;
   designation: string;
   gender: string;
-  panNo: string;
-  dateOfBirth: string;
-  aadharCardNo: string;
-  email: string;
-  contactNo: string;
-  branchCode: string;
+  pan_no: string;
+  dob: string;
+  aadharcard_no: string;
+  emailid: string;
+  contactno: string;
+  branch_id: string;
   introducer: string;
   address: string;
 }
@@ -59,36 +66,111 @@ interface AgentFormData {
 interface ModifyDialogProps {
   open: boolean;
   onClose: () => void;
-  onSave: (data: any) => void;
+  onSave: (data: any, isEdit?: boolean) => void;
   type: 'member' | 'agent';
-  initialData?: any;
+  memberId?: string | null; // member_id for editing
+  isLoading?: boolean;
 }
 
-const MemberModifyDialog: React.FC<{
-  open: boolean;
-  onClose: () => void;
-  onSave: (data: MemberFormData) => void;
-  initialData?: any;
-}> = ({ open, onClose, onSave, initialData }) => {
+const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
+  open,
+  onClose,
+  onSave,
+  memberId,
+  isLoading: externalLoading
+}) => {
+  const isEditMode = !!memberId;
+
+  // Fetch member data when editing
+  const { data: memberData, isLoading: isFetching } = useGetMemberById(
+    memberId || '',
+    isEditMode && open
+  );
+
   const [formData, setFormData] = useState<MemberFormData>({
-    name: initialData?.name || '',
-    fatherName: initialData?.fatherName || '',
-    gender: initialData?.gender || 'Male',
-    dateOfBirth: initialData?.dateOfBirth || '',
-    age: initialData?.age || '',
-    email: initialData?.email || '',
-    contactNo: initialData?.contactNo || '',
-    occupation: initialData?.occupation || '',
-    address: initialData?.address || '',
-    panNo: initialData?.panNo || '',
-    aadharCardNo: initialData?.aadharCardNo || '',
-    voterId: initialData?.voterId || '',
-    branchCode: initialData?.branchCode || '',
-    receiptNo: initialData?.receiptNo || '',
-    nominee: initialData?.nominee || '',
-    relation: initialData?.relation || '',
-    introducer: initialData?.introducer || '',
+    member_id: '',
+    name: '',
+    father_name: '',
+    gender: 'Male',
+    dob: '',
+    age: '',
+    emailid: '',
+    contactno: '',
+    occupation: '',
+    address: '',
+    pan_no: '',
+    aadharcard_no: '',
+    voter_id: '',
+    branch_id: '',
+    receipt_no: '',
+    nominee: '',
+    relation: '',
+    introducer: '',
+    introducer_name: '',
+    member_image: '',
+    member_signature: '',
+    date_of_joining: '',
+    entered_by: '',
   });
+
+  // Update form data when member data is fetched
+  useEffect(() => {
+    if (isEditMode && memberData?.data) {
+      const member = memberData.data;
+      setFormData({
+        member_id: member.member_id || '',
+        name: member.name || '',
+        father_name: member.father_name || '',
+        gender: member.gender || 'Male',
+        dob: member.dob ? new Date(member.dob).toISOString().split('T')[0] : '',
+        age: member.age?.toString() || '',
+        emailid: member.emailid || '',
+        contactno: member.contactno || '',
+        occupation: member.occupation || '',
+        address: member.address || '',
+        pan_no: member.pan_no || '',
+        aadharcard_no: member.aadharcard_no || '',
+        voter_id: member.voter_id || '',
+        branch_id: member.branch_id || '',
+        receipt_no: member.receipt_no || '',
+        nominee: member.nominee || '',
+        relation: member.relation || '',
+        introducer: member.introducer || '',
+        introducer_name: member.introducer_name || '',
+        member_image: member.member_image || '',
+        member_signature: member.member_signature || '',
+        date_of_joining: member.date_of_joining ? new Date(member.date_of_joining).toISOString().split('T')[0] : '',
+        entered_by: member.entered_by || '',
+      });
+    } else if (!isEditMode && open) {
+      // Reset form for create mode
+      setFormData({
+        member_id: '',
+        name: '',
+        father_name: '',
+        gender: 'Male',
+        dob: '',
+        age: '',
+        emailid: '',
+        contactno: '',
+        occupation: '',
+        address: '',
+        pan_no: '',
+        aadharcard_no: '',
+        voter_id: '',
+        branch_id: '',
+        receipt_no: '',
+        nominee: '',
+        relation: '',
+        introducer: '',
+        introducer_name: '',
+        member_image: '',
+        member_signature: '',
+        date_of_joining: '',
+        entered_by: '',
+      });
+    }
+  }, [memberData, isEditMode, open]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -105,35 +187,47 @@ const MemberModifyDialog: React.FC<{
   };
 
   const handleSave = () => {
-    onSave(formData);
-    onClose();
+    onSave(formData, isEditMode);
   };
+
+  const isLoading = isFetching || externalLoading;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle sx={{ 
-        backgroundColor: '#1a237e', 
+      {/* Loading Backdrop */}
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute' }}
+        open={!!isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+      <DialogTitle sx={{
+        backgroundColor: '#1a237e',
         color: 'white',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         py: 2,
       }}>
-        <Typography variant="h6">Update Member Details</Typography>
+        <Typography variant="h6">
+          {isEditMode ? 'Update Member Details' : 'Create New Member'}
+        </Typography>
         <IconButton onClick={onClose} sx={{ color: 'white' }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      
+
       <DialogContent sx={{ p: 3, backgroundColor: '#f8fafc' }}>
-        <Box sx={{ 
-          backgroundColor: 'white', 
-          borderRadius: 2, 
+        <Box sx={{
+          backgroundColor: 'white',
+          borderRadius: 2,
           p: 3,
           border: '1px solid #e2e8f0',
         }}>
           <Grid container spacing={3}>
-            {/* Row 1 */}
+
+            {/* Name */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
@@ -144,40 +238,44 @@ const MemberModifyDialog: React.FC<{
                 size="small"
               />
             </Grid>
+
+            {/* Pan No */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Pan No"
-                name="panNo"
-                value={formData.panNo}
+                name="pan_no"
+                value={formData.pan_no}
                 onChange={handleChange}
                 size="small"
               />
             </Grid>
 
-            {/* Row 2 */}
+            {/* Father Name */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Father Name"
-                name="fatherName"
-                value={formData.fatherName}
-                onChange={handleChange}
-                size="small"
-              />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Aadhar Card No"
-                name="aadharCardNo"
-                value={formData.aadharCardNo}
+                name="father_name"
+                value={formData.father_name}
                 onChange={handleChange}
                 size="small"
               />
             </Grid>
 
-            {/* Row 3 */}
+            {/* Aadhar Card No */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                fullWidth
+                label="Aadhar Card No"
+                name="aadharcard_no"
+                value={formData.aadharcard_no}
+                onChange={handleChange}
+                size="small"
+              />
+            </Grid>
+
+            {/* Gender */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <FormControl fullWidth size="small">
                 <InputLabel>Gender</InputLabel>
@@ -192,72 +290,84 @@ const MemberModifyDialog: React.FC<{
                 </Select>
               </FormControl>
             </Grid>
+
+            {/* Voter ID */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Voter ID"
-                name="voterId"
-                value={formData.voterId}
+                name="voter_id"
+                value={formData.voter_id}
                 onChange={handleChange}
                 size="small"
               />
             </Grid>
 
-            {/* Row 4 */}
+            {/* Date Of Birth */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Date Of Birth"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
+                name="dob"
+                type="date"
+                value={formData.dob}
                 onChange={handleChange}
                 size="small"
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
+
+            {/* Branch Code */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Branch Code"
-                name="branchCode"
-                value={formData.branchCode}
+                name="branch_id"
+                value={formData.branch_id}
                 onChange={handleChange}
                 size="small"
               />
             </Grid>
 
-            {/* Row 5 */}
+            {/* Age */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Age"
                 name="age"
+                type="number"
                 value={formData.age}
                 onChange={handleChange}
                 size="small"
               />
             </Grid>
+
+            {/* Receipt No */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Receipt No"
-                name="receiptNo"
-                value={formData.receiptNo}
+                name="receipt_no"
+                value={formData.receipt_no}
                 onChange={handleChange}
                 size="small"
               />
             </Grid>
 
-            {/* Row 6 */}
+            {/* Email ID */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Email ID"
-                name="email"
-                value={formData.email}
+                name="emailid"
+                type="email"
+                value={formData.emailid}
                 onChange={handleChange}
                 size="small"
               />
             </Grid>
+
+            {/* Nominee */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
@@ -269,17 +379,19 @@ const MemberModifyDialog: React.FC<{
               />
             </Grid>
 
-            {/* Row 7 */}
+            {/* Contact No */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Contact No"
-                name="contactNo"
-                value={formData.contactNo}
+                name="contactno"
+                value={formData.contactno}
                 onChange={handleChange}
                 size="small"
               />
             </Grid>
+
+            {/* Relation */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
@@ -291,7 +403,7 @@ const MemberModifyDialog: React.FC<{
               />
             </Grid>
 
-            {/* Row 8 */}
+            {/* Occupation */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
@@ -302,12 +414,54 @@ const MemberModifyDialog: React.FC<{
                 size="small"
               />
             </Grid>
+
+            {/* Introducer */}
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
-                label="Introducer"
+                label="Introducer Code"
                 name="introducer"
                 value={formData.introducer}
+                onChange={handleChange}
+                size="small"
+              />
+            </Grid>
+
+            {/* Introducer Name */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                fullWidth
+                label="Introducer Name"
+                name="introducer_name"
+                value={formData.introducer_name}
+                onChange={handleChange}
+                size="small"
+                disabled
+                sx={{ backgroundColor: '#f5f5f5' }}
+              />
+            </Grid>
+
+            {/* Date of Joining */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                fullWidth
+                label="Date of Joining"
+                name="date_of_joining"
+                type="date"
+                value={formData.date_of_joining}
+                onChange={handleChange}
+                size="small"
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+
+            {/* Entered By */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                fullWidth
+                label="Entered By"
+                name="entered_by"
+                value={formData.entered_by}
                 onChange={handleChange}
                 size="small"
               />
@@ -336,6 +490,7 @@ const MemberModifyDialog: React.FC<{
           startIcon={<CancelIcon />}
           onClick={onClose}
           sx={{ textTransform: 'none' }}
+          disabled={!!isLoading}
         >
           Cancel
         </Button>
@@ -343,19 +498,21 @@ const MemberModifyDialog: React.FC<{
           variant="contained"
           startIcon={<SaveIcon />}
           onClick={handleSave}
-          sx={{ 
+          disabled={!!isLoading}
+          sx={{
             textTransform: 'none',
             backgroundColor: '#1a237e',
             '&:hover': { backgroundColor: '#283593' }
           }}
         >
-          Save Changes
+          {isEditMode ? 'Update Member' : 'Create Member'}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
+// Agent Dialog remains mostly the same, simplified for brevity
 const AgentModifyDialog: React.FC<{
   open: boolean;
   onClose: () => void;
@@ -366,12 +523,12 @@ const AgentModifyDialog: React.FC<{
     name: initialData?.member?.split(' (')[0] || '',
     designation: initialData?.designation || 'Director',
     gender: initialData?.gender || 'Male',
-    panNo: initialData?.panNo || '',
-    dateOfBirth: initialData?.dateOfBirth || '',
-    aadharCardNo: initialData?.aadharCardNo || '',
-    email: initialData?.email || '',
-    contactNo: initialData?.mobile || '',
-    branchCode: initialData?.branchCode || '',
+    pan_no: initialData?.panNo || '',
+    dob: initialData?.dateOfBirth || '',
+    aadharcard_no: initialData?.aadharCardNo || '',
+    emailid: initialData?.email || '',
+    contactno: initialData?.mobile || '',
+    branch_id: initialData?.branchCode || '',
     introducer: initialData?.introducer || '',
     address: initialData?.address || '',
   });
@@ -397,8 +554,8 @@ const AgentModifyDialog: React.FC<{
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle sx={{ 
-        backgroundColor: '#1a237e', 
+      <DialogTitle sx={{
+        backgroundColor: '#1a237e',
         color: 'white',
         display: 'flex',
         justifyContent: 'space-between',
@@ -410,11 +567,11 @@ const AgentModifyDialog: React.FC<{
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      
+
       <DialogContent sx={{ p: 3, backgroundColor: '#f8fafc' }}>
-        <Box sx={{ 
-          backgroundColor: 'white', 
-          borderRadius: 2, 
+        <Box sx={{
+          backgroundColor: 'white',
+          borderRadius: 2,
           p: 3,
           border: '1px solid #e2e8f0',
         }}>
@@ -460,8 +617,8 @@ const AgentModifyDialog: React.FC<{
               <TextField
                 fullWidth
                 label="Pan No"
-                name="panNo"
-                value={formData.panNo}
+                name="pan_no"
+                value={formData.pan_no}
                 onChange={handleChange}
                 size="small"
               />
@@ -472,8 +629,8 @@ const AgentModifyDialog: React.FC<{
               <TextField
                 fullWidth
                 label="Date Of Birth"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
+                name="dob"
+                value={formData.dob}
                 onChange={handleChange}
                 size="small"
               />
@@ -482,8 +639,8 @@ const AgentModifyDialog: React.FC<{
               <TextField
                 fullWidth
                 label="Aadhar Card No"
-                name="aadharCardNo"
-                value={formData.aadharCardNo}
+                name="aadharcard_no"
+                value={formData.aadharcard_no}
                 onChange={handleChange}
                 size="small"
               />
@@ -494,8 +651,8 @@ const AgentModifyDialog: React.FC<{
               <TextField
                 fullWidth
                 label="Email ID"
-                name="email"
-                value={formData.email}
+                name="emailid"
+                value={formData.emailid}
                 onChange={handleChange}
                 size="small"
               />
@@ -504,8 +661,8 @@ const AgentModifyDialog: React.FC<{
               <TextField
                 fullWidth
                 label="Branch Code"
-                name="branchCode"
-                value={formData.branchCode}
+                name="branch_id"
+                value={formData.branch_id}
                 onChange={handleChange}
                 size="small"
               />
@@ -516,8 +673,8 @@ const AgentModifyDialog: React.FC<{
               <TextField
                 fullWidth
                 label="Contact No"
-                name="contactNo"
-                value={formData.contactNo}
+                name="contactno"
+                value={formData.contactno}
                 onChange={handleChange}
                 size="small"
               />
@@ -563,7 +720,7 @@ const AgentModifyDialog: React.FC<{
           variant="contained"
           startIcon={<SaveIcon />}
           onClick={handleSave}
-          sx={{ 
+          sx={{
             textTransform: 'none',
             backgroundColor: '#1a237e',
             '&:hover': { backgroundColor: '#283593' }
@@ -576,14 +733,34 @@ const AgentModifyDialog: React.FC<{
   );
 };
 
-const ModifyDialog: React.FC<ModifyDialogProps> = ({ open, onClose, onSave, type, initialData }) => {
+interface MainModifyDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onSave: (data: any, isEdit?: boolean) => void;
+  type: 'member' | 'agent';
+  memberId?: string | null;
+  initialData?: any;
+  isLoading?: boolean;
+}
+
+const ModifyDialog: React.FC<MainModifyDialogProps> = ({
+  open,
+  onClose,
+  onSave,
+  type,
+  memberId,
+  initialData,
+  isLoading
+}) => {
   if (type === 'member') {
     return (
       <MemberModifyDialog
         open={open}
         onClose={onClose}
         onSave={onSave}
-        initialData={initialData}
+        type={type}
+        memberId={memberId}
+        isLoading={isLoading}
       />
     );
   }

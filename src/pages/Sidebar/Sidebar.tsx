@@ -7,12 +7,11 @@ import { Avatar, Toolbar, Typography } from '@mui/material';
 import { SideBarMenuItemType } from '../../store/store';
 import { MuiIcons } from '../Icons';
 import { deepOrange } from '@mui/material/colors';
-import { useGetMemberDetails } from '../../api/Memeber';
+// import { useGetMemberDetails } from '../../api/Memeber';
 import { LoadingComponent } from '../../App';
-import { toast } from 'react-toastify';
-import TokenService from '../../api/token/tokenService';
+// import TokenService from '../../queries/token/tokenService';
 
-const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => void, role: string | null}) => {
+const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => void, role: string | null }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>('Dashboard');
   const [closingItem, setClosingItem] = useState<string | null>(null);
@@ -42,19 +41,20 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       onClose();
     }
   };
-  const menuItems = role === "ADMIN" ? AdminSideBarMenuItems  : role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ? AgentSideBarMenuItems : UserSideBarMenuItems;
-  const userId = TokenService.getUserId()
-  const memberMutatation = useGetMemberDetails(userId!)
-  const {data : fethedUser , isLoading , isError , error} = memberMutatation
+  const menuItems = role === "ADMIN" ? AdminSideBarMenuItems : role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ? AgentSideBarMenuItems : UserSideBarMenuItems;
+  // const userId = TokenService.getUserId()
+  // const memberMutatation = useGetMemberDetails(userId!)
+  // const { data: fethedUser, isLoading, isError, error } = memberMutatation
+  const fethedUser = { Name: "Demo", username: "demo", profile_image: "", profileImage: "" }
   const name = fethedUser?.Name || fethedUser?.username
 
-  useEffect(()=>{
-    if(isError){
-     toast.error(error?.message || 'Failed to fetch user details')
-    }
-  },[isError , error])
+  // useEffect(() => {
+  //   if (isError) {
+  //     toast.error(error?.message || 'Failed to fetch user details')
+  //   }
+  // }, [isError, error])
   return (
-    <motion.div 
+    <motion.div
       className={`sidebar ${isOpen ? 'open' : 'closed'}`}
       initial={{ width: 0 }}
       animate={{ width: isOpen ? 250 : 0 }}
@@ -64,7 +64,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       <Toolbar className="navbar-toolbar" />
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             className="sidebar-header"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -78,9 +78,9 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
             >
               {!fethedUser?.profileImage && name?.charAt(0).toUpperCase()}
             </Avatar>
-            <div className="welcome-text" style={{padding: '10px', color: '#fff'}}>
+            <div className="welcome-text" style={{ padding: '10px', color: '#fff' }}>
               <Typography>Welcome,</Typography>
-              <Typography style={{fontWeight: 'bold'}}>{fethedUser?.Name}</Typography>
+              <Typography style={{ fontWeight: 'bold' }}>{fethedUser?.Name}</Typography>
             </div>
           </motion.div>
         )}
@@ -88,14 +88,14 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       <div style={{ height: 'calc(100vh - 100px)', overflowY: 'auto', paddingBottom: '80px' }}>
         <AnimatePresence>
           {menuItems.map((item: SideBarMenuItemType) => (
-            <motion.div 
+            <motion.div
               key={item.name}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
             >
-              <div 
+              <div
                 onClick={() => {
                   if (item.isExpandable) {
                     handleToggle(item.name);
@@ -103,7 +103,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                     navigate(item.path!);
                     handleSelect(item.name);
                   }
-                }} 
+                }}
                 className={`menu-item ${selectedItem === item.name ? 'selected' : ''}`}
               >
                 {item.icon} {item.name}
@@ -117,10 +117,10 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                 )}
               </div>
               {item.isExpandable && (
-                <motion.div 
+                <motion.div
                   className="sub-items"
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ 
+                  animate={{
                     height: (expandedItem === item.name || closingItem === item.name) ? 'auto' : 0,
                     opacity: expandedItem === item.name ? 1 : 0
                   }}
@@ -136,8 +136,8 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Link 
-                          to={subItem.path ?? '#'} 
+                        <Link
+                          to={subItem.path ?? '#'}
                           className={`sub-item ${location.pathname === subItem.path ? 'selected' : ''}`}
                           onClick={() => {
                             handleSelect(item.name);
@@ -154,7 +154,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
             </motion.div>
           ))}
         </AnimatePresence>
-        {isLoading && <LoadingComponent />}
+        {false && <LoadingComponent />}
       </div>
     </motion.div>
   );

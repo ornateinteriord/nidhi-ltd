@@ -92,7 +92,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
         borderTopRightRadius: 8,
       }}
     >
-      
+
       {/* Title and Actions Row */}
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
         <Box>
@@ -114,9 +114,9 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
               <RefreshIcon />
             </IconButton>
           )}
-          
+
           {actions}
-          
+
           {enableExport && onExport && (
             <Button
               variant="outlined"
@@ -157,25 +157,10 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             ),
           }}
         />
-
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          size="small"
-          sx={{
-            textTransform: 'none',
-            backgroundColor: '#1a237e',
-            '&:hover': {
-              backgroundColor: '#283593',
-            },
-          }}
-        >
-          Add New
-        </Button>
       </Stack>
     </Box>
- 
-);
+
+  );
 };
 
 const AdminReusableTable = <T extends Record<string, any>>({
@@ -237,7 +222,7 @@ const AdminReusableTable = <T extends Record<string, any>>({
 
   const handleClick = (event: React.MouseEvent, row: T) => {
     event.stopPropagation();
-    
+
     if (!enableSelection) {
       if (onRowClick) {
         onRowClick(row);
@@ -303,13 +288,13 @@ const AdminReusableTable = <T extends Record<string, any>>({
     }
 
     const headers = columns.map(col => col.label);
-    const csvRows = data.map(row => 
+    const csvRows = data.map(row =>
       columns.map(col => {
         const value = row[col.id as keyof T];
         return `"${String(value || '').replace(/"/g, '""')}"`;
       }).join(',')
     );
-    
+
     const csv = [headers.join(','), ...csvRows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -335,14 +320,14 @@ const AdminReusableTable = <T extends Record<string, any>>({
           label={value}
           size="small"
           sx={{
-            backgroundColor: 
+            backgroundColor:
               status === 'active' ? '#d1fae5' :
-              status === 'pending' ? '#fef3c7' :
-              '#f1f5f9',
+                status === 'pending' ? '#fef3c7' :
+                  '#f1f5f9',
             color:
               status === 'active' ? '#065f46' :
-              status === 'pending' ? '#92400e' :
-              '#64748b',
+                status === 'pending' ? '#92400e' :
+                  '#64748b',
             fontWeight: 500,
             borderRadius: 1,
           }}
@@ -373,12 +358,12 @@ const AdminReusableTable = <T extends Record<string, any>>({
       const bValue = b[orderBy];
 
       if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return order === 'asc' 
+        return order === 'asc'
           ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       }
 
-      return order === 'asc' 
+      return order === 'asc'
         ? (aValue < bValue ? -1 : 1)
         : (aValue > bValue ? -1 : 1);
     });
@@ -408,7 +393,7 @@ const AdminReusableTable = <T extends Record<string, any>>({
         selectedCount={selected.length}
         actions={actions}
         onExport={handleExportCSV}
-        // enableExport={enableExport}
+      // enableExport={enableExport}
       />
 
       <TableContainer sx={{ maxHeight: 600 }}>

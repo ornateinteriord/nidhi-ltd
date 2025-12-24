@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import TokenService from "../api/token/tokenService";
+import TokenService from "../queries/token/tokenService";
 
 const useAuth = () => {
   const [userRole, setUserRole] = useState<string | null>(TokenService.getRole());

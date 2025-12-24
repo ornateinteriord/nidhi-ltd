@@ -1,38 +1,17 @@
-import { Typography } from '@mui/material';
 import { cn } from '../../../lib/utils';
 import '../../Dashboard/dashboard.scss';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
-import { useGetAllMembersDetails } from '../../../api/Admin';
 import DashboardCards from './DashboardCards';
 
-const AdminDashboard = () => { 
-  const { data: members = [], isLoading, error } = useGetAllMembersDetails();
+const AdminDashboard = () => {
 
-  const totalCities = new Set(members.map((member: any) =>  member.location).filter(Boolean)).size;
-  const totalDegrees = new Set(members.map((member: any) => member.degree || member.education).filter(Boolean)).size;
+  const totalCities = 0;
+  const totalDegrees = 0;
   const totalEvents = 0;
-  const totalLikes = 0; 
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Typography>Loading dashboard data...</Typography>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Typography color="error">
-          Error loading dashboard data: {error.message}
-        </Typography>
-      </div>
-    );
-  }
+  const totalLikes = 0;
 
   return (
     <>
