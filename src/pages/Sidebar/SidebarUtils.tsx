@@ -12,58 +12,33 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     isExpandable: false,
   },
   {
-    name: "Account Info",
+    name: "Profile",
     icon: <MuiIcons.AccountCircle />,
-    isExpandable: true,
-    subItems: [
-      { name: "Profile", path: "/user/account/profile", icon: <MuiIcons.Person /> },
-      { name: "KYC", path: "/user/account/kyc", icon: <MuiIcons.VerifiedUser /> },
-      {
-        name: "Change Password",
-        path: "/user/account/change-password",
-        icon: <MuiIcons.Lock />,
-      },
-    ],
-  },
-  {
-    name: "Team",
-    icon: <MuiIcons.Group />,
-    isExpandable: true,
-    subItems: [
-      { name: "Direct", path: "/user/team/direct", icon: <MuiIcons.People /> },
-      { name: "Team", path: "/user/team", icon: <MuiIcons.Group /> },
-      { name: "Tree", path: "/user/team/tree", icon: <MuiIcons.AccountTree /> },
-      { name: "New Register", path: "/user/team/new-register", icon: <MuiIcons.PersonAdd /> },
-    ],
-  },
-  {
-    name: "Earnings",
-    icon: <MuiIcons.MonetizationOn />,
-    isExpandable: true,
-    subItems: [
-      { name: "Level Benefits", path: "/user/earnings/level-benefits", icon: <MuiIcons.ShowChart /> },
-      { name: "Daily Payout", path: "/user/earnings/daily-payout", icon: <MuiIcons.Payments /> },
-    ],
-  },
-  {
-    name: "Transactions",
-    icon: <MuiIcons.ShowChart />,
-    isExpandable: true,
-    subItems: [
-      { name: "Wallet", path: "/user/transactions", icon: <MuiIcons.CreditCardIcon /> },
-      { name: "Loan", path: "/user/loantransactions", icon: <MuiIcons.AccountBalance /> },
-    ],
-  },
-  {
-    name: "Wallet Balance",
-    icon: <MuiIcons.CreditCardIcon />,
-    path: "/user/wallet",
+    path: "/agent/profile",
     isExpandable: false,
   },
   {
-    name: "Mail Box",
-    icon: <MuiIcons.MailOutline />,
-    path: "/user/mailbox",
+    name: "Collections",
+    icon: <MuiIcons.ListAlt />,
+    path: "/agent/collections",
+    isExpandable: false,
+  },
+  {
+    name: "Add New",
+    icon: <MuiIcons.AddCircle />,
+    path: "/agent/add-new",
+    isExpandable: false,
+  },
+  {
+    name: "Report",
+    icon: <MuiIcons.Assessment />,
+    path: "/agent/report",
+    isExpandable: false,
+  },
+  {
+    name: "Logout",
+    icon: <LucideIcons.Info />,
+    path: "/",
     isExpandable: false,
   },
 ];

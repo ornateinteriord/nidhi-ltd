@@ -26,6 +26,7 @@ interface ExportableTableProps {
   paginationPerPage?: number;
   paginationRowsPerPageOptions?: number[];
   customStyles?: any;
+  sx?: any;
 }
 
 const ExportableTable: React.FC<ExportableTableProps> = ({
@@ -37,7 +38,8 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
   onSearchChange,
   paginationPerPage = 25,
   paginationRowsPerPageOptions = [25, 50, 100],
-  customStyles = DASHBOARD_CUTSOM_STYLE
+  customStyles = DASHBOARD_CUTSOM_STYLE,
+  sx = {}
 }) => {
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
 
@@ -70,7 +72,7 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', ...sx }}>
       {title && (
         <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>
           {title}

@@ -21,7 +21,7 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/use-auth";
 import TokenService from "../../queries/token/tokenService";
-import { deepOrange } from "@mui/material/colors";
+// import { deepOrange } from "@mui/material/colors";
 import { useState } from "react";
 // import { useGetMemberDetails } from "../../api/Memeber";
 
@@ -68,7 +68,8 @@ const Navbar = ({
         position="fixed"
         className="navbar"
         style={{
-          background: "#042f2e "
+          background: '#3335c7',
+          boxShadow: "0 4px 20px rgba(99, 102, 241, 0.3)",
         }}
       >
         <Toolbar className="navbar-toolbar">
@@ -80,7 +81,14 @@ const Navbar = ({
           <Typography
             variant="h4"
             className="navbar-title"
-            style={{ marginLeft: "12px", cursor: "pointer" }}
+            style={{ 
+              marginLeft: "12px", 
+              cursor: "pointer",
+              fontWeight: "bold",
+              background: "linear-gradient(to right, #ffffff, #f0f9ff)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent"
+            }}
             onClick={() => navigate("/")}
           >
             MSI
@@ -90,17 +98,44 @@ const Navbar = ({
             {isLoggedIn ? (
               <div className="admin-panel-container">
                 {!isHomePage && isAdmin && (
-                  <div className="admin-panel-content" onClick={handleMenuOpen}>
+                  <div 
+                    className="admin-panel-content" 
+                    onClick={handleMenuOpen}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "8px 16px",
+                      background: "rgba(255, 255, 255, 0.1)",
+                      borderRadius: "12px",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255, 255, 255, 0.2)",
+                    }}
+                  >
                     <Avatar
                       className="user-avatar"
                       alt="User Avatar"
-                      sx={{ width: 40, height: 40, background: deepOrange[500] }}
+                      sx={{ 
+                        width: 40, 
+                        height: 40, 
+                        background: "linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
+                      }}
                     >
                       {memberDetails?.Name
                         ? memberDetails.Name.charAt(0).toUpperCase()
                         : "U"}
                     </Avatar>
-                    <Typography variant="body1" sx={{ color: "white" }}>
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        color: "white",
+                        fontWeight: "500",
+                        textShadow: "0 1px 2px rgba(0,0,0,0.2)"
+                      }}
+                    >
                       {memberDetails?.Name || "Admin"}
                     </Typography>
                     <ChevronDown
@@ -118,7 +153,16 @@ const Navbar = ({
                   <Button
                     className="logout-btn"
                     variant="ghost"
-                    style={{ marginRight: "8px", fontSize: "50px" }}
+                    style={{ 
+                      marginRight: "8px", 
+                      fontSize: "50px",
+                      color: "white",
+                      background: "rgba(255, 255, 255, 0.1)",
+                      borderRadius: "12px",
+                      padding: "8px 16px",
+                      backdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255, 255, 255, 0.2)",
+                    }}
                     onClick={handleLogout}
                   >
                     <LogOutIcon />
@@ -138,6 +182,14 @@ const Navbar = ({
           onClose={handleMenuClose}
           PaperProps={{
             className: Boolean(anchorEl) ? "custom-menu open" : "custom-menu",
+            style: {
+              borderRadius: "16px",
+              marginTop: "8px",
+              background: "white",
+              boxShadow: "0 10px 40px rgba(99, 102, 241, 0.2)",
+              border: "1px solid rgba(99, 102, 241, 0.1)",
+              minWidth: "240px",
+            }
           }}
         >
           <div
@@ -145,7 +197,11 @@ const Navbar = ({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: "10px 0",
+              padding: "20px 0 16px",
+              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)",
+              borderTopLeftRadius: "16px",
+              borderTopRightRadius: "16px",
+              margin: "-4px -4px 0 -4px",
             }}
           >
             <Avatar
@@ -153,24 +209,43 @@ const Navbar = ({
               sx={{
                 width: 64,
                 height: 64,
-                marginBottom: "8px",
-                background: deepOrange[500],
+                marginBottom: "12px",
+                background: "linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+                border: "3px solid white",
               }}
             >
               {memberDetails?.name
                 ? memberDetails.name.charAt(0).toUpperCase()
                 : ""}
             </Avatar>
-            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+            <Typography 
+              variant="subtitle1" 
+              sx={{ 
+                fontWeight: "bold", 
+                color: "white",
+                textShadow: "0 1px 2px rgba(0,0,0,0.2)"
+              }}
+            >
               {memberDetails?.name || "Member"}
             </Typography>
           </div>
 
-          <Divider />
+          <Divider sx={{ my: 1 }} />
 
-          <MenuItem onClick={handleMenuClose}>
-            <User size={18} style={{ marginRight: "8px" }} />
-            My Profile
+          <MenuItem 
+            onClick={handleMenuClose}
+            sx={{ 
+              py: 1.5,
+              '&:hover': {
+                background: "rgba(99, 102, 241, 0.08)",
+              }
+            }}
+          >
+            <User size={18} style={{ marginRight: "12px", color: "#6366f1" }} />
+            <Typography sx={{ color: "#4b5563", fontWeight: "500" }}>
+              My Profile
+            </Typography>
           </MenuItem>
 
           <MenuItem
@@ -178,24 +253,54 @@ const Navbar = ({
               navigate("/admin/update-password");
               setAnchorEl(null);
             }}
+            sx={{ 
+              py: 1.5,
+              '&:hover': {
+                background: "rgba(99, 102, 241, 0.08)",
+              }
+            }}
           >
-            <Settings size={18} style={{ marginRight: "8px" }} />
-            Account Settings
+            <Settings size={18} style={{ marginRight: "12px", color: "#6366f1" }} />
+            <Typography sx={{ color: "#4b5563", fontWeight: "500" }}>
+              Account Settings
+            </Typography>
           </MenuItem>
 
-          <Divider />
+          <Divider sx={{ my: 1 }} />
 
           <div className="admin-panel-menuitems">
-            <MenuItem onClick={handleMenuClose} sx={{ display: "flex" }}>
-              <Lock size={17} style={{ marginRight: "4px", color: "#007bff" }} />
-              Lock
+            <MenuItem 
+              onClick={handleMenuClose} 
+              sx={{ 
+                py: 1.5,
+                display: "flex",
+                '&:hover': {
+                  background: "rgba(99, 102, 241, 0.08)",
+                }
+              }}
+            >
+              <Lock size={17} style={{ marginRight: "12px", color: "#6366f1" }} />
+              <Typography sx={{ color: "#4b5563", fontWeight: "500" }}>
+                Lock
+              </Typography>
             </MenuItem>
-            <MenuItem onClick={handleLogout} sx={{ display: "flex" }}>
+            <MenuItem 
+              onClick={handleLogout} 
+              sx={{ 
+                py: 1.5,
+                display: "flex",
+                '&:hover': {
+                  background: "rgba(239, 68, 68, 0.08)",
+                }
+              }}
+            >
               <LogOutIcon
                 size={18}
-                style={{ marginRight: "4px", color: "red" }}
+                style={{ marginRight: "12px", color: "#ef4444" }}
               />
-              Logout
+              <Typography sx={{ color: "#4b5563", fontWeight: "500" }}>
+                Logout
+              </Typography>
             </MenuItem>
           </div>
         </Menu>
