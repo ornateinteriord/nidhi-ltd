@@ -112,3 +112,108 @@ export const useUpdateMember = () => {
         },
     });
 };
+
+// ==================== AGENT QUERIES ====================
+
+// TypeScript Interfaces for Agents
+export interface Agent {
+    _id?: string;
+    agent_id: string;
+    branch_id?: string;
+    date_of_joining?: Date | string;
+    name?: string;
+    gender?: string;
+    dob?: Date | string;
+    address?: string;
+    emailid?: string;
+    mobile?: string;
+    pan_no?: string;
+    aadharcard_no?: string;
+    introducer?: string;
+    entered_by?: string;
+    designation?: string;
+    status?: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+}
+
+export interface AgentsResponse {
+    success: boolean;
+    message: string;
+    data: Agent[];
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    };
+}
+
+export interface AgentResponse {
+    success: boolean;
+    message: string;
+    data: Agent;
+}
+
+// GET ALL AGENTS
+export const useGetAgents = (
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    status?: string
+) => {
+    return useQuery({
+        queryKey: ["agents", page, limit, search, status],
+        queryFn: async () => {
+            const params: Record<string, any> = { page, limit };
+            if (search) params.search = search;
+            if (status) params.status = status;
+
+            return await useApi<AgentsResponse>("GET", "/admin/get-agents", undefined, params);
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+};
+
+// GET AGENT BY ID
+export const useGetAgentById = (agentId: string, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["agent", agentId],
+        queryFn: async () => {
+            return await useApi<AgentResponse>("GET", `/admin/get-agent/${agentId}`);
+        },
+        enabled: enabled && !!agentId, // Only run query if enabled and agentId exists
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+};
+
+// CREATE AGENT
+export const useCreateAgent = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (agentData: Partial<Agent>) => {
+            return await useApi<AgentResponse>("POST", "/admin/create-agent", agentData);
+        },
+        onSuccess: () => {
+            // Invalidate and refetch agents list
+            queryClient.invalidateQueries({ queryKey: ["agents"] });
+        },
+    });
+};
+
+// UPDATE AGENT
+export const useUpdateAgent = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ agentId, data }: { agentId: string; data: Partial<Agent> }) => {
+            return await useApi<AgentResponse>("PUT", `/admin/update-agent/${agentId}`, data);
+        },
+        onSuccess: (_, variables) => {
+            // Invalidate and refetch agents list and specific agent
+            queryClient.invalidateQueries({ queryKey: ["agents"] });
+            queryClient.invalidateQueries({ queryKey: ["agent", variables.agentId] });
+        },
+    });
+};
