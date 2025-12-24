@@ -217,3 +217,101 @@ export const useUpdateAgent = () => {
         },
     });
 };
+
+// ==================== INTEREST QUERIES ====================
+
+// TypeScript Interfaces for Interests
+export interface Interest {
+    _id?: string;
+    interest_id: string;
+    ref_id?: string;
+    interest_name?: string;
+    interest_rate?: number;
+    duration?: number;
+    from_date?: Date | string;
+    to_date?: Date | string;
+    status?: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+}
+
+export interface InterestsResponse {
+    success: boolean;
+    message: string;
+    data: Interest[];
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    };
+}
+
+export interface InterestResponse {
+    success: boolean;
+    message: string;
+    data: Interest;
+}
+
+// GET ALL INTERESTS
+export const useGetInterests = (
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    status?: string
+) => {
+    return useQuery({
+        queryKey: ["interests", page, limit, search, status],
+        queryFn: async () => {
+            const params: Record<string, any> = { page, limit };
+            if (search) params.search = search;
+            if (status) params.status = status;
+
+            return await useApi<InterestsResponse>("GET", "/admin/get-interests", undefined, params);
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+};
+
+// GET INTEREST BY ID
+export const useGetInterestById = (interestId: string, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["interest", interestId],
+        queryFn: async () => {
+            return await useApi<InterestResponse>("GET", `/admin/get-interest/${interestId}`);
+        },
+        enabled: enabled && !!interestId, // Only run query if enabled and interestId exists
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+};
+
+// CREATE INTEREST
+export const useCreateInterest = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (interestData: Partial<Interest>) => {
+            return await useApi<InterestResponse>("POST", "/admin/create-interest", interestData);
+        },
+        onSuccess: () => {
+            // Invalidate and refetch interests list
+            queryClient.invalidateQueries({ queryKey: ["interests"] });
+        },
+    });
+};
+
+// UPDATE INTEREST
+export const useUpdateInterest = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ interestId, data }: { interestId: string; data: Partial<Interest> }) => {
+            return await useApi<InterestResponse>("PUT", `/admin/update-interest/${interestId}`, data);
+        },
+        onSuccess: (_, variables) => {
+            // Invalidate and refetch interests list and specific interest
+            queryClient.invalidateQueries({ queryKey: ["interests"] });
+            queryClient.invalidateQueries({ queryKey: ["interest", variables.interestId] });
+        },
+    });
+};

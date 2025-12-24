@@ -28,6 +28,7 @@ const AgentAddNew = lazy(() => import("./pages/Agent/AddNew"));
 const AgentReport = lazy(() => import("./pages/Agent/Report"));
 const BankingMembers = lazy(() => import("./pages/Administration/Members"));
 const BankingAgents = lazy(() => import("./pages/Administration/Agents"));
+const InterestRate = lazy(() => import("./pages/Admin-Pages/Interest/interest"));
 const AdminReceipts = lazy(() => import("./pages/Admin-Pages/Banking/Receipts"));
 const AdminPayments = lazy(() => import("./pages/Admin-Pages/Banking/Payments"));
 const AdminCashTransaction = lazy(() => import("./pages/Admin-Pages/Banking/CashTransaction"));
@@ -193,6 +194,7 @@ const RoutesProvider = ({
               <Route path="/admin/agent/list" element={<AdminAgentList />} />
               <Route path="/banking/members" element={<BankingMembers />} />
               <Route path="/banking/agents" element={<BankingAgents />} />
+              <Route path="/banking/interestrate" element={<InterestRate />} />
               <Route path="/agentassignemt/agent-assignment" element={<AgentAssignment />} />
 
               {/* Master Routes */}
