@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Grid, Typography, Avatar, Button } from '@mui/material';
 import { cn } from '../../../lib/utils';
-import '../../../pages/Dashboard/dashboard.scss';
 
 const AgentDashboard: React.FC = () => {
   const totalOrders = 927;
@@ -53,7 +52,7 @@ const AgentDashboard: React.FC = () => {
       </div>
 
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
-          <Grid size={{ xs: 12, sm: 12, md: 8 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 8 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" style={{ fontWeight: 'bold', color: '#333' }}>

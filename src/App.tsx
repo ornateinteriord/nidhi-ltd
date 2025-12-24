@@ -15,7 +15,6 @@ import { Dialog, DialogContent, CircularProgress } from "@mui/material";
 const AdminDashboard = lazy(() => import("./pages/Admin-Pages/AdminDashboard/Dashboard"));
 const AdminPlans = lazy(() => import("./pages/Admin-Pages/Plans"));
 const AdminTeam = lazy(() => import("./pages/Admin-Pages/Team"));
-const AdminPayoutReport = lazy(() => import("./pages/Admin-Pages/Payout"));
 const AdminPlanRecoveryReport = lazy(() => import("./pages/Admin-Pages/PlanRecovery"));
 const AdminLoanRecoveryReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery"));
 const AssignMenuBranch = lazy(() => import("./pages/Admin-Pages/AssignMenu/AssignMenuBranch"));
@@ -215,9 +214,6 @@ const RoutesProvider = ({
 
               {/* Team */}
               <Route path="/admin/team" element={<AdminTeam />} />
-
-              {/* Payout */}
-              <Route path="/admin/payout/report" element={<AdminPayoutReport />} />
 
               {/* Plan Recovery */}
               <Route path="/admin/plan/recovery" element={<AdminPlanRecoveryReport />} />
