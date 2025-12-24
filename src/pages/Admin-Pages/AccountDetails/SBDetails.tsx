@@ -1,16 +1,8 @@
 import React from 'react';
-import AccountDetailsTable from '../../../components/AccountOpening/AccountDetailsTable';
+import AccountViewTable from '../../../components/AccountOpening/AccountViewTable';
 
 const SBDetails: React.FC = () => {
-  const data: any[] = [];
-
-  return (
-    <AccountDetailsTable
-      title="SB Account Details"
-      data={data}
-      accountType="SB"
-    />
-  );
+  return <AccountViewTable accountType="SB" title="SB Account Details" />;
 };
 
 export default SBDetails;
