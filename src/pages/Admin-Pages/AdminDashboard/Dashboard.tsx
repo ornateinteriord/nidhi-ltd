@@ -1,5 +1,4 @@
 import { cn } from '../../../lib/utils';
-import '../../Dashboard/dashboard.scss';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -15,7 +14,7 @@ const AdminDashboard = () => {
 
   return (
     <>
-       <div className="h-auto md:h-40 relative w-full overflow-hidden bg-gradient-to-r from-[#3335c7] via-[#764bdc] to-[#a855f7] flex flex-col items-center justify-center mt-10 py-6 md:py-0">
+      <div className="h-auto md:h-40 relative w-full overflow-hidden bg-gradient-to-r from-[#3335c7] via-[#764bdc] to-[#a855f7] flex flex-col items-center justify-center mt-10 py-6 md:py-0">
         <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#3335c7] to-[#764bdc] z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
 
         <div className="flex flex-col md:flex-row justify-evenly items-center w-full px-4 md:px-8 relative z-20 gap-6 md:gap-0">
