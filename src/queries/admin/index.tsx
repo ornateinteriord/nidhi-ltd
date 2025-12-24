@@ -315,3 +315,189 @@ export const useUpdateInterest = () => {
         },
     });
 };
+
+// ==================== ACCOUNT QUERIES ====================
+
+// TypeScript Interfaces for Accounts
+export interface AccountBook {
+    _id?: string;
+    account_book_id: string;
+    account_book_name?: string;
+    primary_book?: string;
+    status?: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+}
+
+export interface AccountGroup {
+    _id?: string;
+    account_group_id: string;
+    account_book_id?: string;
+    account_group_name?: string;
+    status?: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+}
+
+export interface Account {
+    _id?: string;
+    account_id: string;
+    branch_id?: string;
+    date_of_opening?: Date | string;
+    member_id?: string;
+    account_type?: string; // account_group_id
+    account_no?: string;
+    account_operation?: string;
+    introducer?: string;
+    entered_by?: string;
+    ref_id?: string; // interest_id
+    interest_rate?: number;
+    duration?: number;
+    date_of_maturity?: Date | string;
+    date_of_close?: Date | string;
+    status?: string;
+    assigned_to?: string;
+    account_amount?: number;
+    joint_member?: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+}
+
+export interface AccountBooksResponse {
+    success: boolean;
+    message: string;
+    data: AccountBook[];
+}
+
+export interface AccountGroupsResponse {
+    success: boolean;
+    message: string;
+    data: AccountGroup[];
+}
+
+export interface InterestsByGroupResponse {
+    success: boolean;
+    message: string;
+    data: Interest[];
+}
+
+export interface AccountResponse {
+    success: boolean;
+    message: string;
+    data: Account;
+}
+
+export interface AccountsResponse {
+    success: boolean;
+    message: string;
+    data: Account[];
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    };
+}
+
+// GET ALL ACCOUNT BOOKS
+export const useGetAccountBooks = () => {
+    return useQuery({
+        queryKey: ["accountBooks"],
+        queryFn: async () => {
+            return await useApi<AccountBooksResponse>("GET", "/admin/get-account-books");
+        },
+        staleTime: 1000 * 60 * 10, // 10 minutes
+    });
+};
+
+// GET ALL ACCOUNT GROUPS
+export const useGetAccountGroups = (account_book_id?: string) => {
+    return useQuery({
+        queryKey: ["accountGroups", account_book_id],
+        queryFn: async () => {
+            const params: Record<string, any> = {};
+            if (account_book_id) params.account_book_id = account_book_id;
+
+            return await useApi<AccountGroupsResponse>("GET", "/admin/get-account-groups", undefined, params);
+        },
+        staleTime: 1000 * 60 * 10, // 10 minutes
+    });
+};
+
+// GET INTERESTS BY ACCOUNT GROUP
+export const useGetInterestsByAccountGroup = (account_group_id: string, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["interestsByGroup", account_group_id],
+        queryFn: async () => {
+            return await useApi<InterestsByGroupResponse>("GET", `/admin/get-interests-by-account-group/${account_group_id}`);
+        },
+        enabled: enabled && !!account_group_id,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+};
+
+// CREATE ACCOUNT
+export const useCreateAccount = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (accountData: Partial<Account>) => {
+            return await useApi<AccountResponse>("POST", "/admin/create-account", accountData);
+        },
+        onSuccess: () => {
+            // Invalidate and refetch accounts list
+            queryClient.invalidateQueries({ queryKey: ["accounts"] });
+        },
+    });
+};
+
+// GET ALL ACCOUNTS
+export const useGetAccounts = (
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    status?: string,
+    account_type?: string
+) => {
+    return useQuery({
+        queryKey: ["accounts", page, limit, search, status, account_type],
+        queryFn: async () => {
+            const params: Record<string, any> = { page, limit };
+            if (search) params.search = search;
+            if (status) params.status = status;
+            if (account_type) params.account_type = account_type;
+
+            return await useApi<AccountsResponse>("GET", "/admin/get-accounts", undefined, params);
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+};
+
+// GET ACCOUNT BY ID
+export const useGetAccountById = (accountId: string, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["account", accountId],
+        queryFn: async () => {
+            return await useApi<AccountResponse>("GET", `/admin/get-account/${accountId}`);
+        },
+        enabled: enabled && !!accountId,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+};
+
+// UPDATE ACCOUNT
+export const useUpdateAccount = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ accountId, data }: { accountId: string; data: Partial<Account> }) => {
+            return await useApi<AccountResponse>("PUT", `/admin/update-account/${accountId}`, data);
+        },
+        onSuccess: (_, variables) => {
+            // Invalidate and refetch accounts list and specific account
+            queryClient.invalidateQueries({ queryKey: ["accounts"] });
+            queryClient.invalidateQueries({ queryKey: ["account", variables.accountId] });
+        },
+    });
+};
+
