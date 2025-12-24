@@ -82,7 +82,7 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
   const isEditMode = !!memberId;
 
   // Fetch member data when editing
-  const { data: memberData, isLoading: isFetching } = useGetMemberById(
+  const { data: memberData, isLoading: isFetching, isError } = useGetMemberById(
     memberId || '',
     isEditMode && open
   );
@@ -142,8 +142,11 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
         date_of_joining: member.date_of_joining ? new Date(member.date_of_joining).toISOString().split('T')[0] : '',
         entered_by: member.entered_by || '',
       });
-    } else if (!isEditMode && open) {
-      // Reset form for create mode
+    } else if (!isEditMode || isError || !open) {
+      // Reset form for:
+      // 1. Create mode
+      // 2. When API fails (isError)
+      // 3. When dialog closes
       setFormData({
         member_id: '',
         name: '',
@@ -170,7 +173,7 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
         entered_by: '',
       });
     }
-  }, [memberData, isEditMode, open]);
+  }, [memberData, isEditMode, open, isError]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({

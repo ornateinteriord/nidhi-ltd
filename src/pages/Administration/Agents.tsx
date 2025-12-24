@@ -1,111 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Container,
   Chip,
   Button,
   Avatar,
-  Typography,
   Alert,
   Snackbar,
+  Typography,
   Stack,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import BlockIcon from '@mui/icons-material/Block';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import AdminReusableTable from '../../utils/AdminReusableTable';
-import ModifyDialog from '../../utils/MemberModifyDialog';
+import AgentModifyDialog from '../../utils/AgentModifyDialog';
+import {
+  useGetAgents,
+  useCreateAgent,
+  useUpdateAgent,
+  Agent as AgentType
+} from '../../queries/admin/index';
 
 interface Agent {
   id: string;
   date: string;
-  member: string;
+  name: string;
   email: string;
   mobile: string;
-  status: 'active' | 'inactive' | 'pending';
-  modify: string;
+  status: 'Active' | 'Inactive' | 'Blocked';
+  designation: string;
   action: string;
-  organization?: string;
+  agent_id: string;
 }
 
 const Agents: React.FC = () => {
-  const [agents, setAgents] = useState<Agent[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [snackbar, setSnackbar] = useState({ 
-    open: false, 
-    message: '', 
-    severity: 'success' as 'success' | 'error' | 'info' | 'warning' 
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success' as 'success' | 'error' | 'info' | 'warning'
   });
   const [modifyDialogOpen, setModifyDialogOpen] = useState(false);
-  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchAgents = async () => {
-      setIsLoading(true);
-      try {
-        const mockData: Agent[] = [
-          {
-            id: '1',
-            date: '13-Dec-2025',
-            member: 'mainpai souharda cooperative society (A3)',
-            email: 'mainpalcovhards90@gmail.com',
-            mobile: '9004478100',
-            status: 'active',
-            modify: 'Modify',
-            action: 'Ductive',
-            organization: 'Souharda Cooperative'
-          },
-          {
-            id: '2',
-            date: '30-Jan-2021',
-            member: 'MANJUNATH (A20001)',
-            email: 'manjunath14480@gmail.com',
-            mobile: '9100000000',
-            status: 'active',
-            modify: 'Modify',
-            action: 'Ductive',
-            organization: 'Individual'
-          },
-          {
-            id: '3',
-            date: '15-Jan-2024',
-            member: 'RAJESH KUMAR (A30045)',
-            email: 'rajesh.kumar@example.com',
-            mobile: '9876543210',
-            status: 'pending',
-            modify: 'Modify',
-            action: 'Ductive',
-            organization: 'Corporate'
-          },
-        ];
+  // React Query Hooks
+  const { data: agentsData, isLoading } = useGetAgents(page, 10, searchQuery);
+  const createAgentMutation = useCreateAgent();
+  const updateAgentMutation = useUpdateAgent();
 
-        const filtered = searchQuery 
-          ? mockData.filter(agent => 
-              agent.member.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              agent.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              agent.mobile.includes(searchQuery)
-            )
-          : mockData;
-
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        setAgents(filtered);
-      } catch (error) {
-        console.error('Error fetching agents:', error);
-        setSnackbar({
-          open: true,
-          message: 'Failed to load agents data',
-          severity: 'error'
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAgents();
-  }, [searchQuery]);
+  // Transform API data to table format
+  const agents: Agent[] = agentsData?.data?.map((agent: AgentType) => ({
+    id: agent._id || '',
+    agent_id: agent.agent_id,
+    date: agent.date_of_joining
+      ? new Date(agent.date_of_joining).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })
+      : '-',
+    name: `${agent.name || 'N/A'} (${agent.agent_id})`,
+    email: agent.emailid || 'N/A',
+    mobile: agent.mobile || 'N/A',
+    status: (agent.status === 'active' ? 'Active' : 'Inactive') as 'Active' | 'Inactive' | 'Blocked',
+    designation: agent.designation || 'N/A',
+    action: ''
+  })) || [];
 
   const columns = [
     {
@@ -115,29 +79,29 @@ const Agents: React.FC = () => {
       minWidth: 120,
     },
     {
-      id: 'member',
-      label: 'Member',
+      id: 'name',
+      label: 'Agent',
       sortable: true,
-      minWidth: 250,
+      minWidth: 200,
       renderCell: (row: Agent) => (
         <Stack direction="row" spacing={1} alignItems="center">
           <Avatar
             sx={{
               width: 36,
               height: 36,
-              bgcolor: getAvatarColor(row.member),
+              bgcolor: getAvatarColor(row.name),
               fontSize: '0.875rem',
               fontWeight: 600,
             }}
           >
-            {getInitials(row.member.split(' (')[0])}
+            {getInitials(row.name.split(' (')[0])}
           </Avatar>
           <Box>
             <Typography variant="body2" sx={{ fontWeight: 600, color: '#1e293b' }}>
-              {row.member.split(' (')[0]}
+              {row.name.split(' (')[0]}
             </Typography>
             <Typography variant="caption" sx={{ color: '#64748b' }}>
-              {row.member.match(/\((.*?)\)/)?.[1] || ''}
+              {row.name.match(/\((.*?)\)/)?.[1] || ''}
             </Typography>
           </Box>
         </Stack>
@@ -160,7 +124,7 @@ const Agents: React.FC = () => {
     {
       id: 'mobile',
       label: 'Mobile',
-      minWidth: 140,
+      minWidth: 150,
       renderCell: (row: Agent) => (
         <Stack direction="row" spacing={1} alignItems="center">
           <PhoneIcon sx={{ color: '#64748b', fontSize: 16 }} />
@@ -171,22 +135,28 @@ const Agents: React.FC = () => {
       ),
     },
     {
+      id: 'designation',
+      label: 'Designation',
+      sortable: true,
+      minWidth: 120,
+    },
+    {
       id: 'status',
       label: 'Status',
       sortable: true,
-      minWidth: 120,
+      minWidth: 100,
       align: 'center' as const,
       renderCell: (row: Agent) => (
         <Chip
-          label={row.status.toUpperCase()}
+          label={row.status}
           size="small"
           sx={{
             backgroundColor:
-              row.status === 'active' ? '#d1fae5' :
-              row.status === 'pending' ? '#fef3c7' : '#f1f5f9',
+              row.status === 'Active' ? '#d1fae5' :
+                row.status === 'Inactive' ? '#f1f5f9' : '#fee2e2',
             color:
-              row.status === 'active' ? '#065f46' :
-              row.status === 'pending' ? '#92400e' : '#64748b',
+              row.status === 'Active' ? '#065f46' :
+                row.status === 'Inactive' ? '#64748b' : '#991b1b',
             fontWeight: 600,
             borderRadius: 1,
           }}
@@ -205,7 +175,7 @@ const Agents: React.FC = () => {
           startIcon={<EditIcon />}
           onClick={(e) => {
             e.stopPropagation();
-            handleModifyClick(row);
+            handleModifyClick(row.agent_id);
           }}
           sx={{
             textTransform: 'none',
@@ -241,17 +211,16 @@ const Agents: React.FC = () => {
           sx={{
             textTransform: 'none',
             borderRadius: 1,
-            borderColor: '#cbd5e1',
-            color: '#475569',
+            borderColor: row.status === 'Active' ? '#ef4444' : '#10b981',
+            color: row.status === 'Active' ? '#ef4444' : '#10b981',
             fontSize: '0.75rem',
             px: 2,
             '&:hover': {
-              borderColor: '#94a3b8',
-              backgroundColor: '#f8fafc',
+              backgroundColor: row.status === 'Active' ? '#fef2f2' : '#d1fae5',
             }
           }}
         >
-          {row.status === 'active' ? 'Inactive' : 'Active'}
+          {row.status === 'Active' ? 'Inactive' : 'Active'}
         </Button>
       ),
     },
@@ -273,29 +242,48 @@ const Agents: React.FC = () => {
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
+    setPage(1); // Reset to first page on search
   };
 
-  const handleModifyClick = (agent: Agent) => {
-    setSelectedAgent(agent);
+  const handleModifyClick = (agentId: string) => {
+    setSelectedAgentId(agentId);
+    setModifyDialogOpen(true);
+  };
+
+  const handleAddAgent = () => {
+    setSelectedAgentId(null); // null = create mode
     setModifyDialogOpen(true);
   };
 
   const handleActionClick = (agent: Agent) => {
-    const newStatus = agent.status === 'active' ? 'inactive' : 'active';
-    setAgents(prev => 
-      prev.map(a => 
-        a.id === agent.id ? { ...a, status: newStatus } : a
-      )
+    const newStatus = agent.status === 'Active' ? 'Inactive' : 'Active';
+
+    // Call update API to change status
+    updateAgentMutation.mutate(
+      {
+        agentId: agent.agent_id,
+        data: { status: newStatus.toLowerCase() }
+      },
+      {
+        onSuccess: () => {
+          setSnackbar({
+            open: true,
+            message: `${agent.name.split(' (')[0]} has been ${newStatus.toLowerCase()}`,
+            severity: 'info'
+          });
+        },
+        onError: (error: any) => {
+          setSnackbar({
+            open: true,
+            message: error?.message || 'Failed to update agent status',
+            severity: 'error'
+          });
+        }
+      }
     );
-    
-    setSnackbar({
-      open: true,
-      message: `${agent.member.split(' (')[0]} has been ${newStatus}`,
-      severity: 'info'
-    });
   };
 
-  const handleExport = () => {
+  const handleExportAgents = () => {
     setSnackbar({
       open: true,
       message: 'Agents data exported successfully',
@@ -303,21 +291,73 @@ const Agents: React.FC = () => {
     });
   };
 
-  const handleModifySave = (_data: any) => {
-    setSnackbar({
-      open: true,
-      message: 'Agent details updated successfully',
-      severity: 'success'
-    });
-    // Update agent data here
+  const handleModifySave = (data: any, isEdit?: boolean) => {
+    if (isEdit && selectedAgentId) {
+      // Update existing agent
+      updateAgentMutation.mutate(
+        {
+          agentId: selectedAgentId,
+          data: data
+        },
+        {
+          onSuccess: () => {
+            setSnackbar({
+              open: true,
+              message: 'Agent updated successfully',
+              severity: 'success'
+            });
+            setModifyDialogOpen(false);
+          },
+          onError: (error: any) => {
+            setSnackbar({
+              open: true,
+              message: error?.message || 'Failed to update agent',
+              severity: 'error'
+            });
+          }
+        }
+      );
+    } else {
+      // Create new agent
+      createAgentMutation.mutate(data, {
+        onSuccess: () => {
+          setSnackbar({
+            open: true,
+            message: 'Agent created successfully',
+            severity: 'success'
+          });
+          setModifyDialogOpen(false);
+        },
+        onError: (error: any) => {
+          setSnackbar({
+            open: true,
+            message: error?.message || 'Failed to create agent',
+            severity: 'error'
+          });
+        }
+      });
+    }
   };
 
   const tableActions = (
     <Stack direction="row" spacing={1}>
       <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={handleAddAgent}
+        sx={{
+          textTransform: 'none',
+          borderRadius: 1,
+          backgroundColor: '#1a237e',
+          '&:hover': { backgroundColor: '#283593' }
+        }}
+      >
+        Add Agent
+      </Button>
+      <Button
         variant="outlined"
-        onClick={handleExport}
-        sx={{ 
+        onClick={handleExportAgents}
+        sx={{
           textTransform: 'none',
           borderRadius: 1,
           borderColor: '#cbd5e1',
@@ -350,18 +390,23 @@ const Agents: React.FC = () => {
         onSearchChange={handleSearchChange}
         paginationPerPage={10}
         actions={tableActions}
-        // enableExport={true}
-        onExport={handleExport}
+        onExport={handleExportAgents}
         emptyMessage="No agents found"
+        totalCount={agentsData?.pagination?.total}
+        currentPage={page - 1}
+        onPageChange={(newPage) => setPage(newPage + 1)}
       />
 
       {/* Modify Dialog */}
-      <ModifyDialog
+      <AgentModifyDialog
         open={modifyDialogOpen}
-        onClose={() => setModifyDialogOpen(false)}
+        onClose={() => {
+          setModifyDialogOpen(false);
+          setSelectedAgentId(null);
+        }}
         onSave={handleModifySave}
-        type="agent"
-        initialData={selectedAgent}
+        agentId={selectedAgentId}
+        isLoading={createAgentMutation.isPending || updateAgentMutation.isPending}
       />
 
       {/* Snackbar */}
@@ -371,10 +416,10 @@ const Agents: React.FC = () => {
         onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert 
-          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))} 
+        <Alert
+          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
           severity={snackbar.severity}
-          sx={{ 
+          sx={{
             width: '100%',
             borderRadius: 1,
           }}

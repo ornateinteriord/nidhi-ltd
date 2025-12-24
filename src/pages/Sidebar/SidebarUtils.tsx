@@ -46,6 +46,12 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
 
 export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
   {
+    name: "Dashboard",
+    icon: <MuiIcons.Dashboard />,
+    path: "/admin/dashboard",
+    isExpandable: false,
+  },
+  {
     name: "Administration",
     icon: <LucideIcons.Settings />,
     isExpandable: true,
@@ -55,13 +61,13 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     ],
   },
 
-   {
+  {
     name: "Agent Assignment",
     icon: <LucideIcons.ClipboardCheck />,
     path: "/agentassignemt/agent-assignment",
     isExpandable: false,
   },
-  
+
   {
     name: "Shares",
     icon: <LucideIcons.TrendingUp />,
