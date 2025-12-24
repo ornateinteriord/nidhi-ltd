@@ -1,16 +1,8 @@
 import React from 'react';
-import AccountDetailsTable from '../../../components/AccountOpening/AccountDetailsTable';
+import AccountViewTable from '../../../components/AccountOpening/AccountViewTable';
 
 const CADetails: React.FC = () => {
-  const data: any[] = [];
-
-  return (
-    <AccountDetailsTable
-      title="CA Account Details"
-      data={data}
-      accountType="CA"
-    />
-  );
+  return <AccountViewTable accountType="CA" title="CA Account Details" />;
 };
 
 export default CADetails;
