@@ -1,42 +1,20 @@
-import { Typography } from '@mui/material';
 import { cn } from '../../../lib/utils';
-import '../../Dashboard/dashboard.scss';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
-import { useGetAllMembersDetails } from '../../../api/Admin';
 import DashboardCards from './DashboardCards';
 
-const AdminDashboard = () => { 
-  const { data: members = [], isLoading, error } = useGetAllMembersDetails();
+const AdminDashboard = () => {
 
-  const totalCities = new Set(members.map((member: any) =>  member.location).filter(Boolean)).size;
-  const totalDegrees = new Set(members.map((member: any) => member.degree || member.education).filter(Boolean)).size;
+  const totalCities = 0;
+  const totalDegrees = 0;
   const totalEvents = 0;
-  const totalLikes = 0; 
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Typography>Loading dashboard data...</Typography>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Typography color="error">
-          Error loading dashboard data: {error.message}
-        </Typography>
-      </div>
-    );
-  }
+  const totalLikes = 0;
 
   return (
     <>
-       <div className="h-auto md:h-40 relative w-full overflow-hidden bg-gradient-to-r from-[#3335c7] via-[#764bdc] to-[#a855f7] flex flex-col items-center justify-center mt-10 py-6 md:py-0">
+      <div className="h-auto md:h-40 relative w-full overflow-hidden bg-gradient-to-r from-[#3335c7] via-[#764bdc] to-[#a855f7] flex flex-col items-center justify-center mt-10 py-6 md:py-0">
         <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#3335c7] to-[#764bdc] z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
 
         <div className="flex flex-col md:flex-row justify-evenly items-center w-full px-4 md:px-8 relative z-20 gap-6 md:gap-0">

@@ -1,8 +1,8 @@
 import DataTable from 'react-data-table-component';
 import { Box } from '@mui/material';
-import { DASHBOARD_CUTSOM_STYLE } from '../../utils/DataTableColumnsProvider';
+import { DASHBOARD_CUTSOM_STYLE } from '../../../utils/DataTableColumnsProvider';
 
-const DashboardTable = ({ data , columns, sx = {} }: { data: any , columns: any, sx?: any }) => {
+const DashboardTable = ({ data, columns, sx = {} }: { data: any, columns: any, sx?: any }) => {
 
     return (
         <Box sx={{ width: '100%', ...sx }}>
@@ -19,4 +19,4 @@ const DashboardTable = ({ data , columns, sx = {} }: { data: any , columns: any,
     );
 }
 
-export default DashboardTable
+export default DashboardTable;

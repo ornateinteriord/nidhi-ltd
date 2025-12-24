@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Avatar, Button, Grid, Box } from '@mui/material';
 import { cn } from '../../lib/utils';
-import '../../pages/Dashboard/dashboard.scss';
+
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -77,17 +77,17 @@ const AgentDashboard: React.FC = () => {
             background: 'white',
           }}>
             <CardContent>
-              <Typography variant="h6" style={{ 
-                fontWeight: 'bold', 
+              <Typography variant="h6" style={{
+                fontWeight: 'bold',
                 color: '#4f46e5',
                 marginBottom: '16px',
               }}>
                 Agent Performance
               </Typography>
-              <Box sx={{ 
-                width: '100%', 
-                mt: 2, 
-                height: 224, 
+              <Box sx={{
+                width: '100%',
+                mt: 2,
+                height: 224,
                 borderRadius: '12px',
                 background: 'linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%)',
                 display: 'flex',
@@ -110,8 +110,8 @@ const AgentDashboard: React.FC = () => {
             mt: 3,
           }}>
             <CardContent>
-              <Typography variant="h6" style={{ 
-                fontWeight: 'bold', 
+              <Typography variant="h6" style={{
+                fontWeight: 'bold',
                 color: '#4f46e5',
                 marginBottom: '16px',
               }}>
@@ -138,8 +138,8 @@ const AgentDashboard: React.FC = () => {
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar sx={{ 
-                        width: 48, 
+                      <Avatar sx={{
+                        width: 48,
                         height: 48,
                         background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                       }}>
@@ -160,12 +160,12 @@ const AgentDashboard: React.FC = () => {
                         px: 2,
                         py: 0.5,
                         borderRadius: '8px',
-                        border: order.status === 'Paid' 
-                          ? '1px solid #10b981' 
+                        border: order.status === 'Paid'
+                          ? '1px solid #10b981'
                           : '1px solid #ef4444',
                         color: order.status === 'Paid' ? '#10b981' : '#ef4444',
-                        background: order.status === 'Paid' 
-                          ? 'rgba(16, 185, 129, 0.1)' 
+                        background: order.status === 'Paid'
+                          ? 'rgba(16, 185, 129, 0.1)'
                           : 'rgba(239, 68, 68, 0.1)',
                       }}>
                         {order.status}
@@ -180,15 +180,15 @@ const AgentDashboard: React.FC = () => {
                       }}>
                         {order.subStatus}
                       </Box>
-                      <Typography sx={{ 
-                        fontWeight: '600', 
+                      <Typography sx={{
+                        fontWeight: '600',
                         color: '#1f2937',
                         minWidth: '80px',
                       }}>
                         {order.amount}
                       </Typography>
-                      <Button 
-                        variant="outlined" 
+                      <Button
+                        variant="outlined"
                         size="small"
                         sx={{
                           borderRadius: '8px',
@@ -220,8 +220,8 @@ const AgentDashboard: React.FC = () => {
             mb: 3,
           }}>
             <CardContent>
-              <Typography variant="h6" style={{ 
-                fontWeight: 'bold', 
+              <Typography variant="h6" style={{
+                fontWeight: 'bold',
                 color: 'white',
                 marginBottom: '20px',
               }}>
@@ -272,15 +272,15 @@ const AgentDashboard: React.FC = () => {
             background: 'white',
           }}>
             <CardContent>
-              <Typography variant="h6" style={{ 
-                fontWeight: 'bold', 
+              <Typography variant="h6" style={{
+                fontWeight: 'bold',
                 color: '#4f46e5',
                 marginBottom: '20px',
               }}>
                 Action Center
               </Typography>
               <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Button 
+                <Button
                   variant="contained"
                   sx={{
                     background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
@@ -298,7 +298,7 @@ const AgentDashboard: React.FC = () => {
                 >
                   Add Agent
                 </Button>
-                <Button 
+                <Button
                   variant="outlined"
                   sx={{
                     borderRadius: '12px',

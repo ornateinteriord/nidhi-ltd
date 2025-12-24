@@ -6,13 +6,12 @@ import { UserSideBarMenuItems, AdminSideBarMenuItems, AdviserSideBarMenuItems, A
 import { Avatar, Toolbar, Typography } from '@mui/material';
 import { SideBarMenuItemType } from '../../store/store';
 import { MuiIcons } from '../Icons';
-// import { deepOrange } from '@mui/material/colors';
-import { useGetMemberDetails } from '../../api/Memeber';
+import { deepOrange } from '@mui/material/colors';
+// import { useGetMemberDetails } from '../../api/Memeber';
 import { LoadingComponent } from '../../App';
-import { toast } from 'react-toastify';
-import TokenService from '../../api/token/tokenService';
+// import TokenService from '../../queries/token/tokenService';
 
-const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => void, role: string | null}) => {
+const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => void, role: string | null }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>('Dashboard');
   const [closingItem, setClosingItem] = useState<string | null>(null);
@@ -42,90 +41,61 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
       onClose();
     }
   };
-  const menuItems = role === "ADMIN" ?   AgentSideBarMenuItems: role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ?  AdminSideBarMenuItems : UserSideBarMenuItems;
-  const userId = TokenService.getUserId()
-  const memberMutatation = useGetMemberDetails(userId!)
-  const {data : fethedUser , isLoading , isError , error} = memberMutatation
+  const menuItems = role === "ADMIN" ? AdminSideBarMenuItems : role === "ADVISER" ? AdviserSideBarMenuItems : role === "AGENT" ? AgentSideBarMenuItems : UserSideBarMenuItems;
+  // const userId = TokenService.getUserId()
+  // const memberMutatation = useGetMemberDetails(userId!)
+  // const { data: fethedUser, isLoading, isError, error } = memberMutatation
+  const fethedUser = { Name: "Demo", username: "demo", profile_image: "", profileImage: "" }
   const name = fethedUser?.Name || fethedUser?.username
 
-  useEffect(()=>{
-    if(isError){
-     toast.error(error?.message || 'Failed to fetch user details')
-    }
-  },[isError , error])
+  // useEffect(() => {
+  //   if (isError) {
+  //     toast.error(error?.message || 'Failed to fetch user details')
+  //   }
+  // }, [isError, error])
   return (
-    <motion.div 
+    <motion.div
       className={`sidebar ${isOpen ? 'open' : 'closed'}`}
       initial={{ width: 0 }}
       animate={{ width: isOpen ? 250 : 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      style={{ 
-        zIndex: 100,
-        background: '#3335c7',
-        boxShadow: '4px 0 20px rgba(99, 102, 241, 0.3)',
-      }}
+      style={{ zIndex: 100 }}
     >
       <Toolbar className="navbar-toolbar" />
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             className="sidebar-header"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-              padding: '20px',
-            }}
           >
             <Avatar
               alt="User Avatar"
               src={fethedUser?.profile_image || ''}
-              sx={{ 
-                width: 50, 
-                height: 50, 
-                background: 'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-                border: '2px solid white',
-              }}
+              sx={{ width: 50, height: 50, background: deepOrange[500] }}
             >
               {!fethedUser?.profileImage && name?.charAt(0).toUpperCase()}
             </Avatar>
-            <div className="welcome-text" style={{padding: '10px', color: '#fff'}}>
-              <Typography style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.875rem' }}>
-                Welcome,
-              </Typography>
-              <Typography style={{
-                fontWeight: 'bold', 
-                color: 'white',
-                fontSize: '0.8rem',
-                textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
-              }}>
-                {fethedUser?.Name}
-              </Typography>
+            <div className="welcome-text" style={{ padding: '10px', color: '#fff' }}>
+              <Typography>Welcome,</Typography>
+              <Typography style={{ fontWeight: 'bold' }}>{fethedUser?.Name}</Typography>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      <div style={{ 
-        height: 'calc(100vh - 100px)', 
-        overflowY: 'auto', 
-        paddingBottom: '80px',
-        padding: '16px',
-      }}>
+      <div style={{ height: 'calc(100vh - 100px)', overflowY: 'auto', paddingBottom: '80px' }}>
         <AnimatePresence>
           {menuItems.map((item: SideBarMenuItemType) => (
-            <motion.div 
+            <motion.div
               key={item.name}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
             >
-              <div 
+              <div
                 onClick={() => {
                   if (item.isExpandable) {
                     handleToggle(item.name);
@@ -133,36 +103,12 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                     navigate(item.path!);
                     handleSelect(item.name);
                   }
-                }} 
-                className={`menu-item ${selectedItem === item.name ? 'selected' : ''}`}
-                style={{
-                  background: selectedItem === item.name 
-                    ? 'rgba(255, 255, 255, 0.2)' 
-                    : 'transparent',
-                  borderRadius: '12px',
-                  marginBottom: '4px',
-                  border: selectedItem === item.name 
-                    ? '1px solid rgba(255, 255, 255, 0.3)' 
-                    : '1px solid transparent',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: selectedItem === item.name ? 'blur(10px)' : 'none',
                 }}
+                className={`menu-item ${selectedItem === item.name ? 'selected' : ''}`}
               >
-                <span style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '12px',
-                  color: selectedItem === item.name ? 'white' : 'rgba(255, 255, 255, 0.9)',
-                  fontWeight: selectedItem === item.name ? '600' : '500',
-                }}>
-                  {item.icon} 
-                  <span style={{ flex: 1 }}>{item.name}</span>
-                </span>
+                {item.icon} {item.name}
                 {item.isExpandable && (
-                  <span style={{ 
-                    marginLeft: 'auto', 
-                    color: 'rgba(255, 255, 255, 0.7)',
-                  }} onClick={(e) => {
+                  <span style={{ marginLeft: 'auto' }} onClick={(e) => {
                     e.stopPropagation();
                     handleToggle(item.name);
                   }}>
@@ -171,22 +117,15 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                 )}
               </div>
               {item.isExpandable && (
-                <motion.div 
+                <motion.div
                   className="sub-items"
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ 
+                  animate={{
                     height: (expandedItem === item.name || closingItem === item.name) ? 'auto' : 0,
                     opacity: expandedItem === item.name ? 1 : 0
                   }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    borderRadius: '8px',
-                    margin: '4px 0 4px 16px',
-                    overflow: 'hidden',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                  }}
                 >
                   <AnimatePresence>
                     {(expandedItem === item.name || closingItem === item.name) && item.subItems?.map(subItem => (
@@ -197,42 +136,15 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Link 
-                          to={subItem.path ?? '#'} 
+                        <Link
+                          to={subItem.path ?? '#'}
                           className={`sub-item ${location.pathname === subItem.path ? 'selected' : ''}`}
                           onClick={() => {
                             handleSelect(item.name);
                           }}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            padding: '10px 16px',
-                            color: location.pathname === subItem.path 
-                              ? 'white' 
-                              : 'rgba(255, 255, 255, 0.8)',
-                            background: location.pathname === subItem.path
-                              ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%)'
-                              : 'transparent',
-                            borderRadius: '6px',
-                            margin: '2px 8px',
-                            textDecoration: 'none',
-                            transition: 'all 0.3s ease',
-                          }}
                         >
-                          <span className="sub-item-icon" style={{
-                            color: location.pathname === subItem.path 
-                              ? 'white' 
-                              : 'rgba(255, 255, 255, 0.7)',
-                          }}>
-                            {subItem.icon}
-                          </span>
-                          <span className="sub-item-name" style={{
-                            fontWeight: location.pathname === subItem.path ? '600' : '500',
-                            fontSize: '0.875rem',
-                          }}>
-                            {subItem.name}
-                          </span>
+                          <span className="sub-item-icon">{subItem.icon}</span>
+                          <span className="sub-item-name">{subItem.name}</span>
                         </Link>
                       </motion.div>
                     ))}
@@ -242,7 +154,7 @@ const Sidebar = ({isOpen, onClose , role }: {isOpen: boolean, onClose: () => voi
             </motion.div>
           ))}
         </AnimatePresence>
-        {isLoading && <LoadingComponent />}
+        {false && <LoadingComponent />}
       </div>
     </motion.div>
   );

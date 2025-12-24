@@ -13,7 +13,7 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import { LoadingComponent } from "../../App";
-import { useLoginMutation } from "../../api/Auth";
+import { useLoginMutation } from "../../queries/Auth";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ const Login = () => {
   };
 
   const loginMutation = useLoginMutation()
-  const { mutate, isPending} = loginMutation
+  const { mutate, isPending } = loginMutation
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

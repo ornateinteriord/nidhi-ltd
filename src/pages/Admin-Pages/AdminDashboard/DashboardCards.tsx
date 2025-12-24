@@ -5,7 +5,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import StorageIcon from '@mui/icons-material/Storage';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import DashboardTable from '../../../pages/Dashboard/DashboardTable';
+import DashboardTable from './DashboardTable';
 import TimelineComponent from '../../../utils/TimeLineComponent';
 
 const DashboardCards = () => {
@@ -74,6 +74,11 @@ const DashboardCards = () => {
     {
       title: 'Account',
       highlight: '105600002',
+      date: 'Created On 02-02-2021',
+    },
+    {
+      title: 'Account',
+      highlight: '105600003',
       date: 'Created On 02-02-2021',
     },
   ];
@@ -225,17 +230,17 @@ const DashboardCards = () => {
             actionButtonLabel="More Information"
             showFooterContent={true}
             footerContent={
-              <Box sx={{ 
-                backgroundColor: 'white', 
-                borderRadius: '12px', 
-                mt: 2, 
+              <Box sx={{
+                backgroundColor: 'white',
+                borderRadius: '12px',
+                mt: 2,
                 overflow: 'hidden',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
                 border: '1px solid rgba(99, 102, 241, 0.1)',
               }}>
-                <DashboardTable 
-                  data={membersData} 
-                  columns={membersColumns} 
+                <DashboardTable
+                  data={membersData}
+                  columns={membersColumns}
                   sx={{
                     '& .rdt_Table': {
                       borderRadius: '12px',
@@ -279,15 +284,15 @@ const DashboardCards = () => {
             status="Latest created accounts"
             showFooterContent={true}
             footerContent={
-              <Box sx={{ 
-                backgroundColor: 'white', 
-                borderRadius: '12px', 
-                mt: 2, 
+              <Box sx={{
+                backgroundColor: 'white',
+                borderRadius: '12px',
+                mt: 2,
                 p: 3,
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
                 border: '1px solid rgba(99, 102, 241, 0.1)',
               }}>
-                <TimelineComponent 
+                <TimelineComponent
                   data={accountsTimelineData}
                   sx={{
                     '& .timeline-item': {

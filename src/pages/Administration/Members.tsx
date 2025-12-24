@@ -1,22 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Box, 
-  Container, 
-  Chip, 
+import React, { useState } from 'react';
+import {
+  Box,
+  Container,
+  Chip,
   Button,
   Avatar,
   Alert,
   Snackbar,
   Typography,
   Stack,
-
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import BlockIcon from '@mui/icons-material/Block';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import AdminReusableTable from '../../utils/AdminReusableTable';
 import ModifyDialog from '../../utils/MemberModifyDialog';
+import {
+  useGetMembers,
+  useCreateMember,
+  useUpdateMember,
+  Member as MemberType
+} from '../../queries/admin/index';
 
 interface Member {
   id: string;
@@ -27,82 +33,43 @@ interface Member {
   status: 'Active' | 'Inactive' | 'Blocked';
   membershipType: string;
   action: string;
+  member_id: string;
 }
 
 const Members: React.FC = () => {
-  const [members, setMembers] = useState<Member[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [snackbar, setSnackbar] = useState({ 
-    open: false, 
-    message: '', 
-    severity: 'success' as 'success' | 'error' | 'info' | 'warning' 
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success' as 'success' | 'error' | 'info' | 'warning'
   });
   const [modifyDialogOpen, setModifyDialogOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      setIsLoading(true);
-      try {
-        const mockData: Member[] = [
-          {
-            id: '10516',
-            date: '15-Dec-2025',
-            name: 'john (10516)',
-            email: 'john@example.com',
-            contact: '9645784541',
-            status: 'Active',
-            membershipType: 'Basic',
-            action: ''
-          },
-          {
-            id: '10517',
-            date: '15-Dec-2025',
-            name: 'Bhargavi (10517)',
-            email: 'bhargavi@example.com',
-            contact: '9980615016',
-            status: 'Active',
-            membershipType: 'Premium',
-            action: ''
-          },
-          {
-            id: '10515',
-            date: '15-Dec-2025',
-            name: 'Tousif (10515)',
-            email: 'tousif@example.com',
-            contact: '7466254522',
-            status: 'Active',
-            membershipType: 'Gold',
-            action: ''
-          },
-        ];
+  // React Query Hooks
+  const { data: membersData, isLoading } = useGetMembers(page, 10, searchQuery);
+  const createMemberMutation = useCreateMember();
+  const updateMemberMutation = useUpdateMember();
 
-        const filtered = searchQuery 
-          ? mockData.filter(member => 
-              member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              member.contact.includes(searchQuery)
-            )
-          : mockData;
-
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        setMembers(filtered);
-      } catch (error) {
-        console.error('Error fetching members:', error);
-        setSnackbar({
-          open: true,
-          message: 'Failed to load members',
-          severity: 'error'
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMembers();
-  }, [searchQuery]);
+  // Transform API data to table format
+  const members: Member[] = membersData?.data?.map((member: MemberType) => ({
+    id: member._id || '',
+    member_id: member.member_id,
+    date: member.date_of_joining
+      ? new Date(member.date_of_joining).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })
+      : '-',
+    name: `${member.name || 'N/A'} (${member.member_id})`,
+    email: member.emailid || 'N/A',
+    contact: member.contactno || 'N/A',
+    status: (member.status === 'active' ? 'Active' : 'Inactive') as 'Active' | 'Inactive' | 'Blocked',
+    membershipType: 'Basic',
+    action: ''
+  })) || [];
 
   const columns = [
     {
@@ -174,16 +141,16 @@ const Members: React.FC = () => {
       minWidth: 100,
       align: 'center' as const,
       renderCell: (row: Member) => (
-        <Chip 
+        <Chip
           label={row.status}
           size="small"
           sx={{
             backgroundColor:
               row.status === 'Active' ? '#d1fae5' :
-              row.status === 'Inactive' ? '#f1f5f9' : '#fee2e2',
+                row.status === 'Inactive' ? '#f1f5f9' : '#fee2e2',
             color:
               row.status === 'Active' ? '#065f46' :
-              row.status === 'Inactive' ? '#64748b' : '#991b1b',
+                row.status === 'Inactive' ? '#64748b' : '#991b1b',
             fontWeight: 600,
             borderRadius: 1,
           }}
@@ -202,7 +169,7 @@ const Members: React.FC = () => {
           startIcon={<EditIcon />}
           onClick={(e) => {
             e.stopPropagation();
-            handleModifyClick(row);
+            handleModifyClick(row.member_id);
           }}
           sx={{
             textTransform: 'none',
@@ -269,28 +236,45 @@ const Members: React.FC = () => {
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
+    setPage(1); // Reset to first page on search
   };
 
-  const handleModifyClick = (member: Member) => {
-    setSelectedMember(member);
+  const handleModifyClick = (memberId: string) => {
+    setSelectedMemberId(memberId);
     setModifyDialogOpen(true);
   };
 
-
+  const handleAddMember = () => {
+    setSelectedMemberId(null); // null = create mode
+    setModifyDialogOpen(true);
+  };
 
   const handleActionClick = (member: Member) => {
     const newStatus = member.status === 'Active' ? 'Inactive' : 'Active';
-    setMembers(prev => 
-      prev.map(m => 
-        m.id === member.id ? { ...m, status: newStatus } : m
-      )
+
+    // Call update API to change status
+    updateMemberMutation.mutate(
+      {
+        memberId: member.member_id,
+        data: { status: newStatus.toLowerCase() }
+      },
+      {
+        onSuccess: () => {
+          setSnackbar({
+            open: true,
+            message: `${member.name.split(' (')[0]} has been ${newStatus.toLowerCase()}`,
+            severity: 'info'
+          });
+        },
+        onError: (error: any) => {
+          setSnackbar({
+            open: true,
+            message: error?.message || 'Failed to update member status',
+            severity: 'error'
+          });
+        }
+      }
     );
-    
-    setSnackbar({
-      open: true,
-      message: `${member.name.split(' (')[0]} has been ${newStatus.toLowerCase()}`,
-      severity: 'info'
-    });
   };
 
   const handleExportMembers = () => {
@@ -301,32 +285,73 @@ const Members: React.FC = () => {
     });
   };
 
-  const handleModifySave = (data: any) => {
-    console.log('Modified member data:', data);
-    setSnackbar({
-      open: true,
-      message: 'Member details updated successfully',
-      severity: 'success'
-    });
-    setModifyDialogOpen(false);
-    // Here you would typically update the member data in your state or send it to an API
+  const handleModifySave = (data: any, isEdit?: boolean) => {
+    if (isEdit && selectedMemberId) {
+      // Update existing member
+      updateMemberMutation.mutate(
+        {
+          memberId: selectedMemberId,
+          data: data
+        },
+        {
+          onSuccess: () => {
+            setSnackbar({
+              open: true,
+              message: 'Member updated successfully',
+              severity: 'success'
+            });
+            setModifyDialogOpen(false);
+          },
+          onError: (error: any) => {
+            setSnackbar({
+              open: true,
+              message: error?.message || 'Failed to update member',
+              severity: 'error'
+            });
+          }
+        }
+      );
+    } else {
+      // Create new member
+      createMemberMutation.mutate(data, {
+        onSuccess: () => {
+          setSnackbar({
+            open: true,
+            message: 'Member created successfully',
+            severity: 'success'
+          });
+          setModifyDialogOpen(false);
+        },
+        onError: (error: any) => {
+          setSnackbar({
+            open: true,
+            message: error?.message || 'Failed to create member',
+            severity: 'error'
+          });
+        }
+      });
+    }
   };
-
-
-  // const handleAddMember = () => {
-  //   setSnackbar({
-  //     open: true,
-  //     message: 'Add new member functionality',
-  //     severity: 'info'
-  //   });
-  // };
 
   const tableActions = (
     <Stack direction="row" spacing={1}>
       <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={handleAddMember}
+        sx={{
+          textTransform: 'none',
+          borderRadius: 1,
+          backgroundColor: '#1a237e',
+          '&:hover': { backgroundColor: '#283593' }
+        }}
+      >
+        Add Member
+      </Button>
+      <Button
         variant="outlined"
         onClick={handleExportMembers}
-        sx={{ 
+        sx={{
           textTransform: 'none',
           borderRadius: 1,
           borderColor: '#cbd5e1',
@@ -359,7 +384,6 @@ const Members: React.FC = () => {
         onSearchChange={handleSearchChange}
         paginationPerPage={10}
         actions={tableActions}
-        // enableExport={true}
         onExport={handleExportMembers}
         emptyMessage="No members found"
       />
@@ -367,10 +391,14 @@ const Members: React.FC = () => {
       {/* Modify Dialog */}
       <ModifyDialog
         open={modifyDialogOpen}
-        onClose={() => setModifyDialogOpen(false)}
+        onClose={() => {
+          setModifyDialogOpen(false);
+          setSelectedMemberId(null);
+        }}
         onSave={handleModifySave}
         type="member"
-        initialData={selectedMember}
+        memberId={selectedMemberId}
+        isLoading={createMemberMutation.isPending || updateMemberMutation.isPending}
       />
 
       {/* Snackbar */}
@@ -380,10 +408,10 @@ const Members: React.FC = () => {
         onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert 
-          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))} 
+        <Alert
+          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
           severity={snackbar.severity}
-          sx={{ 
+          sx={{
             width: '100%',
             borderRadius: 1,
           }}

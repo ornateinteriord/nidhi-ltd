@@ -20,10 +20,10 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/use-auth";
-import TokenService from "../../api/token/tokenService";
+import TokenService from "../../queries/token/tokenService";
 // import { deepOrange } from "@mui/material/colors";
-import {  useState } from "react";
-import { useGetMemberDetails } from "../../api/Memeber";
+import { useState } from "react";
+// import { useGetMemberDetails } from "../../api/Memeber";
 
 
 const Navbar = ({
@@ -39,10 +39,10 @@ const Navbar = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Get logged-in userId from TokenService
-  const userId = TokenService.getMemberId();
-
+  // const userId = TokenService.getMemberId();
+  const memberDetails = { Name: "demo", name: "demo" }
   // Fetch member details using your custom hook
-  const { data: memberDetails } = useGetMemberDetails(userId);
+  // const { data: memberDetails } = useGetMemberDetails(userId);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
