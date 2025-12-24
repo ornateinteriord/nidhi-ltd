@@ -78,17 +78,10 @@ import CompanyBank from "./pages/Admin-Pages/MasterTables/CompanyBank";
 import Share from "./pages/Admin-Pages/MasterTables/Share";
 import MemberFee from "./pages/Admin-Pages/MasterTables/MemberFee";
 import AdvisorFee from "./pages/Admin-Pages/MasterTables/AdvisorFee";
-// import MembersUpdateForm from "./pages/Admin-Pages/UpdateForms";
-
-
-
 
 // public pages
 // const Home = lazy(() => import("./pages/Home/Home"));
 const Login = lazy(() => import("./pages/Auth/Login"));
-const Register = lazy(() => import("./pages/Auth/Register"));
-const RecoverPassword = lazy(() => import("./pages/Auth/RecoverPassword"));
-const ResetPassword = lazy(() => import("./pages/Auth/ResetPassword"));
 const Navbar = lazy(() => import("./pages/Navbar/Navbar"));
 const Sidebar = lazy(() => import("./pages/Sidebar/Sidebar"));
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
@@ -105,7 +98,7 @@ export const LoadingComponent = () => {
 
 const ShouldHideSidebarComponent = () => {
   const location = useLocation();
-  const publicPaths = ["/", "/login", "/register", "/recover-password", "/reset-password"];
+  const publicPaths = ["/", "/login"];
   return publicPaths.includes(location.pathname);
 };
 
@@ -182,9 +175,6 @@ const RoutesProvider = ({
             <Route index element={<Login />} />
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/recover-password" element={<RecoverPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
             {/* agent routes */}
             {/* <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}> */}
