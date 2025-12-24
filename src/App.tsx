@@ -178,14 +178,14 @@ const RoutesProvider = ({
               <Route path="/login" element={<Login />} />
             </Route>
             {/* agent routes */}
-            {/* <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}> */}
-            <Route path="/agent/dashboard" element={<AgentDashboard />} />
-            {/* <Route path="/agent/list" element={<AgentList />} /> */}
-            <Route path="/agent/profile" element={<AgentProfile />} />
-            <Route path="/agent/collections" element={<AgentCollections />} />
-            <Route path="/agent/add-new" element={<AgentAddNew />} />
-            <Route path="/agent/report" element={<AgentReport />} />
-            {/* </Route> */}
+            <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}>
+              <Route path="/agent/dashboard" element={<AgentDashboard />} />
+              {/* <Route path="/agent/list" element={<AgentList />} /> */}
+              <Route path="/agent/profile" element={<AgentProfile />} />
+              <Route path="/agent/collections" element={<AgentCollections />} />
+              <Route path="/agent/add-new" element={<AgentAddNew />} />
+              <Route path="/agent/report" element={<AgentReport />} />
+            </Route>
             {/* admin routes */}
 
             <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
@@ -258,16 +258,16 @@ const RoutesProvider = ({
             </Route>
 
             {/* User routes */}
-            <Route element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["USER", "ADMIN", "AGENT"]} />}>
               <Route path="/user/dashboard" element={<UserDashboard />} />
             </Route>
 
 
             {/* not found route */}
             <Route
-              element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}
+              element={<ProtectedRoute allowedRoles={["USER", "ADMIN", "AGENT"]} />}
             >
-              <Route element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
+              <Route element={<ProtectedRoute allowedRoles={["USER", "ADMIN", "AGENT"]} />}>
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Route>
