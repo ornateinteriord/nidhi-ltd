@@ -6,7 +6,7 @@ import {
   TimelineContent,
   TimelineDot
 } from "@mui/lab";
-import { Paper, Typography } from "@mui/material";
+import { Paper, Typography, SxProps, Theme } from "@mui/material";
 
 export interface TimelineItemData {
   title: string;
@@ -16,10 +16,11 @@ export interface TimelineItemData {
 
 export interface TimelineComponentProps {
   data: TimelineItemData[];
+  sx?: SxProps<Theme>;
 }
 
 
-const TimelineComponent: React.FC<TimelineComponentProps> = ({ data }) => {
+const TimelineComponent: React.FC<TimelineComponentProps> = ({ data, sx }) => {
   return (
     <Timeline
       sx={{
@@ -28,7 +29,8 @@ const TimelineComponent: React.FC<TimelineComponentProps> = ({ data }) => {
         "& .MuiTimelineItem-root:before": {
           flex: 0,
           padding: 0
-        }
+        },
+        ...sx
       }}
     >
       {data.map((item, index) => (

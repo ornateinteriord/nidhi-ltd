@@ -95,7 +95,7 @@ const DashboardCards = () => {
       sortable: true,
       center: true,
       style: {
-        color: '#4f46e5',
+        color: '#6366f1',
         fontWeight: '500',
       },
     },
@@ -124,19 +124,19 @@ const DashboardCards = () => {
       cell: (row: any) => (
         <Box
           sx={{
-            px: 3,
-            py: 0.5,
-            borderRadius: 1,
-            border: '1px solid #86efac',
-            backgroundColor: '#f0fdf4',
-            color: '#16a34a',
-            fontWeight: '500',
-            fontSize: '0.875rem',
+            px: 2,
+            py: 0.75,
+            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+            color: 'white',
+            fontWeight: '600',
+            fontSize: '0.75rem',
             textAlign: 'center',
-            minWidth: '80px',
+            minWidth: '70px',
+            boxShadow: '0 2px 4px rgba(16, 185, 129, 0.2)',
           }}
         >
-          {row.status}
+          {row.status.toUpperCase()}
         </Box>
       ),
     },
@@ -149,38 +149,66 @@ const DashboardCards = () => {
         {/* Total Members Card */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
-            icon={<ShieldIcon />}
+            icon={<ShieldIcon sx={{ color: 'white' }} />}
             title="Total Members"
             status="Active"
             description="48 Members"
+            sx={{
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)',
+              color: 'white',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
           />
         </Grid>
 
         {/* Total Accounts Card */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
-            icon={<DescriptionIcon />}
+            icon={<DescriptionIcon sx={{ color: 'white' }} />}
             title="Total Accounts"
             status="Active"
             description="1 Accounts"
+            sx={{
+              background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(139, 92, 246, 0.2)',
+              color: 'white',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
           />
         </Grid>
 
         {/* Cash Balance Card */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
-            icon={<AccountBalanceWalletIcon />}
+            icon={<AccountBalanceWalletIcon sx={{ color: 'white' }} />}
             title="Cash balance"
             description="₹ 200.0"
+            sx={{
+              background: 'linear-gradient(135deg, #a855f7 0%, #d946ef 100%)',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(168, 85, 247, 0.2)',
+              color: 'white',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
           />
         </Grid>
 
         {/* Bank Balance Card - No Footer */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <DashboardCard
-            icon={<AccountBalanceIcon />}
+            icon={<AccountBalanceIcon sx={{ color: 'white' }} />}
             title="Bank balance"
             description="₹"
+            sx={{
+              background: 'linear-gradient(135deg, #d946ef 0%, #ec4899 100%)',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(236, 72, 153, 0.2)',
+              color: 'white',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
           />
         </Grid>
       </Grid>
@@ -190,19 +218,55 @@ const DashboardCards = () => {
         {/* Members Card with Table as Footer */}
         <Grid size={{ xs: 12, md: 6 }}>
           <DashboardCard
-            icon={<StorageIcon />}
+            icon={<StorageIcon sx={{ color: 'white' }} />}
             title="Members"
             status="Summary of recent members"
             showActionButton={true}
             actionButtonLabel="More Information"
             showFooterContent={true}
             footerContent={
-              <Box sx={{ backgroundColor: 'white', borderRadius: 2, mt: 2, overflow: 'hidden' }}>
-                <DashboardTable data={membersData} columns={membersColumns} />
+              <Box sx={{ 
+                backgroundColor: 'white', 
+                borderRadius: '12px', 
+                mt: 2, 
+                overflow: 'hidden',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                border: '1px solid rgba(99, 102, 241, 0.1)',
+              }}>
+                <DashboardTable 
+                  data={membersData} 
+                  columns={membersColumns} 
+                  sx={{
+                    '& .rdt_Table': {
+                      borderRadius: '12px',
+                    },
+                    '& .rdt_TableHead': {
+                      background: 'linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%)',
+                      '& .rdt_TableCol': {
+                        color: '#4b5563',
+                        fontWeight: '600',
+                        fontSize: '0.875rem',
+                        borderBottom: '2px solid rgba(99, 102, 241, 0.2)',
+                      }
+                    },
+                    '& .rdt_TableRow': {
+                      '&:nth-of-type(even)': {
+                        background: 'rgba(99, 102, 241, 0.02)',
+                      },
+                      '&:hover': {
+                        background: 'rgba(99, 102, 241, 0.04)',
+                      }
+                    }
+                  }}
+                />
               </Box>
             }
             sx={{
-              background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
+              background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(79, 70, 229, 0.2)',
+              color: 'white',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
           />
         </Grid>
@@ -210,17 +274,40 @@ const DashboardCards = () => {
         {/* Accounts Card with Timeline as Footer */}
         <Grid size={{ xs: 12, md: 6 }}>
           <DashboardCard
-            icon={<DescriptionIcon />}
+            icon={<DescriptionIcon sx={{ color: 'white' }} />}
             title="Accounts"
             status="Latest created accounts"
             showFooterContent={true}
             footerContent={
-              <Box sx={{ backgroundColor: 'white', borderRadius: 2, mt: 2, p: 2 }}>
-                <TimelineComponent data={accountsTimelineData} />
+              <Box sx={{ 
+                backgroundColor: 'white', 
+                borderRadius: '12px', 
+                mt: 2, 
+                p: 3,
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+                border: '1px solid rgba(99, 102, 241, 0.1)',
+              }}>
+                <TimelineComponent 
+                  data={accountsTimelineData}
+                  sx={{
+                    '& .timeline-item': {
+                      borderLeft: '3px solid #6366f1',
+                      paddingLeft: '16px',
+                      '&:hover': {
+                        background: 'rgba(99, 102, 241, 0.04)',
+                        borderRadius: '8px',
+                      }
+                    }
+                  }}
+                />
               </Box>
             }
             sx={{
-              background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)',
+              color: 'white',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
           />
         </Grid>
