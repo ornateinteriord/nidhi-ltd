@@ -59,6 +59,7 @@ interface AdminReusableTableProps<T> {
   onPageChange?: (page: number) => void;
   onRowsPerPageChange?: (rowsPerPage: number) => void;
   currentPage?: number;
+  sx?: any;
 }
 
 interface TableToolbarProps {
@@ -198,6 +199,7 @@ const AdminReusableTable = <T extends Record<string, any>>({
   onPageChange,
   onRowsPerPageChange,
   currentPage = 0,
+  sx = {},
 }: AdminReusableTableProps<T>) => {
   const theme = useTheme();
   const [localQuery, setLocalQuery] = useState(searchQuery);
@@ -399,6 +401,7 @@ const AdminReusableTable = <T extends Record<string, any>>({
         borderRadius: 2,
         backgroundColor: '#ffffff',
         boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
+        ...sx,
       }}
     >
       <TableToolbar
