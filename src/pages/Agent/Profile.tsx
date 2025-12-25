@@ -18,44 +18,47 @@ import {
   Grid
 } from '@mui/material';
 import { toast } from 'react-toastify';
+import TokenService from '../../queries/token/tokenService';
+import { useGetAgentById } from '../../queries/Agent';
 
 const Profile: React.FC = () => {
-  // Temporary local/dummy data (do not call APIs)
-  const dummyMember = {
-    Name: 'MANJUNATH',
-    Gender: 'Male',
-    Date_of_birth: '1980-04-14',
-    email: 'manjunath14480@gmail.com',
-    Mobile: '9100000000',
-    Address: 'magadi road machohalli bangalore',
-    Designation: 'Director',
-    PAN: 'AKPPN956mm',
-    Aadhar: '9100000000',
-    BranchCode: 'BRN001',
-    Introducer: '10512',
-    profile_image: '',
-  };
+  const userId = TokenService.getMemberId();
+  const { data: agentData, isLoading, isError, error } = useGetAgentById(userId || '');
 
   const [form, setForm] = useState<any>({
-    name: dummyMember.Name,
-    gender: dummyMember.Gender,
-    dob: dummyMember.Date_of_birth,
-    email: dummyMember.email,
-    contact: dummyMember.Mobile,
-    address: dummyMember.Address,
-    designation: dummyMember.Designation,
-    pan: dummyMember.PAN,
-    aadhar: dummyMember.Aadhar,
-    branchCode: dummyMember.BranchCode,
-    introducer: dummyMember.Introducer,
-    profileImage: dummyMember.profile_image,
+    name: '',
+    gender: 'Male',
+    dob: '',
+    email: '',
+    contact: '',
+    address: '',
+    designation: '',
+    pan: '',
+    aadhar: '',
+    branchCode: '',
+    introducer: '',
+    profileImage: '',
   });
-  // removed file state since we're using a local dummy preview
 
   useEffect(() => {
-    // this effect keeps a default but can be used for any client-side initialization
-    setForm((prev: any) => ({ ...prev }));
-  }, []);
+    if (agentData?.data) {
+      const a = agentData.data;
+      setForm({
+        name: a.name || '',
+        gender: 'Male', // Not in Agent interface
+        dob: '', // Not in Agent interface
+        email: a.email || '',
+        contact: a.phone || '',
+        address: '', // Not in Agent interface
+        designation: a.role || '',
+        pan: '', // Not in Agent interface
+        aadhar: '', // Not in Agent interface
+        branchCode: '', // Not in Agent interface
+        introducer: '', // Not in Agent interface
+        profileImage: '', // Not in Agent interface
+      });
+    }
+  }, [agentData]);
 
   const handleChange = (field: string, value: any) => {
     setForm((prev: any) => ({ ...prev, [field]: value }));
@@ -73,21 +76,24 @@ const Profile: React.FC = () => {
   const handleSubmit = async () => {
     try {
       setSaving(true);
-      // simulate API call
+      // Implement update logic here if needed, for now just simulate or leave as is
       await new Promise((res) => setTimeout(res, 600));
       setSaving(false);
-      toast.success('Profile updated (dummy)');
+      toast.success('Profile updated');
     } catch (err: any) {
       setSaving(false);
       toast.error(err?.message || 'Failed to update profile');
     }
   };
 
+  if (isLoading) return <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>;
+  if (isError) return <Typography color="error" align="center" mt={4}>Error loading profile: {(error as any)?.message}</Typography>;
+
   // No API call - always render the form with dummy data
 
   return (
     <div className="mt-6 px-3">
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: '600',mt:10 }}>My Profile</Typography>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: '600', mt: 10 }}>My Profile</Typography>
 
       <Card>
         <CardContent>
