@@ -84,9 +84,21 @@ const Profile: React.FC = () => {
         }
     };
 
-    // If we want to show it even without ID for demo
-    if (isLoading && userId) return <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>;
-    if (isError && userId) return <Typography color="error" align="center" mt={4}>Error loading profile: {(error as any)?.message}</Typography>;
+    if (isLoading)
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: "100vh", // full page height
+                    width: "100%",
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
+    if (isError && userId) return <Typography color="error" align="center" sx={{ color: "red" }} mt={4}>Error loading profile: {(error as any)?.message}</Typography>;
 
     return (
         <div className="mt-6 px-3">

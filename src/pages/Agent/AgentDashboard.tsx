@@ -6,8 +6,11 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SchoolIcon from '@mui/icons-material/School';
+import WalletCard from '../../components/Dashboard/WalletCard';
+import { useNavigate } from 'react-router-dom';
 
 const AgentDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const totalOrders = 927;
   const approvedOrders = 51;
   const openedPayments = 1723.5;
@@ -69,6 +72,12 @@ const AgentDashboard: React.FC = () => {
       </div>
 
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 12 }}>
+          <WalletCard
+            balance="₹ 1050.00"
+            onClick={() => navigate('/agent/wallet')}
+          />
+        </Grid>
         <Grid size={{ xs: 12, sm: 12, md: 8 }}>
           <Card sx={{
             borderRadius: '16px',
