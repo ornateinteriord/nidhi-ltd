@@ -1,10 +1,6 @@
 import axios from "axios";
 import TokenService from "./token/tokenService";
-
-interface ApiError {
-    message: string;
-    status?: number;
-}
+import { ApiError } from "../types";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_MLM_API_URL,
