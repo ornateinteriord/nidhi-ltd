@@ -165,4 +165,58 @@ export const useDeletePayment = () => {
     });
 };
 
+// ==================== CASH TRANSACTIONS ====================
+
+export interface CashTransaction {
+    _id: string;
+    cash_transaction_id: string;
+    transaction_date: Date | string;
+    description: string;
+    reference_no: string;
+    credit: number;
+    debit: number;
+    balance: number;
+    status: string;
+    voucher_no: string;
+    branch_id: string;
+}
+
+export interface CashTransactionSummary {
+    openingBalance: number;
+    debitAmount: number;
+    creditAmount: number;
+    closingBalance: number;
+}
+
+export interface CashTransactionsResponse {
+    success: boolean;
+    message: string;
+    data: CashTransaction[];
+    summary: CashTransactionSummary;
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        pages: number;
+    };
+}
+
+// GET ALL CASH TRANSACTIONS
+export const useGetCashTransactions = (
+    page: number = 1,
+    limit: number = 10,
+    search?: string
+) => {
+    return useQuery({
+        queryKey: ["cashTransactions", page, limit, search],
+        queryFn: async () => {
+            const params: Record<string, any> = { page, limit };
+            if (search) params.search = search;
+
+            return await useApi<CashTransactionsResponse>("GET", "/banking/cash-transactions", undefined, params);
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
+};
+
 export type { Receipt, Payment };

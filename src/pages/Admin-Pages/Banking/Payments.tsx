@@ -52,6 +52,8 @@ const Payments: React.FC = () => {
   const tablePrintRef = useRef<HTMLDivElement>(null);
 
   const { data: paymentsData, isLoading } = useGetPayments(page, 10, searchQuery);
+  // Fetch all payments for printing (without pagination)
+  const { data: allPaymentsData } = useGetPayments(1, 9999, '', undefined, undefined);
   const deletePaymentMutation = useDeletePayment();
   const { data: paymentToPrintData } = useGetPaymentById(paymentToPrint || '', !!paymentToPrint);
 
@@ -508,7 +510,7 @@ const Payments: React.FC = () => {
           <Box sx={{ maxHeight: '70vh', overflow: 'auto', p: 2 }}>
             <PaymentsTablePrint
               ref={tablePrintRef}
-              payments={(paymentsData?.data || []).map((payment: PaymentType) => ({
+              payments={(allPaymentsData?.data || []).map((payment: PaymentType) => ({
                 payment_id: payment.payment_id,
                 payment_date: payment.payment_date,
                 paid_to: payment.paid_to,

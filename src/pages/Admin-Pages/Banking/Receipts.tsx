@@ -52,6 +52,8 @@ const Receipts: React.FC = () => {
   const tablePrintRef = useRef<HTMLDivElement>(null);
 
   const { data: receiptsData, isLoading } = useGetReceipts(page, 10, searchQuery);
+  // Fetch all receipts for printing (without pagination)
+  const { data: allReceiptsData } = useGetReceipts(1, 9999, '', undefined, undefined);
   const deleteReceiptMutation = useDeleteReceipt();
   const { data: receiptToPrintData } = useGetReceiptById(receiptToPrint || '', !!receiptToPrint);
 
@@ -508,7 +510,7 @@ const Receipts: React.FC = () => {
           <Box sx={{ maxHeight: '70vh', overflow: 'auto', p: 2 }}>
             <ReceiptsTablePrint
               ref={tablePrintRef}
-              receipts={(receiptsData?.data || []).map((receipt: ReceiptType) => ({
+              receipts={(allReceiptsData?.data || []).map((receipt: ReceiptType) => ({
                 receipt_id: receipt.receipt_id,
                 receipt_date: receipt.receipt_date,
                 received_from: receipt.received_from,
