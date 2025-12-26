@@ -86,7 +86,22 @@ const Profile: React.FC = () => {
     }
   };
 
-  if (isLoading) return <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>;
+  if (isLoading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh", // full page height
+          width: "100%",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+
+
   if (isError) return <Typography color="error" align="center" mt={4}>Error loading profile: {(error as any)?.message}</Typography>;
 
   // No API call - always render the form with dummy data

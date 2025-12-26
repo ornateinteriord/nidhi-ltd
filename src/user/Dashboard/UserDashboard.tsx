@@ -7,8 +7,11 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleIcon from '@mui/icons-material/People';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import WalletCard from '../../components/Dashboard/WalletCard';
+import { useNavigate } from 'react-router-dom';
 
 const UserDashboard = () => {
+    const navigate = useNavigate();
     const totalUsers = 1050;
     const activeUsers = 345;
     const monthlyRevenue = 17235.50;
@@ -70,6 +73,15 @@ const UserDashboard = () => {
             </div>
 
             <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
+
+
+                <Grid size={{ xs: 12, sm: 12, md: 12 }}>
+                    <WalletCard
+                        balance="₹ 1050.00"
+                        onClick={() => navigate('/user/wallet')}
+                    />
+                </Grid>
+
                 <Grid size={{ xs: 12, sm: 12, md: 8 }}>
                     <Card sx={{
                         borderRadius: '16px',
@@ -349,7 +361,7 @@ const UserDashboard = () => {
                     </Card>
                 </Grid>
             </Grid>
-        </div>
+        </div >
     );
 }
 

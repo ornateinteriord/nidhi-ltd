@@ -63,7 +63,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
       transition={{ duration: 0.3, ease: "easeInOut" }}
       style={{
         zIndex: 100,
-        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
+        background: '#3e2cdeff',
         boxShadow: '4px 0 20px rgba(99, 102, 241, 0.3)',
       }}
     >
@@ -97,13 +97,13 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
               {!fethedUser?.profileImage && name?.charAt(0).toUpperCase()}
             </Avatar>
             <div className="welcome-text" style={{ padding: '10px', color: '#fff' }}>
-              <Typography style={{
+              {/* <Typography style={{
                 color: 'rgba(255, 255, 255, 0.8)',
                 fontSize: '0.875rem',
                 fontWeight: '400',
               }}>
                 Welcome,
-              </Typography>
+              </Typography> */}
               <Typography style={{
                 fontWeight: 'bold',
                 color: 'white',
