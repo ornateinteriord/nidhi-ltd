@@ -38,11 +38,9 @@ const Navbar = ({
   const { isLoggedIn, userRole } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  // Get logged-in userId from TokenService
-  // const userId = TokenService.getMemberId();
-  const memberDetails = { Name: "demo", name: "demo" }
-  // Fetch member details using your custom hook
-  // const { data: memberDetails } = useGetMemberDetails(userId);
+  // Get logged-in user's name from TokenService
+  const userName = TokenService.getUserName();
+  const displayName = userName || "User";
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -81,8 +79,8 @@ const Navbar = ({
           <Typography
             variant="h4"
             className="navbar-title"
-            style={{ 
-              marginLeft: "12px", 
+            style={{
+              marginLeft: "12px",
               cursor: "pointer",
               fontWeight: "bold",
               background: "linear-gradient(to right, #ffffff, #f0f9ff)",
@@ -98,8 +96,8 @@ const Navbar = ({
             {isLoggedIn ? (
               <div className="admin-panel-container">
                 {!isHomePage && isAdmin && (
-                  <div 
-                    className="admin-panel-content" 
+                  <div
+                    className="admin-panel-content"
                     onClick={handleMenuOpen}
                     style={{
                       display: "flex",
@@ -117,26 +115,24 @@ const Navbar = ({
                     <Avatar
                       className="user-avatar"
                       alt="User Avatar"
-                      sx={{ 
-                        width: 40, 
-                        height: 40, 
+                      sx={{
+                        width: 40,
+                        height: 40,
                         background: "linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)",
                         boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
                       }}
                     >
-                      {memberDetails?.Name
-                        ? memberDetails.Name.charAt(0).toUpperCase()
-                        : "U"}
+                      {displayName.charAt(0).toUpperCase()}
                     </Avatar>
-                    <Typography 
-                      variant="body1" 
-                      sx={{ 
+                    <Typography
+                      variant="body1"
+                      sx={{
                         color: "white",
                         fontWeight: "500",
                         textShadow: "0 1px 2px rgba(0,0,0,0.2)"
                       }}
                     >
-                      {memberDetails?.Name || "Admin"}
+                      {displayName}
                     </Typography>
                     <ChevronDown
                       color="white"
@@ -153,8 +149,8 @@ const Navbar = ({
                   <Button
                     className="logout-btn"
                     variant="ghost"
-                    style={{ 
-                      marginRight: "8px", 
+                    style={{
+                      marginRight: "8px",
                       fontSize: "50px",
                       color: "white",
                       background: "rgba(255, 255, 255, 0.1)",
@@ -215,27 +211,25 @@ const Navbar = ({
                 border: "3px solid white",
               }}
             >
-              {memberDetails?.name
-                ? memberDetails.name.charAt(0).toUpperCase()
-                : ""}
+              {displayName.charAt(0).toUpperCase()}
             </Avatar>
-            <Typography 
-              variant="subtitle1" 
-              sx={{ 
-                fontWeight: "bold", 
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: "bold",
                 color: "white",
                 textShadow: "0 1px 2px rgba(0,0,0,0.2)"
               }}
             >
-              {memberDetails?.name || "Member"}
+              {displayName}
             </Typography>
           </div>
 
           <Divider sx={{ my: 1 }} />
 
-          <MenuItem 
+          <MenuItem
             onClick={handleMenuClose}
-            sx={{ 
+            sx={{
               py: 1.5,
               '&:hover': {
                 background: "rgba(99, 102, 241, 0.08)",
@@ -253,7 +247,7 @@ const Navbar = ({
               navigate("/admin/update-password");
               setAnchorEl(null);
             }}
-            sx={{ 
+            sx={{
               py: 1.5,
               '&:hover': {
                 background: "rgba(99, 102, 241, 0.08)",
@@ -269,9 +263,9 @@ const Navbar = ({
           <Divider sx={{ my: 1 }} />
 
           <div className="admin-panel-menuitems">
-            <MenuItem 
-              onClick={handleMenuClose} 
-              sx={{ 
+            <MenuItem
+              onClick={handleMenuClose}
+              sx={{
                 py: 1.5,
                 display: "flex",
                 '&:hover': {
@@ -284,9 +278,9 @@ const Navbar = ({
                 Lock
               </Typography>
             </MenuItem>
-            <MenuItem 
-              onClick={handleLogout} 
-              sx={{ 
+            <MenuItem
+              onClick={handleLogout}
+              sx={{
                 py: 1.5,
                 display: "flex",
                 '&:hover': {
