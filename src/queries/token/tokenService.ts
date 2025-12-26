@@ -40,6 +40,12 @@ class TokenService {
     return this.decodeToken()?.user_name || null;
   }
 
+  static getBranchCode(): string | null {
+    // For now, return a default branch code
+    // In the future, this could be from user's profile or token
+    return 'BRN001';
+  }
+
   static removeToken(): void {
     localStorage.removeItem("token");
   }
