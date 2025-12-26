@@ -294,6 +294,12 @@ const TransferMoneyDialog: React.FC<TransferMoneyDialogProps> = ({ open, onClose
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="0.00"
+                    error={selectedFrom && parseFloat(amount) > selectedFrom.account_amount}
+                    helperText={
+                        selectedFrom && parseFloat(amount) > selectedFrom.account_amount
+                            ? `Insufficient balance. Available: ₹${selectedFrom.account_amount.toFixed(2)}`
+                            : ''
+                    }
                     InputProps={{
                         startAdornment: <Typography sx={{ mr: 1 }}>₹</Typography>
                     }}
