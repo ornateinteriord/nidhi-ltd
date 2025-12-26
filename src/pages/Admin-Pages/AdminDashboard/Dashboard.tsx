@@ -1,9 +1,12 @@
 import DashboardCards from './DashboardCards';
 import InterestCard from './interest-card';
+import WalletCard from '../../../components/Dashboard/WalletCard';
+import { useNavigate } from 'react-router-dom';
 import { useGetDashboardCounts, useGetRecentData } from '../../../queries/admin';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const { data: dashboardData, isLoading: countsLoading, isError: countsError } = useGetDashboardCounts();
   const { data: recentData, isLoading: recentLoading, isError: recentError } = useGetRecentData();
 
@@ -26,6 +29,12 @@ const AdminDashboard = () => {
   return (
     <div style={{ backgroundColor: "#f8f9fa" }}>
       <div className="my-20" />
+      <div className="mb-4">
+        <WalletCard
+          balance="₹ 50,000.00"
+          onClick={() => navigate('/admin/wallet')}
+        />
+      </div>
       <InterestCard />
       <DashboardCards counts={dashboardData.data} recentData={recentData.data} />
     </div>

@@ -66,7 +66,7 @@ const Navbar = ({
         position="fixed"
         className="navbar"
         style={{
-          background: '#3335c7',
+          background: '#3e2cdeff',
           boxShadow: "0 4px 20px rgba(99, 102, 241, 0.3)",
         }}
       >
@@ -103,13 +103,13 @@ const Navbar = ({
                       display: "flex",
                       alignItems: "center",
                       gap: "8px",
-                      padding: "8px 16px",
-                      background: "rgba(255, 255, 255, 0.1)",
+                      // padding: "8px 16px",
+                      // background: "rgba(173, 24, 24, 0.1)",
                       borderRadius: "12px",
                       cursor: "pointer",
                       transition: "all 0.3s ease",
-                      backdropFilter: "blur(10px)",
-                      border: "1px solid rgba(255, 255, 255, 0.2)",
+                      // backdropFilter: "blur(10px)",
+                      // border: "1px solid rgba(255, 255, 255, 0.2)",
                     }}
                   >
                     <Avatar

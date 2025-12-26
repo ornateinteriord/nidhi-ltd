@@ -4,6 +4,8 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import WalletCard from '../../components/Dashboard/WalletCard';
+import { useNavigate } from 'react-router-dom';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SavingsIcon from '@mui/icons-material/Savings';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -37,6 +39,7 @@ const getAccountGradient = (index: number) => {
 };
 
 const UserDashboard = () => {
+    const navigate = useNavigate();
     const { data: accountsData, isLoading, isError } = useGetMyAccounts();
 
     const latestUsers = [
@@ -137,6 +140,15 @@ const UserDashboard = () => {
             </Box>
 
             <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
+
+
+                <Grid size={{ xs: 12, sm: 12, md: 12 }}>
+                    <WalletCard
+                        balance="₹ 1050.00"
+                        onClick={() => navigate('/user/wallet')}
+                    />
+                </Grid>
+
                 <Grid size={{ xs: 12, sm: 12, md: 8 }}>
                     <Card sx={{
                         borderRadius: '16px',
@@ -416,7 +428,7 @@ const UserDashboard = () => {
                     </Card>
                 </Grid>
             </Grid>
-        </div>
+        </div >
     );
 }
 
