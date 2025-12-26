@@ -42,6 +42,21 @@ const UserDashboard = () => {
     const navigate = useNavigate();
     const { data: accountsData, isLoading, isError } = useGetMyAccounts();
 
+    // Calculate total balance from all accounts
+    const totalBalance = accountsData?.data?.accountTypes?.reduce((total: number, accType: any) => {
+        const typeTotal = accType.accounts.reduce((sum: number, acc: any) => sum + (acc.account_amount || 0), 0);
+        return total + typeTotal;
+    }, 0) || 0;
+
+    // Create breakdown by account type
+    const accountBreakdown = accountsData?.data?.accountTypes?.map((accType: any) => {
+        const typeTotal = accType.accounts.reduce((sum: number, acc: any) => sum + (acc.account_amount || 0), 0);
+        return {
+            type: accType.account_group_name,
+            amount: typeTotal
+        };
+    }) || [];
+
     const latestUsers = [
         { id: 1, name: 'Tracey Newman', date: '25 March 2018', time: '12:23PM', status: 'Active', subStatus: 'Premium', amount: '$403.22' },
         { id: 2, name: 'Jonathan Foster', date: '25 March 2018', time: '10:11PM', status: 'Inactive', subStatus: 'Basic', amount: '$504.15' },
@@ -144,8 +159,9 @@ const UserDashboard = () => {
 
                 <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                     <WalletCard
-                        balance="₹ 1050.00"
+                        balance={isLoading ? "Loading..." : `₹${totalBalance.toFixed(2)}`}
                         onClick={() => navigate('/user/wallet')}
+                        breakdown={accountBreakdown}
                     />
                 </Grid>
 
