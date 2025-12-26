@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Container,
@@ -6,16 +6,25 @@ import {
   Typography,
   Stack,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PrintIcon from '@mui/icons-material/Print';
+import CloseIcon from '@mui/icons-material/Close';
+import { useReactToPrint } from 'react-to-print';
 import AdminReusableTable from '../../../utils/AdminReusableTable';
-import { useGetPayments, useDeletePayment, Payment as PaymentType } from '../../../queries/banking';
+import { useGetPayments, useDeletePayment, useGetPaymentById, Payment as PaymentType } from '../../../queries/banking';
 import { toast } from 'react-toastify';
 import PaymentDialog from '../../../components/Banking/PaymentDialog';
 import ConfirmDialog from '../../../components/Shared/ConfirmDialog';
+import PaymentPrint from '../../../components/Print-components/Payments/payment';
+import PaymentsTablePrint from '../../../components/Print-components/Payments/payments';
 
 interface Payment {
   id: string;
@@ -36,9 +45,15 @@ const Payments: React.FC = () => {
   const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [paymentToDelete, setPaymentToDelete] = useState<string | null>(null);
+  const [printDialogOpen, setPrintDialogOpen] = useState(false);
+  const [paymentToPrint, setPaymentToPrint] = useState<string | null>(null);
+  const [tablePrintDialogOpen, setTablePrintDialogOpen] = useState(false);
+  const printRef = useRef<HTMLDivElement>(null);
+  const tablePrintRef = useRef<HTMLDivElement>(null);
 
   const { data: paymentsData, isLoading } = useGetPayments(page, 10, searchQuery);
   const deletePaymentMutation = useDeletePayment();
+  const { data: paymentToPrintData } = useGetPaymentById(paymentToPrint || '', !!paymentToPrint);
 
   // Transform API data to table format
   const payments: Payment[] = paymentsData?.data?.map((payment: PaymentType, index: number) => ({
@@ -274,9 +289,18 @@ const Payments: React.FC = () => {
     }
   };
 
-  const handlePrintPreview = (_paymentId: string) => {
-    toast.info('Print preview feature will be implemented soon');
+  const handlePrintPreview = (paymentId: string) => {
+    setPaymentToPrint(paymentId);
+    setPrintDialogOpen(true);
   };
+
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+  });
+
+  const handleTablePrint = useReactToPrint({
+    contentRef: tablePrintRef,
+  });
 
   const handleExport = () => {
     toast.info('Excel export feature will be implemented soon');
@@ -284,6 +308,18 @@ const Payments: React.FC = () => {
 
   const tableActions = (
     <Stack direction="row" spacing={1}>
+      <Button
+        variant="contained"
+        startIcon={<PrintIcon />}
+        onClick={() => setTablePrintDialogOpen(true)}
+        sx={{
+          textTransform: 'none',
+          backgroundColor: '#6366f1',
+          '&:hover': { backgroundColor: '#4f46e5' }
+        }}
+      >
+        Print
+      </Button>
       <Button
         variant="contained"
         startIcon={<AddIcon />}
@@ -344,6 +380,174 @@ const Payments: React.FC = () => {
         cancelText="Cancel"
         confirmColor="error"
       />
+
+      {/* Print Preview Dialog */}
+      <Dialog
+        open={printDialogOpen}
+        onClose={() => {
+          setPrintDialogOpen(false);
+          setPaymentToPrint(null);
+        }}
+        maxWidth="md"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: { borderRadius: '16px' }
+          }
+        }}
+      >
+        <DialogTitle
+          sx={{
+            background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            py: 2
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Payment Print Preview
+          </Typography>
+          <IconButton
+            onClick={() => {
+              setPrintDialogOpen(false);
+              setPaymentToPrint(null);
+            }}
+            sx={{ color: 'white' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ p: 0, backgroundColor: '#f3f4f6' }}>
+          {paymentToPrintData?.data && (
+            <Box sx={{ maxHeight: '70vh', overflow: 'auto', p: 2 }}>
+              <PaymentPrint
+                ref={printRef}
+                paymentData={{
+                  payment_id: paymentToPrintData.data.payment_id,
+                  payment_date: paymentToPrintData.data.payment_date,
+                  paid_to: paymentToPrintData.data.paid_to,
+                  payment_details: paymentToPrintData.data.payment_details,
+                  mode_of_payment_paid: paymentToPrintData.data.mode_of_payment_paid,
+                  amount: paymentToPrintData.data.amount,
+                  branch_code: paymentToPrintData.data.branch_code,
+                  entered_by: paymentToPrintData.data.entered_by,
+                }}
+              />
+            </Box>
+          )}
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
+          <Button
+            onClick={() => {
+              setPrintDialogOpen(false);
+              setPaymentToPrint(null);
+            }}
+            variant="outlined"
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            onClick={handlePrint}
+            variant="contained"
+            startIcon={<PrintIcon />}
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+              background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+            }}
+          >
+            Print
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Table Print Preview Dialog */}
+      <Dialog
+        open={tablePrintDialogOpen}
+        onClose={() => setTablePrintDialogOpen(false)}
+        maxWidth="lg"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: { borderRadius: '16px' }
+          }
+        }}
+      >
+        <DialogTitle
+          sx={{
+            background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            py: 2
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Payments Table Print Preview
+          </Typography>
+          <IconButton
+            onClick={() => setTablePrintDialogOpen(false)}
+            sx={{ color: 'white' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ p: 0, backgroundColor: '#f3f4f6' }}>
+          <Box sx={{ maxHeight: '70vh', overflow: 'auto', p: 2 }}>
+            <PaymentsTablePrint
+              ref={tablePrintRef}
+              payments={(paymentsData?.data || []).map((payment: PaymentType) => ({
+                payment_id: payment.payment_id,
+                payment_date: payment.payment_date,
+                paid_to: payment.paid_to,
+                payment_details: payment.payment_details,
+                mode_of_payment_paid: payment.mode_of_payment_paid,
+                amount: payment.amount,
+                status: payment.status,
+              }))}
+            />
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
+          <Button
+            onClick={() => setTablePrintDialogOpen(false)}
+            variant="outlined"
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            onClick={handleTablePrint}
+            variant="contained"
+            startIcon={<PrintIcon />}
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+              background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+            }}
+          >
+            Print
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

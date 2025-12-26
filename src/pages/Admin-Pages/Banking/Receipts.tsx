@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Container,
@@ -6,16 +6,25 @@ import {
   Typography,
   Stack,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PrintIcon from '@mui/icons-material/Print';
+import CloseIcon from '@mui/icons-material/Close';
+import { useReactToPrint } from 'react-to-print';
 import AdminReusableTable from '../../../utils/AdminReusableTable';
-import { useGetReceipts, useDeleteReceipt, Receipt as ReceiptType } from '../../../queries/banking';
+import { useGetReceipts, useDeleteReceipt, useGetReceiptById, Receipt as ReceiptType } from '../../../queries/banking';
 import { toast } from 'react-toastify';
 import ReceiptDialog from '../../../components/Banking/ReceiptDialog';
 import ConfirmDialog from '../../../components/Shared/ConfirmDialog';
+import ReceiptPrint from '../../../components/Print-components/Receipts/receipt';
+import ReceiptsTablePrint from '../../../components/Print-components/Receipts/receipts';
 
 interface Receipt {
   id: string;
@@ -36,9 +45,15 @@ const Receipts: React.FC = () => {
   const [selectedReceiptId, setSelectedReceiptId] = useState<string | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [receiptToDelete, setReceiptToDelete] = useState<string | null>(null);
+  const [printDialogOpen, setPrintDialogOpen] = useState(false);
+  const [receiptToPrint, setReceiptToPrint] = useState<string | null>(null);
+  const [tablePrintDialogOpen, setTablePrintDialogOpen] = useState(false);
+  const printRef = useRef<HTMLDivElement>(null);
+  const tablePrintRef = useRef<HTMLDivElement>(null);
 
   const { data: receiptsData, isLoading } = useGetReceipts(page, 10, searchQuery);
   const deleteReceiptMutation = useDeleteReceipt();
+  const { data: receiptToPrintData } = useGetReceiptById(receiptToPrint || '', !!receiptToPrint);
 
   // Transform API data to table format
   const receipts: Receipt[] = receiptsData?.data?.map((receipt: ReceiptType, index: number) => ({
@@ -274,9 +289,18 @@ const Receipts: React.FC = () => {
     }
   };
 
-  const handlePrintPreview = (_receiptId: string) => {
-    toast.info('Print preview feature will be implemented soon');
+  const handlePrintPreview = (receiptId: string) => {
+    setReceiptToPrint(receiptId);
+    setPrintDialogOpen(true);
   };
+
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+  });
+
+  const handleTablePrint = useReactToPrint({
+    contentRef: tablePrintRef,
+  });
 
   const handleExport = () => {
     toast.info('Excel export feature will be implemented soon');
@@ -284,6 +308,18 @@ const Receipts: React.FC = () => {
 
   const tableActions = (
     <Stack direction="row" spacing={1}>
+      <Button
+        variant="contained"
+        startIcon={<PrintIcon />}
+        onClick={() => setTablePrintDialogOpen(true)}
+        sx={{
+          textTransform: 'none',
+          backgroundColor: '#6366f1',
+          '&:hover': { backgroundColor: '#4f46e5' }
+        }}
+      >
+        Print
+      </Button>
       <Button
         variant="contained"
         startIcon={<AddIcon />}
@@ -344,6 +380,174 @@ const Receipts: React.FC = () => {
         cancelText="Cancel"
         confirmColor="error"
       />
+
+      {/* Print Preview Dialog */}
+      <Dialog
+        open={printDialogOpen}
+        onClose={() => {
+          setPrintDialogOpen(false);
+          setReceiptToPrint(null);
+        }}
+        maxWidth="md"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: { borderRadius: '16px' }
+          }
+        }}
+      >
+        <DialogTitle
+          sx={{
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            py: 2
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Receipt Print Preview
+          </Typography>
+          <IconButton
+            onClick={() => {
+              setPrintDialogOpen(false);
+              setReceiptToPrint(null);
+            }}
+            sx={{ color: 'white' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ p: 0, backgroundColor: '#f3f4f6' }}>
+          {receiptToPrintData?.data && (
+            <Box sx={{ maxHeight: '70vh', overflow: 'auto', p: 2 }}>
+              <ReceiptPrint
+                ref={printRef}
+                receiptData={{
+                  receipt_id: receiptToPrintData.data.receipt_id,
+                  receipt_date: receiptToPrintData.data.receipt_date,
+                  received_from: receiptToPrintData.data.received_from,
+                  receipt_details: receiptToPrintData.data.receipt_details,
+                  mode_of_payment_received: receiptToPrintData.data.mode_of_payment_received,
+                  amount: receiptToPrintData.data.amount,
+                  branch_code: receiptToPrintData.data.branch_code,
+                  entered_by: receiptToPrintData.data.entered_by,
+                }}
+              />
+            </Box>
+          )}
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
+          <Button
+            onClick={() => {
+              setPrintDialogOpen(false);
+              setReceiptToPrint(null);
+            }}
+            variant="outlined"
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            onClick={handlePrint}
+            variant="contained"
+            startIcon={<PrintIcon />}
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            }}
+          >
+            Print
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Table Print Preview Dialog */}
+      <Dialog
+        open={tablePrintDialogOpen}
+        onClose={() => setTablePrintDialogOpen(false)}
+        maxWidth="lg"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: { borderRadius: '16px' }
+          }
+        }}
+      >
+        <DialogTitle
+          sx={{
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            py: 2
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Receipts Table Print Preview
+          </Typography>
+          <IconButton
+            onClick={() => setTablePrintDialogOpen(false)}
+            sx={{ color: 'white' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ p: 0, backgroundColor: '#f3f4f6' }}>
+          <Box sx={{ maxHeight: '70vh', overflow: 'auto', p: 2 }}>
+            <ReceiptsTablePrint
+              ref={tablePrintRef}
+              receipts={(receiptsData?.data || []).map((receipt: ReceiptType) => ({
+                receipt_id: receipt.receipt_id,
+                receipt_date: receipt.receipt_date,
+                received_from: receipt.received_from,
+                receipt_details: receipt.receipt_details,
+                mode_of_payment_received: receipt.mode_of_payment_received,
+                amount: receipt.amount,
+                status: receipt.status,
+              }))}
+            />
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
+          <Button
+            onClick={() => setTablePrintDialogOpen(false)}
+            variant="outlined"
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            onClick={handleTablePrint}
+            variant="contained"
+            startIcon={<PrintIcon />}
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            }}
+          >
+            Print
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
