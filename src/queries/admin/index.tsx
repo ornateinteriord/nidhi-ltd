@@ -1,54 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useApi from "../useApi";
-
-// TypeScript Interfaces
-export interface Member {
-    _id?: string;
-    member_id: string;
-    branch_id?: string;
-    date_of_joining?: Date | string;
-    receipt_no?: string;
-    name?: string;
-    father_name?: string;
-    gender?: string;
-    dob?: Date | string;
-    age?: number;
-    address?: string;
-    emailid?: string;
-    contactno?: string;
-    pan_no?: string;
-    aadharcard_no?: string;
-    voter_id?: string;
-    nominee?: string;
-    relation?: string;
-    occupation?: string;
-    introducer?: string;
-    introducer_name?: string;
-    member_image?: string;
-    member_signature?: string;
-    entered_by?: string;
-    status?: string;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-}
-
-export interface MembersResponse {
-    success: boolean;
-    message: string;
-    data: Member[];
-    pagination: {
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-    };
-}
-
-export interface MemberResponse {
-    success: boolean;
-    message: string;
-    data: Member;
-}
+import {
+    Member,
+    MemberResponse,
+    MembersResponse,
+    Agent,
+    AgentResponse,
+    AgentsResponse,
+    Interest,
+    InterestResponse,
+    InterestsResponse,
+    Account,
+    AccountResponse,
+    AccountsResponse,
+    AccountBooksResponse,
+    AccountGroupsResponse,
+    InterestsByGroupResponse,
+} from "../../types";
 
 // GET ALL MEMBERS
 export const useGetMembers = (
@@ -115,46 +83,6 @@ export const useUpdateMember = () => {
 
 // ==================== AGENT QUERIES ====================
 
-// TypeScript Interfaces for Agents
-export interface Agent {
-    _id?: string;
-    agent_id: string;
-    branch_id?: string;
-    date_of_joining?: Date | string;
-    name?: string;
-    gender?: string;
-    dob?: Date | string;
-    address?: string;
-    emailid?: string;
-    mobile?: string;
-    pan_no?: string;
-    aadharcard_no?: string;
-    introducer?: string;
-    entered_by?: string;
-    designation?: string;
-    status?: string;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-}
-
-export interface AgentsResponse {
-    success: boolean;
-    message: string;
-    data: Agent[];
-    pagination: {
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-    };
-}
-
-export interface AgentResponse {
-    success: boolean;
-    message: string;
-    data: Agent;
-}
-
 // GET ALL AGENTS
 export const useGetAgents = (
     page: number = 1,
@@ -220,39 +148,6 @@ export const useUpdateAgent = () => {
 
 // ==================== INTEREST QUERIES ====================
 
-// TypeScript Interfaces for Interests
-export interface Interest {
-    _id?: string;
-    interest_id: string;
-    ref_id?: string;
-    interest_name?: string;
-    interest_rate?: number;
-    duration?: number;
-    from_date?: Date | string;
-    to_date?: Date | string;
-    status?: string;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-}
-
-export interface InterestsResponse {
-    success: boolean;
-    message: string;
-    data: Interest[];
-    pagination: {
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-    };
-}
-
-export interface InterestResponse {
-    success: boolean;
-    message: string;
-    data: Interest;
-}
-
 // GET ALL INTERESTS
 export const useGetInterests = (
     page: number = 1,
@@ -317,87 +212,6 @@ export const useUpdateInterest = () => {
 };
 
 // ==================== ACCOUNT QUERIES ====================
-
-// TypeScript Interfaces for Accounts
-export interface AccountBook {
-    _id?: string;
-    account_book_id: string;
-    account_book_name?: string;
-    primary_book?: string;
-    status?: string;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-}
-
-export interface AccountGroup {
-    _id?: string;
-    account_group_id: string;
-    account_book_id?: string;
-    account_group_name?: string;
-    status?: string;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-}
-
-export interface Account {
-    _id?: string;
-    account_id: string;
-    branch_id?: string;
-    date_of_opening?: Date | string;
-    member_id?: string;
-    account_type?: string; // account_group_id
-    account_no?: string;
-    account_operation?: string;
-    introducer?: string;
-    entered_by?: string;
-    ref_id?: string; // interest_id
-    interest_rate?: number;
-    duration?: number;
-    date_of_maturity?: Date | string;
-    date_of_close?: Date | string;
-    status?: string;
-    assigned_to?: string;
-    account_amount?: number;
-    joint_member?: string;
-    createdAt?: Date | string;
-    updatedAt?: Date | string;
-}
-
-export interface AccountBooksResponse {
-    success: boolean;
-    message: string;
-    data: AccountBook[];
-}
-
-export interface AccountGroupsResponse {
-    success: boolean;
-    message: string;
-    data: AccountGroup[];
-}
-
-export interface InterestsByGroupResponse {
-    success: boolean;
-    message: string;
-    data: Interest[];
-}
-
-export interface AccountResponse {
-    success: boolean;
-    message: string;
-    data: Account;
-}
-
-export interface AccountsResponse {
-    success: boolean;
-    message: string;
-    data: Account[];
-    pagination: {
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-    };
-}
 
 // GET ALL ACCOUNT BOOKS
 export const useGetAccountBooks = () => {

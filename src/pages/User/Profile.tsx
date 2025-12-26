@@ -17,16 +17,16 @@ import {
 } from '@mui/material';
 import { toast } from 'react-toastify';
 import TokenService from '../../queries/token/tokenService';
-import { useGetAgentById } from '../../queries/Agent'; // Reusing Agent query or swap to User query later
+import { useGetMemberById } from '../../queries/member';
 
 const Profile: React.FC = () => {
     const userId = TokenService.getMemberId();
     // TODO: Replace with user specific query if available, currently simulating or reusing
-    const { data: userData, isLoading, isError, error } = useGetAgentById(userId || '');
+    const { data: userData, isLoading, isError, error } = useGetMemberById(userId || '');
 
     const [form, setForm] = useState<any>({
         name: '',
-        gender: 'Male',
+        gender: '',
         dob: '',
         email: '',
         contact: '',
@@ -44,16 +44,16 @@ const Profile: React.FC = () => {
             const a = userData.data;
             setForm({
                 name: a.name || '',
-                gender: 'Male',
-                dob: '',
-                email: a.email || '',
-                contact: a.phone || '',
-                address: '',
-                designation: 'User', // Defaulting for user
-                pan: '',
-                aadhar: '',
-                branchCode: '',
-                introducer: '',
+                gender: a.gender || '',
+                dob: a.dob || '',
+                email: a.emailid || '',
+                contact: a.contactno || '',
+                address: a.address || '',
+                designation: a.occupation || '', // Defaulting for user
+                pan: a.pan_no || '',
+                aadhar: a.aadharcard_no || '',
+                branchCode: a.branch_id || '',
+                introducer: a.introducer || '',
                 profileImage: '',
             });
         }

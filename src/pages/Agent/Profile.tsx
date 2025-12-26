@@ -27,7 +27,7 @@ const Profile: React.FC = () => {
 
   const [form, setForm] = useState<any>({
     name: '',
-    gender: 'Male',
+    gender: '',
     dob: '',
     email: '',
     contact: '',
@@ -45,16 +45,16 @@ const Profile: React.FC = () => {
       const a = agentData.data;
       setForm({
         name: a.name || '',
-        gender: 'Male', // Not in Agent interface
-        dob: '', // Not in Agent interface
-        email: a.email || '',
-        contact: a.phone || '',
-        address: '', // Not in Agent interface
-        designation: a.role || '',
-        pan: '', // Not in Agent interface
-        aadhar: '', // Not in Agent interface
-        branchCode: '', // Not in Agent interface
-        introducer: '', // Not in Agent interface
+        gender: a.gender || '', // Not in Agent interface
+        dob: a.dob || '', // Not in Agent interface
+        email: a.emailid || '',
+        contact: a.mobile || '',
+        address: a.address || '', // Not in Agent interface
+        designation: a.designation || '',
+        pan: a.pan_no || '', // Not in Agent interface
+        aadhar: a.aadharcard_no || '', // Not in Agent interface
+        branchCode: a.branch_id || '', // Not in Agent interface
+        introducer: a.introducer || '', // Not in Agent interface
         profileImage: '', // Not in Agent interface
       });
     }
