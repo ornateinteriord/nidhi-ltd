@@ -4,10 +4,12 @@ import AddIcon from '@mui/icons-material/Add';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TransferMoneyDialog from '../../components/Wallet/TransferMoneyDialog';
+import WithdrawMoneyDialog from '../../components/Wallet/WithdrawMoneyDialog';
 import { useGetMyAccounts } from '../../queries/member';
 
 const Wallet: React.FC = () => {
     const [transferDialogOpen, setTransferDialogOpen] = useState(false);
+    const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
     const { data: accountsData, isLoading } = useGetMyAccounts();
 
     // Calculate total balance from all accounts
@@ -99,6 +101,7 @@ const Wallet: React.FC = () => {
                         <Button
                             variant="contained"
                             startIcon={<AccountBalanceWalletIcon />}
+                            onClick={() => setWithdrawDialogOpen(true)}
                             sx={{
                                 bgcolor: 'rgba(255,255,255,0.2)',
                                 backdropFilter: 'blur(10px)',
@@ -160,6 +163,12 @@ const Wallet: React.FC = () => {
             <TransferMoneyDialog
                 open={transferDialogOpen}
                 onClose={() => setTransferDialogOpen(false)}
+            />
+
+            {/* Withdraw Money Dialog */}
+            <WithdrawMoneyDialog
+                open={withdrawDialogOpen}
+                onClose={() => setWithdrawDialogOpen(false)}
             />
         </Box>
     );
