@@ -1,13 +1,18 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
+
+interface AccountBreakdown {
+    type: string;
+    amount: number;
+}
 
 interface WalletCardProps {
     balance: string | number;
     onClick: () => void;
+    breakdown?: AccountBreakdown[];
 }
 
-const WalletCard: React.FC<WalletCardProps> = ({ balance, onClick }) => {
+const WalletCard: React.FC<WalletCardProps> = ({ balance, onClick, breakdown }) => {
     return (
         <Card
             onClick={onClick}
@@ -31,35 +36,31 @@ const WalletCard: React.FC<WalletCardProps> = ({ balance, onClick }) => {
                 overflow: 'hidden'
             }}
         >
-            {/* Decorative Rupee Symbol */}
-            <Box sx={{
-                position: 'absolute',
-                left: '10%',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                opacity: 0.2,
-            }}>
-                <CurrencyRupeeIcon sx={{ fontSize: 80, color: 'white' }} />
-            </Box>
-
-            <Box sx={{
-                position: 'absolute',
-                left: '20%',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                display: { xs: 'none', md: 'block' }
-            }}>
-                <CurrencyRupeeIcon sx={{ fontSize: 48, color: 'white' }} />
-            </Box>
-
-
             <CardContent sx={{ zIndex: 1, textAlign: 'center', width: '100%' }}>
                 <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
                     {balance}
                 </Typography>
-                <Typography variant="subtitle1" sx={{ opacity: 0.9 }}>
+                <Typography variant="subtitle1" sx={{ opacity: 0.9, mb: breakdown && breakdown.length > 0 ? 2 : 0 }}>
                     Wallet Balance
                 </Typography>
+
+                {/* Account Breakdown Chips */}
+                {breakdown && breakdown.length > 0 && (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center', mt: 2 }}>
+                        {breakdown.map((acc, index) => (
+                            <Chip
+                                key={index}
+                                label={`${acc.type} - ₹${acc.amount.toFixed(2)}`}
+                                sx={{
+                                    bgcolor: 'rgba(255,255,255,0.2)',
+                                    color: 'white',
+                                    fontWeight: 600,
+                                    backdropFilter: 'blur(10px)'
+                                }}
+                            />
+                        ))}
+                    </Box>
+                )}
             </CardContent>
         </Card>
     );
