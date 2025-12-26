@@ -1,5 +1,6 @@
 import { Box, Grid, Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashboardCard from './DashboardCard';
 import DescriptionIcon from '@mui/icons-material/Description';
 import StorageIcon from '@mui/icons-material/Storage';
@@ -16,6 +17,7 @@ interface DashboardCardsProps {
 }
 
 const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
+  const navigate = useNavigate();
   const [accountTypesDialogOpen, setAccountTypesDialogOpen] = useState(false);
 
   // Format recent members data for table
@@ -174,6 +176,7 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
             status="Summary of recent members"
             showActionButton={true}
             actionButtonLabel="More Information"
+            onActionClick={() => navigate('/banking/members')}
             showFooterContent={true}
             footerContent={
               <Box sx={{
