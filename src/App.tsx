@@ -62,6 +62,10 @@ const ODViewAll = lazy(() => import("./pages/Admin-Pages/Overdraft/ODViewAll"));
 const AgentAssignment = lazy(() => import("./pages/Admin-Pages/AgentAssignment/AgentAssignment"));
 // const AdminCollectedLoanReport = lazy(() => import("./pages/Admin-Pages/LoanRecovery").then(module => ({ default: module.CollectedLoanReport })));
 const UserDashboard = lazy(() => import("./user/Dashboard/UserDashboard"));
+const UserProfile = lazy(() => import("./pages/User/Profile"));
+const UserCollections = lazy(() => import("./pages/User/Collections"));
+const UserAddNew = lazy(() => import("./pages/User/AddNew"));
+const UserReport = lazy(() => import("./pages/User/Report"));
 import ProtectedRoute from "./routeProtecter/RouteProtecter";
 import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
@@ -260,6 +264,10 @@ const RoutesProvider = ({
             {/* User routes */}
             <Route element={<ProtectedRoute allowedRoles={["USER", "ADMIN", "AGENT"]} />}>
               <Route path="/user/dashboard" element={<UserDashboard />} />
+              <Route path="/user/profile" element={<UserProfile />} />
+              <Route path="/user/collections" element={<UserCollections />} />
+              <Route path="/user/add-new" element={<UserAddNew />} />
+              <Route path="/user/report" element={<UserReport />} />
             </Route>
 
 

@@ -14,25 +14,25 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
   {
     name: "Profile",
     icon: <MuiIcons.AccountCircle />,
-    path: "/agent/profile",
+    path: "/user/profile",
     isExpandable: false,
   },
   {
     name: "Collections",
     icon: <MuiIcons.ListAlt />,
-    path: "/agent/collections",
+    path: "/user/collections",
     isExpandable: false,
   },
   {
     name: "Add New",
     icon: <MuiIcons.AddCircle />,
-    path: "/agent/add-new",
+    path: "/user/add-new",
     isExpandable: false,
   },
   {
     name: "Report",
     icon: <MuiIcons.Assessment />,
-    path: "/agent/report",
+    path: "/user/report",
     isExpandable: false,
   },
   {
