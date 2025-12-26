@@ -18,6 +18,9 @@ import {
     InterestsByGroupResponse,
 } from "../../types";
 
+// Re-export types for use in other modules
+export type { Member, Agent, Interest, Account };
+
 // GET ALL MEMBERS
 export const useGetMembers = (
     page: number = 1,
