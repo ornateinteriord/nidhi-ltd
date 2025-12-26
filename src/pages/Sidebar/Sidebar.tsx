@@ -1,14 +1,13 @@
 import './sidebar.scss';
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserSideBarMenuItems, AdminSideBarMenuItems, AdviserSideBarMenuItems, AgentSideBarMenuItems } from './SidebarUtils'
 import { Avatar, Toolbar, Typography } from '@mui/material';
 import { SideBarMenuItemType } from '../../store/store';
 import { MuiIcons } from '../Icons';
-// import { useGetMemberDetails } from '../../api/Memeber';
 import { LoadingComponent } from '../../App';
-// import TokenService from '../../queries/token/tokenService';
+import TokenService from '../../queries/token/tokenService';
 
 const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => void, role: string | null }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
@@ -51,9 +50,9 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
           role === "USER" ? UserSideBarMenuItems :  // USER role shows UserSideBarMenuItems
             UserSideBarMenuItems;
 
-  // Demo user data
-  const fethedUser = { Name: "Demo", username: "demo", profile_image: "", profileImage: "" }
-  const name = fethedUser?.Name || fethedUser?.username
+  // Get logged-in user's name from token
+  const userName = TokenService.getUserName();
+  const name = userName || "User";
 
   return (
     <motion.div
@@ -85,7 +84,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
           >
             <Avatar
               alt="User Avatar"
-              src={fethedUser?.profile_image || ''}
+              src={''}
               sx={{
                 width: 50,
                 height: 50,
@@ -94,7 +93,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                 border: '2px solid white',
               }}
             >
-              {!fethedUser?.profileImage && name?.charAt(0).toUpperCase()}
+              {name?.charAt(0).toUpperCase()}
             </Avatar>
             <div className="welcome-text" style={{ padding: '10px', color: '#fff' }}>
               {/* <Typography style={{
@@ -111,7 +110,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
                 lineHeight: '1.2',
               }}>
-                {fethedUser?.Name}
+                {name}
               </Typography>
             </div>
           </motion.div>
@@ -234,10 +233,12 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                             exit={{ opacity: 0, y: -10 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <Link
-                              to={subItem.path ?? '#'}
+                            <div
                               className={`sub-item ${isSubItemActive ? 'selected' : ''}`}
                               onClick={() => {
+                                if (subItem.path) {
+                                  navigate(subItem.path);
+                                }
                                 handleSelect(item.name);
                               }}
                               onMouseEnter={() => setHoveredSubItem(`${item.name}-${subItem.name}`)}
@@ -255,6 +256,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                                 margin: '2px 8px',
                                 textDecoration: 'none',
                                 transition: 'all 0.3s ease',
+                                cursor: 'pointer',
                               }}
                             >
                               <span className="sub-item-icon" style={{
@@ -275,7 +277,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                               }}>
                                 {subItem.name}
                               </span>
-                            </Link>
+                            </div>
                           </motion.div>
                         );
                       })}

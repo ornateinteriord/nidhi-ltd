@@ -38,11 +38,9 @@ const Navbar = ({
   const { isLoggedIn, userRole } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  // Get logged-in userId from TokenService
-  // const userId = TokenService.getMemberId();
-  const memberDetails = { Name: "demo", name: "demo" }
-  // Fetch member details using your custom hook
-  // const { data: memberDetails } = useGetMemberDetails(userId);
+  // Get logged-in user's name from TokenService
+  const userName = TokenService.getUserName();
+  const displayName = userName || "User";
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -124,9 +122,7 @@ const Navbar = ({
                         boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
                       }}
                     >
-                      {memberDetails?.Name
-                        ? memberDetails.Name.charAt(0).toUpperCase()
-                        : "U"}
+                      {displayName.charAt(0).toUpperCase()}
                     </Avatar>
                     <Typography
                       variant="body1"
@@ -136,7 +132,7 @@ const Navbar = ({
                         textShadow: "0 1px 2px rgba(0,0,0,0.2)"
                       }}
                     >
-                      {memberDetails?.Name || "Admin"}
+                      {displayName}
                     </Typography>
                     <ChevronDown
                       color="white"
@@ -215,9 +211,7 @@ const Navbar = ({
                 border: "3px solid white",
               }}
             >
-              {memberDetails?.name
-                ? memberDetails.name.charAt(0).toUpperCase()
-                : ""}
+              {displayName.charAt(0).toUpperCase()}
             </Avatar>
             <Typography
               variant="subtitle1"
@@ -227,7 +221,7 @@ const Navbar = ({
                 textShadow: "0 1px 2px rgba(0,0,0,0.2)"
               }}
             >
-              {memberDetails?.name || "Member"}
+              {displayName}
             </Typography>
           </div>
 

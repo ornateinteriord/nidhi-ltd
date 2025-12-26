@@ -92,11 +92,11 @@ export const useLoginMutation = () => {
         toast.success(response.message);
         const role = TokenService.getRole()
         if (role === "USER") {
-          navigate("/user/dashboard");
+          navigate("/user/dashboard", { replace: true });
         } else if (role === "ADMIN") {
-          navigate("/admin/dashboard");
+          navigate("/admin/dashboard", { replace: true });
         } else if (role === "AGENT") {
-          navigate("/agent/dashboard");
+          navigate("/agent/dashboard", { replace: true });
         } else {
           console.error("Invalid role:", role);
           localStorage.clear()

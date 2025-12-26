@@ -1,22 +1,46 @@
 
-import { Card, CardContent, Typography, Avatar, Button, Grid, Box } from '@mui/material';
-import { cn } from '../../lib/utils';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { Card, CardContent, Typography, Avatar, Button, Grid, Box, CircularProgress } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleIcon from '@mui/icons-material/People';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import WalletCard from '../../components/Dashboard/WalletCard';
 import { useNavigate } from 'react-router-dom';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import SavingsIcon from '@mui/icons-material/Savings';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { useGetMyAccounts } from '../../queries/member';
+
+// Icon mapping for account types
+const getAccountIcon = (accountType: string) => {
+    const iconMap: { [key: string]: JSX.Element } = {
+        'SB': <SavingsIcon sx={{ fontSize: 40 }} />,
+        'CA': <AccountBalanceIcon sx={{ fontSize: 40 }} />,
+        'RD': <TrendingUpIcon sx={{ fontSize: 40 }} />,
+        'FD': <MonetizationOnIcon sx={{ fontSize: 40 }} />,
+        'PIGMY': <AccountBalanceWalletIcon sx={{ fontSize: 40 }} />,
+        'MIS': <SavingsIcon sx={{ fontSize: 40 }} />,
+    };
+    return iconMap[accountType] || <AccountBalanceIcon sx={{ fontSize: 40 }} />;
+};
+
+// Gradient colors for different account types
+const getAccountGradient = (index: number) => {
+    const gradients = [
+        'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)',
+        'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+        'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)',
+        'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)',
+        'linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%)',
+    ];
+    return gradients[index % gradients.length];
+};
 
 const UserDashboard = () => {
     const navigate = useNavigate();
-    const totalUsers = 1050;
-    const activeUsers = 345;
-    const monthlyRevenue = 17235.50;
-    const userVisits = 14355;
-    const userReviews = 147;
+    const { data: accountsData, isLoading, isError } = useGetMyAccounts();
 
     const latestUsers = [
         { id: 1, name: 'Tracey Newman', date: '25 March 2018', time: '12:23PM', status: 'Active', subStatus: 'Premium', amount: '$403.22' },
@@ -26,51 +50,94 @@ const UserDashboard = () => {
 
     return (
         <div>
-            <div className="h-auto md:h-40 relative w-full overflow-hidden bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] flex flex-col items-center justify-center mt-10 py-6 md:py-0">
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#6366f1] to-[#a855f7] z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+            {/* Account Type Cards Section */}
+            <Box sx={{ px: 3, mt: 4 }}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#4f46e5', mb: 3 }}>
+                    My Accounts
+                </Typography>
 
-                <div className="flex flex-col md:flex-row justify-evenly items-center w-full px-4 md:px-8 relative z-20 gap-6 md:gap-0">
-                    <div className="text-center md:text-left">
-                        <h1 className={cn("text-xl md:text-4xl text-white font-bold")}>
-                            Welcome to User Dashboard
-                        </h1>
-                        <p className="mt-2 text-white/80 text-sm md:text-base">
-                            Manage Users and track performance
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:flex items-center gap-6 md:gap-12 text-white">
-                        <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[100px] md:min-w-[120px]">
-                            <div className="text-xl md:text-2xl font-bold mb-2">{activeUsers}/{totalUsers}</div>
-                            <div className="text-xs md:text-sm flex items-center justify-center gap-1">
-                                <PeopleIcon sx={{ fontSize: { xs: 14, md: 16 } }} />
-                                Active Users
-                            </div>
-                        </div>
-                        <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[100px] md:min-w-[120px]">
-                            <div className="text-xl md:text-2xl font-bold mb-2">${monthlyRevenue.toLocaleString()}</div>
-                            <div className="text-xs md:text-sm flex items-center justify-center gap-1">
-                                <AccountBalanceIcon sx={{ fontSize: { xs: 14, md: 16 } }} />
-                                Monthly Revenue
-                            </div>
-                        </div>
-                        <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[100px] md:min-w-[120px]">
-                            <div className="text-xl md:text-2xl font-bold mb-2">{userVisits.toLocaleString()}</div>
-                            <div className="text-xs md:text-sm flex items-center justify-center gap-1">
-                                <LocationOnIcon sx={{ fontSize: { xs: 14, md: 16 } }} />
-                                User Visits
-                            </div>
-                        </div>
-                        <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[100px] md:min-w-[120px]">
-                            <div className="text-xl md:text-2xl font-bold mb-2">{userReviews}</div>
-                            <div className="text-xs md:text-sm flex items-center justify-center gap-1">
-                                <ThumbUpIcon sx={{ fontSize: { xs: 14, md: 16 } }} />
-                                User Reviews
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                {isLoading ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+                        <CircularProgress />
+                    </Box>
+                ) : isError || !accountsData?.success ? (
+                    <Box sx={{ textAlign: 'center', py: 4 }}>
+                        <Typography color="error">Failed to load account data</Typography>
+                    </Box>
+                ) : accountsData.data.accountTypes.length === 0 ? (
+                    <Card sx={{
+                        borderRadius: '16px',
+                        p: 4,
+                        textAlign: 'center',
+                        background: 'linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%)',
+                        border: '2px dashed #d1d5db',
+                    }}>
+                        <AccountBalanceIcon sx={{ fontSize: 64, color: '#9ca3af', mb: 2 }} />
+                        <Typography variant="h6" sx={{ color: '#6b7280', fontWeight: 600 }}>
+                            No Accounts Opened
+                        </Typography>
+                        <Typography sx={{ color: '#9ca3af', mt: 1 }}>
+                            You don't have any accounts yet. Contact your branch to open an account.
+                        </Typography>
+                    </Card>
+                ) : (
+                    <Grid container spacing={3}>
+                        {accountsData.data.accountTypes.map((accountType, index) => (
+                            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={accountType.account_type}>
+                                <Card sx={{
+                                    borderRadius: '16px',
+                                    background: getAccountGradient(index),
+                                    color: 'white',
+                                    boxShadow: '0 4px 20px rgba(99, 102, 241, 0.3)',
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': {
+                                        transform: 'translateY(-8px)',
+                                        boxShadow: '0 8px 30px rgba(99, 102, 241, 0.4)',
+                                    }
+                                }}>
+                                    <CardContent sx={{ p: 3 }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                                            <Box>
+                                                {getAccountIcon(accountType.account_group_name)}
+                                            </Box>
+                                            <Box sx={{
+                                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                borderRadius: '12px',
+                                                px: 2,
+                                                py: 0.5,
+                                                backdropFilter: 'blur(10px)',
+                                            }}>
+                                                <Typography sx={{ fontSize: '0.875rem', fontWeight: 600 }}>
+                                                    {accountType.count} {accountType.count === 1 ? 'Account' : 'Accounts'}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                        <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
+                                            {accountType.account_group_name}
+                                        </Typography>
+                                        {accountType.accounts && accountType.accounts.length > 0 && (
+                                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                                <Typography sx={{
+                                                    fontSize: '0.75rem',
+                                                    opacity: 0.8,
+                                                    fontFamily: 'monospace',
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                                    px: 1.5,
+                                                    py: 0.5,
+                                                    borderRadius: '6px',
+                                                }}>
+                                                    {accountType.accounts[0].account_no || accountType.accounts[0].account_id}
+                                                    {accountType.accounts.length > 1 && ` +${accountType.accounts.length - 1}`}
+                                                </Typography>
+                                            </Box>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
+            </Box>
 
             <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
 

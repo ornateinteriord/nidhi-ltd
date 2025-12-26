@@ -176,7 +176,7 @@ const RoutesProvider = ({
             overflowX: "hidden",
           }}
         >
-          <Routes>
+          <Routes key={location.pathname}>
             {/* public routes */}
             <Route index element={<Login />} />
             <Route element={<PublicRoute />}>

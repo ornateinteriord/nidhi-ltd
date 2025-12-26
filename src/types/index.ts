@@ -5,3 +5,6 @@ export * from './admin';
 export * from './accounts';
 export * from './apiresponse';
 export * from './apipayload';
+export * from './dashboard';
+export * from './memberDashboard';
+export * from './updateMember';

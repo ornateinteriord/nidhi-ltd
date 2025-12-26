@@ -16,7 +16,11 @@ import {
     AccountBooksResponse,
     AccountGroupsResponse,
     InterestsByGroupResponse,
+    DashboardCountsResponse,
+    RecentDataResponse,
 } from "../../types";
+
+
 
 // Re-export types for use in other modules
 export type { Member, Agent, Interest, Account };
@@ -317,4 +321,32 @@ export const useUpdateAccount = () => {
         },
     });
 };
+
+// ==================== DASHBOARD QUERIES ====================
+
+// GET DASHBOARD COUNTS
+export const useGetDashboardCounts = () => {
+    return useQuery({
+        queryKey: ["dashboardCounts"],
+        queryFn: async () => {
+            return await useApi<DashboardCountsResponse>("GET", "/admin/get-dashboard-counts");
+        },
+        staleTime: 1000 * 60 * 2, // 2 minutes
+        refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
+    });
+};
+
+// GET RECENT ACCOUNTS AND MEMBERS
+export const useGetRecentData = () => {
+    return useQuery({
+        queryKey: ["recentData"],
+        queryFn: async () => {
+            return await useApi<RecentDataResponse>("GET", "/admin/get-recent-data");
+        },
+        staleTime: 1000 * 60 * 2, // 2 minutes
+        refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
+    });
+};
+
+
 
