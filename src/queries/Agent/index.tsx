@@ -48,6 +48,30 @@ export const useCollectPayment = (agentId: string | number) => {
         onSuccess: () => {
             // Invalidate assigned accounts query to refresh the list
             queryClient.invalidateQueries({ queryKey: ["assignedAccounts"] });
+            queryClient.invalidateQueries({ queryKey: ["collectionTransactions"] });
         },
+    });
+};
+
+export const useGetCollectionTransactions = (agentId: string, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["collectionTransactions", agentId],
+        queryFn: async () => {
+            return await useApi<{
+                success: boolean;
+                message: string;
+                data: Array<{
+                    transaction_id: string;
+                    transaction_date: Date | string;
+                    account_number: string;
+                    Name: string;
+                    credit: number;
+                    balance: number;
+                    status: string;
+                    description: string;
+                }>;
+            }>("GET", `/agent/get-collection-transactions/${agentId}`);
+        },
+        enabled: enabled && !!agentId,
     });
 };
