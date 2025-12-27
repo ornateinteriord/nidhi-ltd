@@ -9,7 +9,7 @@ export const useGetMemberById = (memberId: string, enabled: boolean = true) => {
             return await useApi<MemberResponse>("GET", `/member/get-member/${memberId}`);
         },
         enabled: enabled && !!memberId, // Only run query if enabled and memberId exists
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        
     });
 };
 
@@ -20,7 +20,7 @@ export const useGetMyAccounts = () => {
         queryFn: async () => {
             return await useApi<MemberAccountsResponse>("GET", "/member/get-my-accounts");
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        
     });
 };
 
