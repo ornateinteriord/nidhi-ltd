@@ -19,3 +19,18 @@ export interface Agent {
     createdAt?: Date | string;
     updatedAt?: Date | string;
 }
+
+// Assigned Account type for agent collections
+export interface AssignedAccount {
+    date_of_opening: Date | string;
+    account_no: string;
+    account_holder: string;
+    date_of_maturity: Date | string | null;
+    balance: number;
+    status: string;
+    // Additional fields
+    account_id?: string;
+    member_id?: string;
+    account_type?: string;
+    account_operation?: string;
+}
