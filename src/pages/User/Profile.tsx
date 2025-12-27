@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { toast } from 'react-toastify';
 import TokenService from '../../queries/token/tokenService';
-import { useGetMemberById, useUpdateMemberProfile } from '../../queries/member';
+import { useGetMemberById, useUpdateMemberProfile } from '../../queries/Member';
 import PersonIcon from '@mui/icons-material/Person';
 import BadgeIcon from '@mui/icons-material/Badge';
 import HomeIcon from '@mui/icons-material/Home';

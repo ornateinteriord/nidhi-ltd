@@ -10,7 +10,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SavingsIcon from '@mui/icons-material/Savings';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import { useGetMyAccounts } from '../../queries/member';
+import { useGetMyAccounts } from '../../queries/Member';
 
 // Icon mapping for account types
 const getAccountIcon = (accountType: string) => {
