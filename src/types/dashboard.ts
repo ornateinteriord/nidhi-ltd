@@ -13,6 +13,9 @@ export interface DashboardCounts {
     totalAccounts: number;
     totalAgents: number;
     accountsByType: AccountTypeCount[];
+    closingBalance: number;
+    totalDebit: number;
+    totalCredit: number;
 }
 
 export interface DashboardCountsResponse {
