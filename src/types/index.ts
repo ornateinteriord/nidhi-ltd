@@ -8,3 +8,5 @@ export * from './apipayload';
 export * from './dashboard';
 export * from './memberDashboard';
 export * from './updateMember';
+export * from './transfer';
+export * from './banking';

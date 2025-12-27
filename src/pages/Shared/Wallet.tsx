@@ -6,8 +6,34 @@ import AddIcon from '@mui/icons-material/Add';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TokenService from '../../queries/token/tokenService';
+import { Box, Typography, Card, CardContent, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, Chip } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import TransferMoneyDialog from '../../components/Wallet/TransferMoneyDialog';
+import WithdrawMoneyDialog from '../../components/Wallet/WithdrawMoneyDialog';
+import { useGetMyAccounts } from '../../queries/member';
 
 const Wallet: React.FC = () => {
+    const [transferDialogOpen, setTransferDialogOpen] = useState(false);
+    const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
+    const { data: accountsData, isLoading } = useGetMyAccounts();
+
+    // Calculate total balance from all accounts
+    const totalBalance = accountsData?.data?.accountTypes?.reduce((total: number, accType: any) => {
+        const typeTotal = accType.accounts.reduce((sum: number, acc: any) => sum + (acc.account_amount || 0), 0);
+        return total + typeTotal;
+    }, 0) || 0;
+
+    // Create breakdown by account type
+    const accountBreakdown = accountsData?.data?.accountTypes?.map((accType: any) => {
+        const typeTotal = accType.accounts.reduce((sum: number, acc: any) => sum + (acc.account_amount || 0), 0);
+        return {
+            type: accType.account_group_name,
+            amount: typeTotal
+        };
+    }) || [];
+
     // Dummy transaction data
     const transactions = [
         { id: 1, date: '2023-10-25', description: 'Added Funds', amount: '+ ₹500.00', status: 'Success' },
@@ -90,12 +116,37 @@ const Wallet: React.FC = () => {
                 My Wallet
             </Typography>
 
-            {/* Balance Section (Simplified here as the main card is on dashboard, but good to have context) */}
+            {/* Balance Section */}
             <Card sx={{ mb: 4, borderRadius: '16px', background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)', color: 'white' }}>
                 <CardContent sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', justifyContent: 'space-between', p: 4 }}>
-                    <Box>
-                        <Typography variant="subtitle1" sx={{ opacity: 0.8 }}>Current Balance</Typography>
-                        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>₹1050.00</Typography>
+                    <Box sx={{ flex: 1 }}>
+                        <Typography variant="subtitle1" sx={{ opacity: 0.8 }}>Total Balance</Typography>
+                        {isLoading ? (
+                            <CircularProgress size={40} sx={{ color: 'white', mt: 1 }} />
+                        ) : (
+                            <>
+                                <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+                                    ₹{totalBalance.toFixed(2)}
+                                </Typography>
+                                {/* Account Breakdown */}
+                                {accountBreakdown.length > 0 && (
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+                                        {accountBreakdown.map((acc: any, index: number) => (
+                                            <Chip
+                                                key={index}
+                                                label={`${acc.type} - ₹${acc.amount.toFixed(2)}`}
+                                                sx={{
+                                                    bgcolor: 'rgba(255,255,255,0.2)',
+                                                    color: 'white',
+                                                    fontWeight: 600,
+                                                    backdropFilter: 'blur(10px)'
+                                                }}
+                                            />
+                                        ))}
+                                    </Box>
+                                )}
+                            </>
+                        )}
                     </Box>
                     <Box sx={{ display: 'flex', gap: 2, mt: { xs: 3, md: 0 } }}>
                         <Button
@@ -113,6 +164,7 @@ const Wallet: React.FC = () => {
                         <Button
                             variant="contained"
                             startIcon={<SwapHorizIcon />}
+                            onClick={() => setTransferDialogOpen(true)}
                             sx={{
                                 bgcolor: 'rgba(255,255,255,0.2)',
                                 backdropFilter: 'blur(10px)',
@@ -124,6 +176,7 @@ const Wallet: React.FC = () => {
                         <Button
                             variant="contained"
                             startIcon={<AccountBalanceWalletIcon />}
+                            onClick={() => setWithdrawDialogOpen(true)}
                             sx={{
                                 bgcolor: 'rgba(255,255,255,0.2)',
                                 backdropFilter: 'blur(10px)',
@@ -256,6 +309,17 @@ const Wallet: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            {/* Transfer Dialog */}
+            <TransferMoneyDialog
+                open={transferDialogOpen}
+                onClose={() => setTransferDialogOpen(false)}
+            />
+
+            {/* Withdraw Money Dialog */}
+            <WithdrawMoneyDialog
+                open={withdrawDialogOpen}
+                onClose={() => setWithdrawDialogOpen(false)}
+            />
         </Box>
     );
 };
