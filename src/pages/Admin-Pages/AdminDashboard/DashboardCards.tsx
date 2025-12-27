@@ -168,7 +168,7 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
             title="Cash Balance
             "
             status="Active"
-            description={`${counts.totalAgents} Agents`}
+            description={`₹ ${counts.closingBalance}`}
             sx={{
               background: '#667eea',
               borderRadius: '16px',
