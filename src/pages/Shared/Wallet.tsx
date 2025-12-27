@@ -1,8 +1,11 @@
-import React from 'react';
-import { Box, Typography, Card, CardContent, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Card, CardContent, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { useCreatePaymentOrder } from '../../queries/Wallet/useWallet';
+import { useGetMemberById } from '../../queries/Member';
 import AddIcon from '@mui/icons-material/Add';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import TokenService from '../../queries/token/tokenService';
 
 const Wallet: React.FC = () => {
     // Dummy transaction data
@@ -12,6 +15,73 @@ const Wallet: React.FC = () => {
         { id: 3, date: '2023-10-23', description: 'Withdrawal', amount: '- ₹1000.00', status: 'Pending' },
         { id: 4, date: '2023-10-20', description: 'Bonus', amount: '+ ₹50.00', status: 'Success' },
     ];
+
+    const [openAddMoney, setOpenAddMoney] = useState(false);
+    const [amount, setAmount] = useState<string>('');
+    const [customAmount, setCustomAmount] = useState<string>('');
+    const { mutate: createOrder, isPending } = useCreatePaymentOrder();
+    const userId = TokenService.getMemberId();
+    const { data: memberData } = useGetMemberById(userId || '');
+    console.log("memberdata:", memberData)
+    // Initialize Cashfree
+    let cashfree: any;
+    try {
+        if ((window as any).Cashfree) {
+            cashfree = new (window as any).Cashfree({
+                mode: "sandbox", // or "production"
+            });
+        }
+    } catch (e) {
+        console.error("Cashfree SDK not found or failed to initialize", e);
+    }
+
+    const handleOpenAddMoney = () => {
+        setOpenAddMoney(true);
+    };
+
+    const handleCloseAddMoney = () => {
+        setOpenAddMoney(false);
+        setAmount('');
+        setCustomAmount('');
+    };
+
+    const handleAddMoney = () => {
+        const finalAmount = amount === 'custom' ? parseFloat(customAmount) : parseFloat(amount);
+        if (finalAmount > 0) {
+            const request = {
+                member_id: memberData?.data?.member_id,
+                amount: finalAmount,
+                mobileno: memberData?.data?.contactno,
+                Name: memberData?.data?.name,
+                email: memberData?.data?.emailid
+            };
+
+            if (!request.member_id) {
+                console.error("Missing critical member data for payment");
+                return;
+            }
+
+            createOrder(request, {
+                onSuccess: (data: any) => {
+                    console.log("Order created:", data);
+                    // Initiate Cashfree Checkout
+                    if (data?.payment_session_id && cashfree) {
+                        cashfree.checkout({
+                            paymentSessionId: data.payment_session_id
+                        });
+                    } else {
+                        console.error("Missing payment session ID or Cashfree SDK");
+                        // Fallback or error handling
+                    }
+                    handleCloseAddMoney();
+                },
+                onError: (error) => {
+                    console.error("Error creating order:", error);
+                    // Handle error
+                }
+            });
+        }
+    };
 
     return (
         <Box sx={{ p: 3 }}>
@@ -31,6 +101,7 @@ const Wallet: React.FC = () => {
                         <Button
                             variant="contained"
                             startIcon={<AddIcon />}
+                            onClick={handleOpenAddMoney}
                             sx={{
                                 bgcolor: 'rgba(255,255,255,0.2)',
                                 backdropFilter: 'blur(10px)',
@@ -109,6 +180,82 @@ const Wallet: React.FC = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            {/* Add Money Dialog */}
+            <Dialog open={openAddMoney} onClose={handleCloseAddMoney} maxWidth="xs" fullWidth>
+                <DialogTitle>Add Money to Wallet</DialogTitle>
+                <DialogContent>
+                    <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        {memberData && (
+                            <>
+                                <TextField
+                                    label="Member ID"
+                                    value={memberData.data.member_id || ''}
+                                    fullWidth
+                                    disabled
+                                    size="small"
+                                />
+                                <TextField
+                                    label="Name"
+                                    value={memberData.data.name || ''}
+                                    fullWidth
+                                    disabled
+                                    size="small"
+                                />
+                                <TextField
+                                    label="Mobile"
+                                    value={memberData.data.contactno || ''}
+                                    fullWidth
+                                    disabled
+                                    size="small"
+                                />
+                                <TextField
+                                    label="Email"
+                                    value={memberData.data.emailid || ''}
+                                    fullWidth
+                                    disabled
+                                    size="small"
+                                />
+                            </>
+                        )}
+                        <FormControl fullWidth>
+                            <InputLabel id="amount-select-label">Select Amount</InputLabel>
+                            <Select
+                                labelId="amount-select-label"
+                                value={amount}
+                                label="Select Amount"
+                                onChange={(e) => setAmount(e.target.value)}
+                            >
+                                <MenuItem value="100">₹100</MenuItem>
+                                <MenuItem value="500">₹500</MenuItem>
+                                <MenuItem value="1000">₹1000</MenuItem>
+                                <MenuItem value="2000">₹2000</MenuItem>
+                                <MenuItem value="custom">Custom Amount</MenuItem>
+                            </Select>
+                        </FormControl>
+                        {amount === 'custom' && (
+                            <TextField
+                                label="Enter Amount"
+                                type="number"
+                                fullWidth
+                                value={customAmount}
+                                onChange={(e) => setCustomAmount(e.target.value)}
+                                InputProps={{ inputProps: { min: 1 } }}
+                            />
+                        )}
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAddMoney}>Cancel</Button>
+                    <Button
+                        onClick={handleAddMoney}
+                        variant="contained"
+                        disabled={isPending || (amount === 'custom' && !customAmount) || (!amount)}
+                    >
+                        {isPending ? 'Processing...' : 'Add Money'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
