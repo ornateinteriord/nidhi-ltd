@@ -19,7 +19,7 @@ const Wallet: React.FC = () => {
     const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
     const { data: accountsData, isLoading } = useGetMyAccounts();
 
-    // Calculate total balance from all accounts
+    // Calculate total balance from all accounts ok
     const totalBalance = accountsData?.data?.accountTypes?.reduce((total: number, accType: any) => {
         const typeTotal = accType.accounts.reduce((sum: number, acc: any) => sum + (acc.account_amount || 0), 0);
         return total + typeTotal;
