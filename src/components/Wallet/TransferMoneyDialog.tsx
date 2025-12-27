@@ -20,7 +20,7 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { toast } from 'react-toastify';
 import TokenService from '../../queries/token/tokenService';
-import { useGetMyAccounts } from '../../queries/member';
+import { useGetMyAccounts } from '../../queries/Member';
 import { useGetMemberBasicInfo, useGetMemberAccountsPublic, useTransferMoney } from '../../queries/transfer';
 
 interface TransferMoneyDialogProps {
