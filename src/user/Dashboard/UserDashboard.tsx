@@ -10,7 +10,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SavingsIcon from '@mui/icons-material/Savings';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import { useGetMyAccounts } from '../../queries/member';
+import { useGetMyAccounts } from '../../queries/Member';
 
 // Icon mapping for account types
 const getAccountIcon = (accountType: string) => {
@@ -97,7 +97,7 @@ const UserDashboard = () => {
                     </Card>
                 ) : (
                     <Grid container spacing={3}>
-                        {accountsData.data.accountTypes.map((accountType, index) => (
+                        {accountsData.data.accountTypes.map((accountType: any, index: number) => (
                             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={accountType.account_type}>
                                 <Card sx={{
                                     borderRadius: '16px',

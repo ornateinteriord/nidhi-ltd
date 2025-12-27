@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import { useGetMyAccounts } from '../../queries/member';
+import { useGetMyAccounts } from '../../queries/Member';
 import { toast } from 'react-toastify';
 
 interface WithdrawMoneyDialogProps {
