@@ -97,7 +97,7 @@ const UserDashboard = () => {
                     </Card>
                 ) : (
                     <Grid container spacing={3}>
-                        {accountsData.data.accountTypes.map((accountType, index) => (
+                        {accountsData.data.accountTypes.map((accountType: any, index: number) => (
                             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={accountType.account_type}>
                                 <Card sx={{
                                     borderRadius: '16px',
