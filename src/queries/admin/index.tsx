@@ -359,5 +359,22 @@ export const useGetRecentData = () => {
     });
 };
 
+// ==================== AGENT ACCOUNT CREATION ====================
+
+// CREATE ACCOUNT BY AGENT
+export const useCreateAccountByAgent = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (accountData: Partial<Account>) => {
+            return await useApi<AccountResponse>("POST", "/agent/create-account", accountData);
+        },
+        onSuccess: () => {
+            // Invalidate and refetch accounts list
+            queryClient.invalidateQueries({ queryKey: ["accounts"] });
+        },
+    });
+};
+
 
 
