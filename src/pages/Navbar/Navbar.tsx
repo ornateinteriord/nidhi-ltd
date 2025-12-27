@@ -41,6 +41,7 @@ const Navbar = ({
   // Get logged-in user's name from TokenService
   const userName = TokenService.getUserName();
   const displayName = userName || "User";
+  const role = TokenService.getRole();
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -87,7 +88,7 @@ const Navbar = ({
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent"
             }}
-            onClick={() => navigate("/")}
+            onClick={() => navigate(`/${role?.toLocaleLowerCase()}/dashboard`)}
           >
             MSI
           </Typography>

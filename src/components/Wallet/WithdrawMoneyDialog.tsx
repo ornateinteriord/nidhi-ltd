@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import { useWithdrawRequest } from '../../queries/transfer';
 import { useGetMyAccounts } from '../../queries/Member';
 import { toast } from 'react-toastify';
 
@@ -26,6 +27,7 @@ interface WithdrawMoneyDialogProps {
 
 const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose }) => {
     const { data: accountsData, isLoading: accountsLoading } = useGetMyAccounts();
+    const withdrawMutation = useWithdrawRequest();
 
     const [selectedAccount, setSelectedAccount] = useState('');
     const [amount, setAmount] = useState('');
@@ -66,19 +68,44 @@ const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose
         }
 
         const selectedAcc = allAccounts.find((acc: any) => acc.account_id === selectedAccount);
-        if (selectedAcc && parseFloat(amount) > selectedAcc.account_amount) {
+        if (!selectedAcc) {
+            toast.error('Selected account not found');
+            return;
+        }
+
+        if (parseFloat(amount) > selectedAcc.account_amount) {
             toast.error('Insufficient balance in selected account');
             return;
         }
 
         setWithdrawing(true);
 
-        // Simulate withdrawal request (would be API call in production)
-        setTimeout(() => {
-            toast.success('Withdrawal request submitted successfully!');
+        try {
+            // Call withdraw request API
+            const response = await withdrawMutation.mutateAsync({
+                member_id: selectedAcc.member_id,
+                account_id: selectedAcc.account_id,
+                account_no: selectedAcc.account_no,
+                account_type: selectedAcc.account_type,
+                amount: parseFloat(amount),
+                bank_account_number: bankAccountNumber,
+                ifsc_code: ifscCode,
+                account_holder_name: accountHolderName
+            });
+
+            if (response.success) {
+                toast.success(response.message || 'Withdrawal request submitted successfully!');
+                handleClose();
+            } else {
+                toast.error(response.message || 'Failed to submit withdrawal request');
+            }
+        } catch (error: any) {
+            console.error('Withdrawal request error:', error);
+            const errorMessage = error?.response?.data?.message || error?.message || 'Failed to submit withdrawal request. Please try again.';
+            toast.error(errorMessage);
+        } finally {
             setWithdrawing(false);
-            handleClose();
-        }, 1500);
+        }
     };
 
     const handleClose = () => {

@@ -10,6 +10,6 @@ export const useGetAgentById = (agentId: string, enabled: boolean = true) => {
             return await useApi<AgentResponse>("GET", `/agent/get-agent/${agentId}`);
         },
         enabled: enabled && !!agentId,
-        staleTime: 1000 * 60 * 5,
+        
     });
 };

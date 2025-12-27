@@ -15,7 +15,6 @@ export const useGetMemberBasicInfo = (memberId: string, enabled: boolean = false
             return await useApi<MemberBasicInfoResponse>("GET", `/member/basic-info/${memberId}`);
         },
         enabled: enabled && !!memberId,
-        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 };
 
@@ -27,7 +26,6 @@ export const useGetMemberAccountsPublic = (memberId: string, enabled: boolean = 
             return await useApi<AccountsPublicResponse>("GET", `/member/accounts/${memberId}`);
         },
         enabled: enabled && !!memberId,
-        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 };
 
@@ -45,3 +43,43 @@ export const useTransferMoney = () => {
         },
     });
 };
+
+// Withdraw request mutation
+export const useWithdrawRequest = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (data: {
+            member_id: string;
+            account_id: string;
+            account_no: string;
+            account_type: string;
+            amount: number;
+            bank_account_number: string;
+            ifsc_code: string;
+            account_holder_name: string;
+        }) => {
+            return await useApi<{
+                success: boolean;
+                message: string;
+                data: {
+                    withdraw_request_id: string;
+                    member_name: string;
+                    account_no: string;
+                    account_type: string;
+                    amount: number;
+                    bank_account_number: string;
+                    ifsc_code: string;
+                    account_holder_name: string;
+                    status: string;
+                    requested_date: string;
+                };
+            }>("POST", "/transaction/withdraw-request", data);
+        },
+        onSuccess: () => {
+            // Invalidate accounts to refresh balances
+            queryClient.invalidateQueries({ queryKey: ["myAccounts"] });
+        },
+    });
+};
+

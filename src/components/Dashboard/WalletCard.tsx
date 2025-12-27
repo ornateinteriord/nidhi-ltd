@@ -18,7 +18,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ balance, onClick, breakdown }) 
             onClick={onClick}
             sx={{
                 borderRadius: '16px',
-                background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)', // Blue to Purple gradient
+                background: '#667eea',
                 color: 'white',
                 cursor: 'pointer',
                 boxShadow: '0 4px 20px rgba(99, 102, 241, 0.3)',

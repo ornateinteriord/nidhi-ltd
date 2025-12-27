@@ -117,7 +117,7 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
             status="Active"
             description={`${counts.totalMembers} Members`}
             sx={{
-              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+              background: '#667eea',
               borderRadius: '16px',
               boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)',
               color: 'white',
@@ -134,12 +134,12 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
             status="Active"
             description={`${counts.totalAccounts} Accounts`}
             showActionButton={true}
-            actionButtonLabel="More Info"
+            actionButtonLabel="More"
             onActionClick={() => setAccountTypesDialogOpen(true)}
             sx={{
-              background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)',
+              background: '#667eea',
               borderRadius: '16px',
-              boxShadow: '0 4px 20px rgba(139, 92, 246, 0.2)',
+              boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)',
               color: 'white',
               border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
@@ -154,9 +154,25 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
             status="Active"
             description={`${counts.totalAgents} Agents`}
             sx={{
-              background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+              background: '#667eea',
               borderRadius: '16px',
-              boxShadow: '0 4px 20px rgba(16, 185, 129, 0.2)',
+              boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)',
+              color: 'white',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <DashboardCard
+            icon={<SupervisorAccountIcon sx={{ color: 'white' }} />}
+            title="Cash Balance
+            "
+            status="Active"
+            description={`${counts.totalAgents} Agents`}
+            sx={{
+              background: '#667eea',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)',
               color: 'white',
               border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
@@ -169,7 +185,7 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
       {/* Second Row with Two Cards */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {/* Members Card with Table as Footer */}
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <DashboardCard
             icon={<StorageIcon sx={{ color: 'white' }} />}
             title="Members"
@@ -195,7 +211,7 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
                       borderRadius: '12px',
                     },
                     '& .rdt_TableHead': {
-                      background: 'linear-gradient(135deg, #f3f4f6 0%, #f9fafb 100%)',
+                      background: '#667eea',
                       '& .rdt_TableCol': {
                         color: '#4b5563',
                         fontWeight: '600',
@@ -216,9 +232,9 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
               </Box>
             }
             sx={{
-              background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+              background: '#667eea',
               borderRadius: '16px',
-              boxShadow: '0 4px 20px rgba(79, 70, 229, 0.2)',
+              boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)',
               color: 'white',
               border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
@@ -226,7 +242,7 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
         </Grid>
 
         {/* Accounts Card with Timeline as Footer */}
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <DashboardCard
             icon={<DescriptionIcon sx={{ color: 'white' }} />}
             title="Accounts"
@@ -245,7 +261,7 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
                   data={accountsTimelineData}
                   sx={{
                     '& .timeline-item': {
-                      borderLeft: '3px solid #6366f1',
+                      borderLeft: '3px solid #667eea',
                       paddingLeft: '16px',
                       '&:hover': {
                         background: 'rgba(99, 102, 241, 0.04)',
@@ -257,7 +273,7 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
               </Box>
             }
             sx={{
-              background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+              background: '#667eea',
               borderRadius: '16px',
               boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)',
               color: 'white',
@@ -276,13 +292,13 @@ const DashboardCards = ({ counts, recentData }: DashboardCardsProps) => {
         PaperProps={{
           sx: {
             borderRadius: '16px',
-            background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+            background: '#667eea',
           }
         }}
       >
         <DialogTitle
           sx={{
-            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+            background: '#667eea',
             color: 'white',
             position: 'relative',
             py: 3,

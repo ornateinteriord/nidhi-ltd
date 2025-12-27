@@ -41,7 +41,7 @@ export const useGetMembers = (
 
             return await useApi<MembersResponse>("GET", "/admin/get-members", undefined, params);
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -53,7 +53,7 @@ export const useGetMemberById = (memberId: string, enabled: boolean = true) => {
             return await useApi<MemberResponse>("GET", `/admin/get-member/${memberId}`);
         },
         enabled: enabled && !!memberId, // Only run query if enabled and memberId exists
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -106,7 +106,7 @@ export const useGetAgents = (
 
             return await useApi<AgentsResponse>("GET", "/admin/get-agents", undefined, params);
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -118,7 +118,7 @@ export const useGetAgentById = (agentId: string, enabled: boolean = true) => {
             return await useApi<AgentResponse>("GET", `/admin/get-agent/${agentId}`);
         },
         enabled: enabled && !!agentId, // Only run query if enabled and agentId exists
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -153,6 +153,19 @@ export const useUpdateAgent = () => {
     });
 };
 
+// GET ALL AGENTS (for dropdowns - no pagination)
+export const useGetAllAgents = () => {
+    return useQuery({
+        queryKey: ["allAgents"],
+        queryFn: async () => {
+            // Fetch with high limit to get all active agents
+            const params = { page: 1, limit: 1000, status: "active" };
+            return await useApi<AgentsResponse>("GET", "/admin/get-agents", undefined, params);
+        },
+        staleTime: 1000 * 60 * 10, // 10 minutes cache
+    });
+};
+
 // ==================== INTEREST QUERIES ====================
 
 // GET ALL INTERESTS
@@ -171,7 +184,7 @@ export const useGetInterests = (
 
             return await useApi<InterestsResponse>("GET", "/admin/get-interests", undefined, params);
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -183,7 +196,7 @@ export const useGetInterestById = (interestId: string, enabled: boolean = true) 
             return await useApi<InterestResponse>("GET", `/admin/get-interest/${interestId}`);
         },
         enabled: enabled && !!interestId, // Only run query if enabled and interestId exists
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -253,7 +266,7 @@ export const useGetInterestsByAccountGroup = (account_group_id: string, enabled:
             return await useApi<InterestsByGroupResponse>("GET", `/admin/get-interests-by-account-group/${account_group_id}`);
         },
         enabled: enabled && !!account_group_id,
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -290,7 +303,7 @@ export const useGetAccounts = (
 
             return await useApi<AccountsResponse>("GET", "/admin/get-accounts", undefined, params);
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -302,7 +315,7 @@ export const useGetAccountById = (accountId: string, enabled: boolean = true) =>
             return await useApi<AccountResponse>("GET", `/admin/get-account/${accountId}`);
         },
         enabled: enabled && !!accountId,
-        staleTime: 1000 * 60 * 5, // 5 minutes
+
     });
 };
 
@@ -331,7 +344,6 @@ export const useGetDashboardCounts = () => {
         queryFn: async () => {
             return await useApi<DashboardCountsResponse>("GET", "/admin/get-dashboard-counts");
         },
-        staleTime: 1000 * 60 * 2, // 2 minutes
         refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
     });
 };
@@ -343,7 +355,6 @@ export const useGetRecentData = () => {
         queryFn: async () => {
             return await useApi<RecentDataResponse>("GET", "/admin/get-recent-data");
         },
-        staleTime: 1000 * 60 * 2, // 2 minutes
         refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
     });
 };

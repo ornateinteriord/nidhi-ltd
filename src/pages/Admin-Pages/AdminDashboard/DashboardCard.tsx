@@ -88,7 +88,7 @@ const DashboardCard = ({
               <Box
                 sx={{
                   fontSize: '14px',
-                  color: '#48bb78',
+                  color: '#62ff00ff',
                   fontWeight: 500,
                 }}
               >

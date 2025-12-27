@@ -29,7 +29,7 @@ export const useGetReceipts = (
 
             return await useApi<ReceiptsResponse>("GET", "/banking/receipts", undefined, params);
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        
     });
 };
 
@@ -41,7 +41,6 @@ export const useGetReceiptById = (receiptId: string, enabled: boolean = true) =>
             return await useApi<ReceiptResponse>("GET", `/banking/receipts/${receiptId}`);
         },
         enabled: enabled && !!receiptId,
-        staleTime: 1000 * 60 * 5,
     });
 };
 
@@ -107,7 +106,7 @@ export const useGetPayments = (
 
             return await useApi<PaymentsResponse>("GET", "/banking/payments", undefined, params);
         },
-        staleTime: 1000 * 60 * 5,
+        
     });
 };
 
@@ -119,7 +118,7 @@ export const useGetPaymentById = (paymentId: string, enabled: boolean = true) =>
             return await useApi<PaymentResponse>("GET", `/banking/payments/${paymentId}`);
         },
         enabled: enabled && !!paymentId,
-        staleTime: 1000 * 60 * 5,
+        
     });
 };
 
@@ -215,7 +214,7 @@ export const useGetCashTransactions = (
 
             return await useApi<CashTransactionsResponse>("GET", "/banking/cash-transactions", undefined, params);
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        
     });
 };
 

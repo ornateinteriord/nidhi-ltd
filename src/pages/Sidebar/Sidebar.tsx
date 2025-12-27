@@ -76,9 +76,9 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
             style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              // background: 'rgba(255, 255, 255, 0.1)',
+              // backdropFilter: 'blur(10px)',
+              // borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
               padding: '20px',
             }}
           >
@@ -119,8 +119,10 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
       <div style={{
         height: 'calc(100vh - 100px)',
         overflowY: 'auto',
+        paddingTop: '16px',
+        paddingLeft: '16px',
+        paddingRight: '16px',
         paddingBottom: '80px',
-        padding: '16px',
       }}>
         <AnimatePresence>
           {menuItems.map((item: SideBarMenuItemType) => {
