@@ -28,3 +28,30 @@ export interface Member {
     createdAt?: Date | string;
     updatedAt?: Date | string;
 }
+
+// Transaction type definition
+export interface Transaction {
+    _id?: string;
+    transaction_id: string;
+    member_id: string;
+    account_id: string;
+    account_no: string;
+    account_type: string;
+    transaction_type: string; // 'credit' or 'debit'
+    amount: number;
+    balance_after: number;
+    transaction_date: Date | string;
+    description?: string;
+    reference_no?: string;
+    entered_by?: string;
+    status?: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+}
+
+// Member Transactions Response
+export interface MemberTransactionsResponse {
+    success: boolean;
+    message: string;
+    data: Transaction[];
+}

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useApi from "../useApi";
-import { MemberResponse, MemberAccountsResponse, UpdateMemberRequest, UpdateMemberResponse } from "../../types";
+import { MemberResponse, MemberAccountsResponse, UpdateMemberRequest, UpdateMemberResponse, MemberTransactionsResponse } from "../../types";
 
 export const useGetMemberById = (memberId: string, enabled: boolean = true) => {
     return useQuery({
@@ -12,7 +12,7 @@ export const useGetMemberById = (memberId: string, enabled: boolean = true) => {
 
         },
         enabled: enabled && !!memberId, // Only run query if enabled and memberId exists
-        
+
     });
 
 };
@@ -24,7 +24,7 @@ export const useGetMyAccounts = () => {
         queryFn: async () => {
             return await useApi<MemberAccountsResponse>("GET", "/member/get-my-accounts");
         },
-        
+
     });
 };
 
@@ -40,5 +40,21 @@ export const useUpdateMemberProfile = () => {
             // Invalidate and refetch member data
             queryClient.invalidateQueries({ queryKey: ["member", variables.memberId] });
         },
+    });
+};
+export const useGetMemberTransactions = (
+    memberId: string,
+    enabled: boolean = true
+) => {
+    return useQuery({
+        queryKey: ["memberTransactions", memberId],
+        queryFn: async () => {
+            // CORRECTED: Use the correct endpoint that matches your backend route
+            return await useApi<MemberTransactionsResponse>(
+                "GET",
+                `/transaction/member/${memberId}`  // Changed from `/member/transaction/${memberId}`
+            );
+        },
+        enabled: enabled && !!memberId,
     });
 };
