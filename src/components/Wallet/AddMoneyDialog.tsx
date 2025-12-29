@@ -39,7 +39,7 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
     try {
         if ((window as any).Cashfree) {
             cashfree = new (window as any).Cashfree({
-                mode: "sandbox", // or "production"
+                mode: "production", // Must match backend environment (production)
             });
         }
     } catch (e) {
