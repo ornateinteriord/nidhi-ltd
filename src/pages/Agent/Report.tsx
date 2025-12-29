@@ -1,142 +1,100 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableContainer,
-  TableFooter,
-  TablePagination,
-  Grid
-} from '@mui/material';
+import React from 'react';
+import { Box, Chip } from '@mui/material';
+import AdminReusableTable, { ColumnDefinition } from '../../utils/AdminReusableTable';
+import { useGetCollectionTransactions } from '../../queries/Agent';
+import TokenService from '../../queries/token/tokenService';
 
 const Report: React.FC = () => {
-  const [fromDate, setFromDate] = useState<string>('');
-  const [toDate, setToDate] = useState<string>('');
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(0);
-  const [rowsPerPage] = useState(5);
+  const agentId = TokenService.getMemberId();
+  const { data: transactionsData, isLoading: transactionsLoading } = useGetCollectionTransactions(agentId || '', !!agentId);
 
-  // Dummy: no transactions
-  const transactions: any[] = [];
+  const transactions = transactionsData?.data || [];
 
-  const filtered = transactions.filter((t) =>
-    [t.tranDate, t.tranNo, t.details, t.refNo, t.withdrawal, t.deposits, t.balance]
-      .join(' ')
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
-
-  const handleSearch = () => {
-    // For dummy page, no op — in real use would trigger fetch/filter
-  };
+  // Transaction columns
+  const transactionColumns: ColumnDefinition<any>[] = [
+    {
+      id: 'transaction_date',
+      label: 'Date',
+      sortable: true,
+      renderCell: (row) => {
+        const date = new Date(row.transaction_date);
+        return date.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        });
+      },
+    },
+    {
+      id: 'transaction_id',
+      label: 'Transaction ID',
+      sortable: true,
+    },
+    {
+      id: 'account_number',
+      label: 'Account No',
+      sortable: true,
+    },
+    {
+      id: 'Name',
+      label: 'Account Holder',
+      sortable: true,
+    },
+    {
+      id: 'credit',
+      label: 'Amount Collected',
+      align: 'right',
+      sortable: true,
+      renderCell: (row) => `₹ ${row.credit.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    },
+    {
+      id: 'balance',
+      label: 'Account Balance',
+      align: 'right',
+      sortable: true,
+      renderCell: (row) => `₹ ${row.balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      sortable: true,
+      renderCell: (row) => {
+        const status = row.status.toLowerCase();
+        return (
+          <Chip
+            label={row.status}
+            size="small"
+            sx={{
+              backgroundColor:
+                status === 'completed' ? '#d1fae5' :
+                  status === 'pending' ? '#fef3c7' :
+                    '#fee2e2',
+              color:
+                status === 'completed' ? '#065f46' :
+                  status === 'pending' ? '#92400e' :
+                    '#991b1b',
+              fontWeight: 500,
+              borderRadius: 1,
+              textTransform: 'capitalize',
+            }}
+          />
+        );
+      },
+    },
+  ];
 
   return (
-    <Box sx={{ mt: 10,px:3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <Typography variant="h5" sx={{ fontWeight: 600 }}>Agent &gt; Report</Typography>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <TextField size="small" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-          <TextField size="small" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
-          <Button variant="contained" color="success" onClick={handleSearch}>Search</Button>
-        </Box>
-      </Box>
-
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 3 }}>
-              <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
-                <Typography variant="h6">₹ 0.0</Typography>
-                <Typography variant="caption">Opening Balance</Typography>
-              </Paper>
-            </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
-              <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
-                <Typography variant="h6">₹ 0.0</Typography>
-                <Typography variant="caption">Debit Amount</Typography>
-              </Paper>
-            </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
-              <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
-                <Typography variant="h6">₹ 0.0</Typography>
-                <Typography variant="caption">Credit Amount</Typography>
-              </Paper>
-            </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
-              <Paper elevation={0} sx={{ p: 3, textAlign: 'center' }}>
-                <Typography variant="h6">₹ 0.0</Typography>
-                <Typography variant="caption">Closing Balance</Typography>
-              </Paper>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Button variant="outlined">Excel</Button>
-            <TextField size="small" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
-          </Box>
-
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Tran. Date</TableCell>
-                  <TableCell>Tran. No</TableCell>
-                  <TableCell>Transaction Details</TableCell>
-                  <TableCell>Ref. No</TableCell>
-                  <TableCell>Withdrawal</TableCell>
-                  <TableCell>Deposits</TableCell>
-                  <TableCell>Balance</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filtered.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} align="center">No data available in table</TableCell>
-                  </TableRow>
-                ) : (
-                  filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any) => (
-                    <TableRow key={row.id}>
-                      <TableCell>{row.tranDate}</TableCell>
-                      <TableCell>{row.tranNo}</TableCell>
-                      <TableCell>{row.details}</TableCell>
-                      <TableCell>{row.refNo}</TableCell>
-                      <TableCell>{row.withdrawal}</TableCell>
-                      <TableCell>{row.deposits}</TableCell>
-                      <TableCell>{row.balance}</TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[rowsPerPage]}
-                    colSpan={7}
-                    count={filtered.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={(_e, newPage) => setPage(newPage)}
-                    ActionsComponent={() => null}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
+    <Box sx={{ mt: 10, px: 3, pb: 4 }}>
+      <AdminReusableTable
+        columns={transactionColumns}
+        data={transactions}
+        title="Transactions"
+        isLoading={transactionsLoading}
+        emptyMessage="No transactions found"
+        onExport={() => {
+          console.log('Export transactions');
+        }}
+      />
     </Box>
   );
 };

@@ -14,7 +14,7 @@ import {
 import { Close as CloseIcon } from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import AdminReusableTable, { ColumnDefinition } from '../../utils/AdminReusableTable';
-import { useGetAssignedAccounts, useCollectPayment, useGetCollectionTransactions } from '../../queries/Agent';
+import { useGetAssignedAccounts, useCollectPayment } from '../../queries/Agent';
 import TokenService from '../../queries/token/tokenService';
 import { AssignedAccount } from '../../types';
 
@@ -25,11 +25,9 @@ const Collections: React.FC = () => {
   const [amount, setAmount] = useState('');
 
   const { data, isLoading } = useGetAssignedAccounts(agentId || '', !!agentId);
-  const { data: transactionsData, isLoading: transactionsLoading } = useGetCollectionTransactions(agentId || '', !!agentId);
   const collectPaymentMutation = useCollectPayment(agentId || '');
 
   const accounts = data?.data || [];
-  const transactions = transactionsData?.data || [];
 
   const handleOpenDialog = (account: AssignedAccount) => {
     setSelectedAccount(account);
@@ -163,82 +161,9 @@ const Collections: React.FC = () => {
     },
   ];
 
-  // Transaction columns
-  const transactionColumns: ColumnDefinition<any>[] = [
-    {
-      id: 'transaction_date',
-      label: 'Date',
-      sortable: true,
-      renderCell: (row) => {
-        const date = new Date(row.transaction_date);
-        return date.toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-        });
-      },
-    },
-    {
-      id: 'transaction_id',
-      label: 'Transaction ID',
-      sortable: true,
-    },
-    {
-      id: 'account_number',
-      label: 'Account No',
-      sortable: true,
-    },
-    {
-      id: 'Name',
-      label: 'Account Holder',
-      sortable: true,
-    },
-    {
-      id: 'credit',
-      label: 'Amount Collected',
-      align: 'right',
-      sortable: true,
-      renderCell: (row) => `₹ ${row.credit.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-    },
-    {
-      id: 'balance',
-      label: 'Account Balance',
-      align: 'right',
-      sortable: true,
-      renderCell: (row) => `₹ ${row.balance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-    },
-    {
-      id: 'status',
-      label: 'Status',
-      sortable: true,
-      renderCell: (row) => {
-        const status = row.status.toLowerCase();
-        return (
-          <Chip
-            label={row.status}
-            size="small"
-            sx={{
-              backgroundColor:
-                status === 'completed' ? '#d1fae5' :
-                  status === 'pending' ? '#fef3c7' :
-                    '#fee2e2',
-              color:
-                status === 'completed' ? '#065f46' :
-                  status === 'pending' ? '#92400e' :
-                    '#991b1b',
-              fontWeight: 500,
-              borderRadius: 1,
-              textTransform: 'capitalize',
-            }}
-          />
-        );
-      },
-    },
-  ];
-
   return (
     <>
-      <Box sx={{ mt: 10, px: 3, pb: 2 }}>
+      <Box sx={{ mt: 10, px: 3, pb: 4 }}>
         <AdminReusableTable
           columns={columns}
           data={accounts}
@@ -248,19 +173,6 @@ const Collections: React.FC = () => {
           onExport={() => {
             // TODO: Implement export functionality if needed
             console.log('Export accounts');
-          }}
-        />
-      </Box>
-
-      <Box sx={{ px: 3, pb: 4 }}>
-        <AdminReusableTable
-          columns={transactionColumns}
-          data={transactions}
-          title="Collection Transactions"
-          isLoading={transactionsLoading}
-          emptyMessage="No collection transactions found"
-          onExport={() => {
-            console.log('Export transactions');
           }}
         />
       </Box>

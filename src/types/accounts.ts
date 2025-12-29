@@ -19,6 +19,13 @@ export interface AccountGroup {
     updatedAt?: Date | string;
 }
 
+export interface MemberDetails {
+    name?: string;
+    contactno?: string;
+    emailid?: string;
+    address?: string;
+}
+
 export interface Account {
     _id?: string;
     account_id: string;
@@ -39,6 +46,7 @@ export interface Account {
     assigned_to?: string;
     account_amount?: number;
     joint_member?: string;
+    memberDetails?: MemberDetails;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 }

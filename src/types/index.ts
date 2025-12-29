@@ -2,6 +2,7 @@
 export * from './member';
 export * from './agent';
 export * from './admin';
+export * from './user';
 export * from './accounts';
 export * from './apiresponse';
 export * from './apipayload';
