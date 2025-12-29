@@ -159,7 +159,7 @@ const AccountViewTable: React.FC<Props> = ({ accountType, title }) => {
                                         <TableRow sx={{ bgcolor: '#f5f5f5' }}>
                                             <TableCell sx={{ fontWeight: 600 }}>Account No</TableCell>
                                             <TableCell sx={{ fontWeight: 600 }}>Account ID</TableCell>
-                                            <TableCell sx={{ fontWeight: 600 }}>Member ID</TableCell>
+                                            <TableCell sx={{ fontWeight: 600 }}>Member</TableCell>
                                             <TableCell sx={{ fontWeight: 600 }}>Opening Date</TableCell>
                                             <TableCell sx={{ fontWeight: 600 }}>Operation</TableCell>
                                             <TableCell sx={{ fontWeight: 600 }} align="right">Amount</TableCell>
@@ -175,7 +175,12 @@ const AccountViewTable: React.FC<Props> = ({ accountType, title }) => {
                                             <TableRow key={account._id} hover>
                                                 <TableCell>{account.account_no || '-'}</TableCell>
                                                 <TableCell>{account.account_id}</TableCell>
-                                                <TableCell>{account.member_id || '-'}</TableCell>
+                                                <TableCell>
+                                                    {account.memberDetails?.name
+                                                        ? `${account.memberDetails.name} (${account.member_id})`
+                                                        : account.member_id || '-'
+                                                    }
+                                                </TableCell>
                                                 <TableCell>{formatDate(account.date_of_opening)}</TableCell>
                                                 <TableCell>{account.account_operation || '-'}</TableCell>
                                                 <TableCell align="right">

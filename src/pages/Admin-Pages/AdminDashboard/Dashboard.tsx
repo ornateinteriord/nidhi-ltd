@@ -1,6 +1,6 @@
 import DashboardCards from './DashboardCards';
 import InterestCard from './interest-card';
-import WalletCard from '../../../components/Dashboard/WalletCard';
+// import WalletCard from '../../../components/Dashboard/WalletCard';
 // import { useNavigate } from 'react-router-dom';
 import { useGetDashboardCounts, useGetRecentData } from '../../../queries/admin';
 import { Box, CircularProgress, Typography } from '@mui/material';
@@ -30,10 +30,10 @@ const AdminDashboard = () => {
     <div style={{ backgroundColor: "#f8f9fa" }}>
       <div className="my-20" />
       <div className="mb-4">
-        <WalletCard
+        {/* <WalletCard
           balance="₹ 00.00"
           onClick={() => { }}
-        />
+        /> */}
       </div>
       <InterestCard />
       <DashboardCards counts={dashboardData.data} recentData={recentData.data} />
