@@ -64,13 +64,23 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
     const handleAddMoney = () => {
         const finalAmount = parseFloat(amount);
         if (finalAmount > 0 && selectedAccount) {
+            // Find the selected account object to get all details
+            const accountDetails = myAccounts.find((acc: any) => acc.account_id === selectedAccount);
+
+            if (!accountDetails) {
+                toast.error("Selected account not found. Please try again.");
+                return;
+            }
+
             const request = {
                 member_id: memberData?.data?.member_id,
                 amount: finalAmount,
                 mobileno: memberData?.data?.contactno,
                 Name: memberData?.data?.name,
                 email: memberData?.data?.emailid,
-                account_id: selectedAccount
+                account_id: accountDetails.account_id,
+                account_no: accountDetails.account_no,
+                account_type: accountDetails.account_type
             };
 
             if (!request.member_id) {

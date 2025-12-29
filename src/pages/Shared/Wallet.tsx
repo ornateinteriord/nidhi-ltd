@@ -1,23 +1,35 @@
 import React, { useState } from 'react';
 import {
     Box, Typography, Card, CardContent, Button, Table, TableBody, TableCell,
-    TableContainer, TableHead, TableRow, Paper, CircularProgress, Chip
+    TableContainer, TableHead, TableRow, Paper, CircularProgress, Chip, Alert
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import { useGetMyAccounts } from '../../queries/Member';
+import { useGetMyAccounts, useGetMemberTransactions } from '../../queries/Member';
 import TransferMoneyDialog from '../../components/Wallet/TransferMoneyDialog';
 import WithdrawMoneyDialog from '../../components/Wallet/WithdrawMoneyDialog';
 import AddMoneyDialog from '../../components/Wallet/AddMoneyDialog';
+import TokenService from '../../queries/token/tokenService';
 
 const Wallet: React.FC = () => {
     const [transferDialogOpen, setTransferDialogOpen] = useState(false);
     const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
     const [addMoneyDialogOpen, setAddMoneyDialogOpen] = useState(false);
 
+    const memberId = TokenService.getMemberId();
     const { data: accountsData, isLoading } = useGetMyAccounts();
+    const {
+        data: transactionsData,
+        isLoading: transactionsLoading,
+        error: transactionsError
+    } = useGetMemberTransactions(
+        memberId || '',
+        !!memberId
+    );
+    console.log("transactionsData:", transactionsData
 
+    )
     // Calculate total balance from all accounts ok
     const totalBalance = accountsData?.data?.accountTypes?.reduce((total: number, accType: any) => {
         const typeTotal = accType.accounts.reduce((sum: number, acc: any) => sum + (acc.account_amount || 0), 0);
@@ -33,13 +45,25 @@ const Wallet: React.FC = () => {
         };
     }) || [];
 
-    // Dummy transaction data
-    const transactions = [
-        { id: 1, date: '2023-10-25', description: 'Added Funds', amount: '+ ₹500.00', status: 'Success' },
-        { id: 2, date: '2023-10-24', description: 'Transfer to User A', amount: '- ₹200.00', status: 'Success' },
-        { id: 3, date: '2023-10-23', description: 'Withdrawal', amount: '- ₹1000.00', status: 'Pending' },
-        { id: 4, date: '2023-10-20', description: 'Bonus', amount: '+ ₹50.00', status: 'Success' },
-    ];
+    // Get real transactions
+    const transactions = transactionsData?.data || [];
+
+    // Format transaction for display
+    const formatTransaction = (transaction: any) => {
+        const credit = transaction.credit || 0;
+        const debit = transaction.debit || 0;
+        const amount = credit > 0 ? credit : debit;
+        const isCredit = credit > 0;
+
+        return {
+            id: transaction._id || transaction.transaction_id,
+            date: new Date(transaction.transaction_date).toLocaleDateString('en-IN'),
+            description: transaction.description || 'Transaction',
+            amount: `${isCredit ? '+ ' : '- '}₹${Math.abs(amount).toFixed(2)}`,
+            status: transaction.status || 'Pending',
+            isCredit
+        };
+    };
 
     return (
         <Box sx={{ p: 3 }}>
@@ -125,46 +149,66 @@ const Wallet: React.FC = () => {
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', color: '#374151' }}>
                 Recent Transactions
             </Typography>
-            <TableContainer component={Paper} sx={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-                <Table>
-                    <TableHead sx={{ bgcolor: '#f9fafb' }}>
-                        <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Amount</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {transactions.map((transaction) => (
-                            <TableRow key={transaction.id} hover>
-                                <TableCell>{transaction.date}</TableCell>
-                                <TableCell>{transaction.description}</TableCell>
-                                <TableCell sx={{
-                                    fontWeight: 'bold',
-                                    color: transaction.amount.startsWith('+') ? 'green' : 'red'
-                                }}>
-                                    {transaction.amount}
-                                </TableCell>
-                                <TableCell>
-                                    <Box sx={{
-                                        display: 'inline-block',
-                                        px: 1.5,
-                                        py: 0.5,
-                                        borderRadius: '6px',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 'bold',
-                                        bgcolor: transaction.status === 'Success' ? '#dcfce7' : '#fef9c3',
-                                        color: transaction.status === 'Success' ? '#166534' : '#854d0e',
-                                    }}>
-                                        {transaction.status}
-                                    </Box>
-                                </TableCell>
+
+            {transactionsLoading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                    <CircularProgress />
+                </Box>
+            ) : transactionsError ? (
+                <Alert severity="error" sx={{ borderRadius: '12px' }}>
+                    Failed to load transactions. Please try again later.
+                </Alert>
+            ) : transactions.length === 0 ? (
+                <Paper sx={{ p: 4, textAlign: 'center', borderRadius: '12px' }}>
+                    <Typography variant="body1" color="text.secondary">
+                        No transactions yet
+                    </Typography>
+                </Paper>
+            ) : (
+                <TableContainer component={Paper} sx={{ borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                    <Table>
+                        <TableHead sx={{ bgcolor: '#f9fafb' }}>
+                            <TableRow>
+                                <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>Amount</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {transactions.map((transaction: any) => {
+                                const formatted = formatTransaction(transaction);
+                                return (
+                                    <TableRow key={formatted.id} hover>
+                                        <TableCell>{formatted.date}</TableCell>
+                                        <TableCell>{formatted.description}</TableCell>
+                                        <TableCell sx={{
+                                            fontWeight: 'bold',
+                                            color: formatted.isCredit ? 'green' : 'red'
+                                        }}>
+                                            {formatted.amount}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box sx={{
+                                                display: 'inline-block',
+                                                px: 1.5,
+                                                py: 0.5,
+                                                borderRadius: '6px',
+                                                fontSize: '0.75rem',
+                                                fontWeight: 'bold',
+                                                bgcolor: formatted.status === 'Success' ? '#dcfce7' : '#fef9c3',
+                                                color: formatted.status === 'Success' ? '#166534' : '#854d0e',
+                                            }}>
+                                                {formatted.status}
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
 
             {/* Dialogs */}
             <AddMoneyDialog
