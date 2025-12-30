@@ -11,3 +11,4 @@ export * from './memberDashboard';
 export * from './updateMember';
 export * from './transfer';
 export * from './banking';
+export * from './maturity';
