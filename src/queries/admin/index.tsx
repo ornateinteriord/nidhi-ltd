@@ -18,6 +18,8 @@ import {
     InterestsByGroupResponse,
     DashboardCountsResponse,
     RecentDataResponse,
+    PreMaturityAccountsResponse,
+    PostMaturityAccountsResponse,
 } from "../../types";
 
 
@@ -372,6 +374,46 @@ export const useCreateAccountByAgent = () => {
         onSuccess: () => {
             // Invalidate and refetch accounts list
             queryClient.invalidateQueries({ queryKey: ["accounts"] });
+        },
+    });
+};
+
+// ==================== MATURITY ACCOUNTS ====================
+
+// GET PRE-MATURITY ACCOUNTS
+export const useGetPreMaturityAccounts = (
+    page: number = 1,
+    limit: number = 25,
+    account_type?: string,
+    date_of_maturity?: string
+) => {
+    return useQuery({
+        queryKey: ["preMaturityAccounts", page, limit, account_type, date_of_maturity],
+        queryFn: async () => {
+            const params: Record<string, any> = { page, limit };
+            if (account_type) params.account_type = account_type;
+            if (date_of_maturity) params.date_of_maturity = date_of_maturity;
+
+            return await useApi<PreMaturityAccountsResponse>("GET", "/admin/get-pre-maturity-accounts", undefined, params);
+        },
+    });
+};
+
+// GET POST-MATURITY ACCOUNTS
+export const useGetPostMaturityAccounts = (
+    page: number = 1,
+    limit: number = 25,
+    account_type?: string,
+    date_of_maturity?: string
+) => {
+    return useQuery({
+        queryKey: ["postMaturityAccounts", page, limit, account_type, date_of_maturity],
+        queryFn: async () => {
+            const params: Record<string, any> = { page, limit };
+            if (account_type) params.account_type = account_type;
+            if (date_of_maturity) params.date_of_maturity = date_of_maturity;
+
+            return await useApi<PostMaturityAccountsResponse>("GET", "/admin/get-post-maturity-accounts", undefined, params);
         },
     });
 };

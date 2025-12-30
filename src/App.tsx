@@ -55,6 +55,17 @@ const RDOpening = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDOpening"))
 const FDOpening = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDOpening"));
 const PigmyOpening = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyOpening"));
 const MISOpening = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISOpening"));
+
+// Maturity Pages
+const RDPreMaturity = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDPreMaturity"));
+const RDPayMaturity = lazy(() => import("./pages/Admin-Pages/Banking/RD/RDPayMaturity"));
+const FDPreMaturity = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDPreMaturity"));
+const FDPayMaturity = lazy(() => import("./pages/Admin-Pages/Banking/FD/FDPayMaturity"));
+const PigmyPreMaturity = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyPreMaturity"));
+const PigmyPayMaturity = lazy(() => import("./pages/Admin-Pages/Banking/PIGMY/PigmyPayMaturity"));
+const MISPreMaturity = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISPreMaturity"));
+const MISPayMaturity = lazy(() => import("./pages/Admin-Pages/Banking/MIS/MISPayMaturity"));
+
 const LoanViewAll = lazy(() => import("./pages/Admin-Pages/Loan/LoanViewAll"));
 const ODViewAll = lazy(() => import("./pages/Admin-Pages/Overdraft/ODViewAll"));
 
@@ -259,6 +270,16 @@ const RoutesProvider = ({
               <Route path="/banking/fd-viewall" element={<FDViewAll />} />
               <Route path="/banking/pigmy-viewall" element={<PigmyViewAll />} />
               <Route path="/banking/mis-viewall" element={<MISViewAll />} />
+
+              {/* Maturity Pages */}
+              <Route path="/banking/rd-prematurity" element={<RDPreMaturity />} />
+              <Route path="/banking/rd-pay-maturity" element={<RDPayMaturity />} />
+              <Route path="/banking/fd-prematurity" element={<FDPreMaturity />} />
+              <Route path="/banking/fd-pay-maturity" element={<FDPayMaturity />} />
+              <Route path="/banking/pigmy-prematurity" element={<PigmyPreMaturity />} />
+              <Route path="/banking/pigmy-pay-maturity" element={<PigmyPayMaturity />} />
+              <Route path="/banking/mis-prematurity" element={<MISPreMaturity />} />
+              <Route path="/banking/mis-pay-maturity" element={<MISPayMaturity />} />
               <Route path="/loan-viewall" element={<LoanViewAll />} />
               <Route path="/od-viewall" element={<ODViewAll />} />
 
