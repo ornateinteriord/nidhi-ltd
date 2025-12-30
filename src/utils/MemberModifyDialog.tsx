@@ -17,11 +17,12 @@ import {
   Grid,
   CircularProgress,
   Backdrop,
+  InputAdornment,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useGetMemberById } from '../queries/admin/index';
+import { useGetMemberById, useGetAgentById } from '../queries/admin/index';
 
 interface MemberFormData {
   member_id?: string;
@@ -87,6 +88,16 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
     isEditMode && open
   );
 
+  // State to track introducer code for fetching agent data
+  const [introducerCode, setIntroducerCode] = useState<string>('');
+  const [shouldFetchAgent, setShouldFetchAgent] = useState<boolean>(false);
+
+  // Fetch agent data when introducer code is entered and onBlur triggered
+  const { data: agentData, isLoading: isLoadingAgent, isError: isAgentError } = useGetAgentById(
+    introducerCode,
+    shouldFetchAgent && !!introducerCode && introducerCode.length > 0
+  );
+
   const [formData, setFormData] = useState<MemberFormData>({
     member_id: '',
     name: '',
@@ -142,6 +153,8 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
         date_of_joining: member.date_of_joining ? new Date(member.date_of_joining).toISOString().split('T')[0] : '',
         entered_by: member.entered_by || '',
       });
+      // Set introducer code for editing mode
+      setIntroducerCode(member.introducer || '');
     } else if (!isEditMode || isError || !open) {
       // Reset form for:
       // 1. Create mode
@@ -172,14 +185,51 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
         date_of_joining: '',
         entered_by: '',
       });
+      setIntroducerCode('');
     }
   }, [memberData, isEditMode, open, isError]);
 
+  // Auto-populate introducer name when agent data is fetched
+  useEffect(() => {
+    if (agentData?.data?.name) {
+      setFormData(prev => ({
+        ...prev,
+        introducer_name: agentData.data.name || ''
+      }));
+      // Reset fetch trigger after successful fetch
+      setShouldFetchAgent(false);
+    }
+  }, [agentData]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // If introducer code is changed, update the introducer code state
+    if (name === 'introducer') {
+      setIntroducerCode(value);
+      // Clear introducer name and stop fetching if code is cleared
+      if (!value) {
+        setShouldFetchAgent(false);
+        setFormData(prev => ({
+          ...prev,
+          introducer_name: ''
+        }));
+      }
+    }
+  };
+
+  // Handle onBlur for introducer field to trigger API call
+  const handleIntroducerBlur = () => {
+    // Use formData.introducer to get the current value directly
+    if (formData.introducer && formData.introducer.trim().length > 0) {
+      setIntroducerCode(formData.introducer.trim());
+      setShouldFetchAgent(true);
+    }
   };
 
   const handleSelectChange = (e: SelectChangeEvent) => {
@@ -190,7 +240,14 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
   };
 
   const handleSave = () => {
-    onSave(formData, isEditMode);
+    // When updating, remove member_id from formData as it shouldn't be changed
+    // The member_id comes from the URL parameter only
+    if (isEditMode) {
+      const { member_id, ...updateData } = formData;
+      onSave(updateData, isEditMode);
+    } else {
+      onSave(formData, isEditMode);
+    }
   };
 
   const isLoading = isFetching || externalLoading;
@@ -426,8 +483,17 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
                 name="introducer"
                 value={formData.introducer}
                 onChange={handleChange}
+                onBlur={handleIntroducerBlur}
                 size="small"
+                InputProps={{
+                  endAdornment: isLoadingAgent ? (
+                    <InputAdornment position="end">
+                      <CircularProgress size={20} />
+                    </InputAdornment>
+                  ) : null,
+                }}
               />
+              {isAgentError && <Typography color="error">Introducer not found</Typography>}
             </Grid>
 
             {/* Introducer Name */}

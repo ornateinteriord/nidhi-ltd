@@ -115,7 +115,14 @@ function App() {
     setIsOpen(!isOpen);
   };
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1, // Retry once on failure (total 2 attempts: initial + 1 retry)
+        refetchOnWindowFocus: false, // Disable refetch on window focus for better UX
+      },
+    },
+  });
 
   return (
     <UserProvider>
