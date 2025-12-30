@@ -34,10 +34,18 @@ interface Agent {
   designation: string;
   action: string;
   agent_id: string;
+  gender: string;
+  dob: string;
+  address: string;
+  pan_no: string;
+  aadharcard_no: string;
+  introducer: string;
+  branch_id: string;
 }
 
 const Agents: React.FC = () => {
   const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [searchQuery, setSearchQuery] = useState('');
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -48,7 +56,7 @@ const Agents: React.FC = () => {
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
 
   // React Query Hooks
-  const { data: agentsData, isLoading } = useGetAgents(page, 10, searchQuery);
+  const { data: agentsData, isLoading } = useGetAgents(page, rowsPerPage, searchQuery);
   const createAgentMutation = useCreateAgent();
   const updateAgentMutation = useUpdateAgent();
 
@@ -63,12 +71,25 @@ const Agents: React.FC = () => {
         year: 'numeric'
       })
       : '-',
-    name: `${agent.name || 'N/A'} (${agent.agent_id})`,
-    email: agent.emailid || 'N/A',
-    mobile: agent.mobile || 'N/A',
+    name: `${agent.name || '-'} (${agent.agent_id})`,
+    email: agent.emailid || '-',
+    mobile: agent.mobile || '-',
     status: (agent.status === 'active' ? 'Active' : 'Inactive') as 'Active' | 'Inactive' | 'Blocked',
-    designation: agent.designation || 'N/A',
-    action: ''
+    designation: agent.designation || '-',
+    action: '',
+    gender: agent.gender || '-',
+    dob: agent.dob
+      ? new Date(agent.dob).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })
+      : '-',
+    address: agent.address || '-',
+    pan_no: agent.pan_no || '-',
+    aadharcard_no: agent.aadharcard_no || '-',
+    introducer: agent.introducer || '-',
+    branch_id: agent.branch_id || '-'
   })) || [];
 
   const columns = [
@@ -139,6 +160,90 @@ const Agents: React.FC = () => {
       label: 'Designation',
       sortable: true,
       minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Agent) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.designation}
+        </Typography>
+      ),
+    },
+    {
+      id: 'gender',
+      label: 'Gender',
+      sortable: true,
+      minWidth: 100,
+      align: 'center' as const,
+      renderCell: (row: Agent) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.gender}
+        </Typography>
+      ),
+    },
+    {
+      id: 'dob',
+      label: 'Date of Birth',
+      sortable: true,
+      minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Agent) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.dob}
+        </Typography>
+      ),
+    },
+    {
+      id: 'address',
+      label: 'Address',
+      minWidth: 200,
+      renderCell: (row: Agent) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.address}
+        </Typography>
+      ),
+    },
+    {
+      id: 'pan_no',
+      label: 'PAN No',
+      minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Agent) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.pan_no}
+        </Typography>
+      ),
+    },
+    {
+      id: 'aadharcard_no',
+      label: 'Aadhar No',
+      minWidth: 130,
+      align: 'center' as const,
+      renderCell: (row: Agent) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.aadharcard_no}
+        </Typography>
+      ),
+    },
+    {
+      id: 'introducer',
+      label: 'Introducer ID',
+      minWidth: 130,
+      align: 'center' as const,
+      renderCell: (row: Agent) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.introducer}
+        </Typography>
+      ),
+    },
+    {
+      id: 'branch_id',
+      label: 'Branch ID',
+      minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Agent) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.branch_id}
+        </Typography>
+      ),
     },
     {
       id: 'status',
@@ -243,6 +348,11 @@ const Agents: React.FC = () => {
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     setPage(1); // Reset to first page on search
+  };
+
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setPage(1); // Reset to first page when changing rows per page
   };
 
   const handleModifyClick = (agentId: string) => {
@@ -388,13 +498,14 @@ const Agents: React.FC = () => {
         title="Agent Management"
         isLoading={isLoading}
         onSearchChange={handleSearchChange}
-        paginationPerPage={10}
+        paginationPerPage={rowsPerPage}
         actions={tableActions}
         onExport={handleExportAgents}
         emptyMessage="No agents found"
         totalCount={agentsData?.pagination?.total}
         currentPage={page - 1}
         onPageChange={(newPage) => setPage(newPage + 1)}
+        onRowsPerPageChange={handleRowsPerPageChange}
       />
 
       {/* Modify Dialog */}

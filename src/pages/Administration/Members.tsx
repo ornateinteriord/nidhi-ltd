@@ -34,10 +34,25 @@ interface Member {
   membershipType: string;
   action: string;
   member_id: string;
+  father_name: string;
+  gender: string;
+  dob: string;
+  age: string;
+  address: string;
+  pan_no: string;
+  aadharcard_no: string;
+  voter_id: string;
+  nominee: string;
+  relation: string;
+  occupation: string;
+  introducer: string;
+  introducer_name: string;
+  branch_id: string;
 }
 
 const Members: React.FC = () => {
   const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const [searchQuery, setSearchQuery] = useState('');
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -48,7 +63,7 @@ const Members: React.FC = () => {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
 
   // React Query Hooks
-  const { data: membersData, isLoading } = useGetMembers(page, 10, searchQuery);
+  const { data: membersData, isLoading } = useGetMembers(page, rowsPerPage, searchQuery);
   const createMemberMutation = useCreateMember();
   const updateMemberMutation = useUpdateMember();
 
@@ -63,12 +78,32 @@ const Members: React.FC = () => {
         year: 'numeric'
       })
       : '-',
-    name: `${member.name || 'N/A'} (${member.member_id})`,
-    email: member.emailid || 'N/A',
-    contact: member.contactno || 'N/A',
+    name: `${member.name || '-'} (${member.member_id})`,
+    email: member.emailid || '-',
+    contact: member.contactno || '-',
     status: (member.status === 'active' ? 'Active' : 'Inactive') as 'Active' | 'Inactive' | 'Blocked',
     membershipType: 'Basic',
-    action: ''
+    action: '',
+    father_name: member.father_name || '-',
+    gender: member.gender || '-',
+    dob: member.dob
+      ? new Date(member.dob).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })
+      : '-',
+    age: member.age ? member.age.toString() : '-',
+    address: member.address || '-',
+    pan_no: member.pan_no || '-',
+    aadharcard_no: member.aadharcard_no || '-',
+    voter_id: member.voter_id || '-',
+    nominee: member.nominee || '-',
+    relation: member.relation || '-',
+    occupation: member.occupation || '-',
+    introducer: member.introducer || '-',
+    introducer_name: member.introducer_name || '-',
+    branch_id: member.branch_id || '-'
   })) || [];
 
   const columns = [
@@ -132,6 +167,155 @@ const Members: React.FC = () => {
             {row.contact}
           </Typography>
         </Stack>
+      ),
+    },
+    {
+      id: 'father_name',
+      label: 'Father Name',
+      sortable: true,
+      minWidth: 150,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.father_name}
+        </Typography>
+      ),
+    },
+    {
+      id: 'gender',
+      label: 'Gender',
+      sortable: true,
+      minWidth: 100,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.gender}
+        </Typography>
+      ),
+    },
+    {
+      id: 'dob',
+      label: 'Date of Birth',
+      sortable: true,
+      minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.dob}
+        </Typography>
+      ),
+    },
+    {
+      id: 'age',
+      label: 'Age',
+      sortable: true,
+      minWidth: 80,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.age}
+        </Typography>
+      ),
+    },
+    {
+      id: 'address',
+      label: 'Address',
+      minWidth: 200,
+    },
+    {
+      id: 'pan_no',
+      label: 'PAN No',
+      minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.pan_no}
+        </Typography>
+      ),
+    },
+    {
+      id: 'aadharcard_no',
+      label: 'Aadhar No',
+      minWidth: 130,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.aadharcard_no}
+        </Typography>
+      ),
+    },
+    {
+      id: 'voter_id',
+      label: 'Voter ID',
+      minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.voter_id}
+        </Typography>
+      ),
+    },
+    {
+      id: 'nominee',
+      label: 'Nominee',
+      minWidth: 150,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.nominee}
+        </Typography>
+      ),
+    },
+    {
+      id: 'relation',
+      label: 'Relation',
+      minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.relation}
+        </Typography>
+      ),
+    },
+    {
+      id: 'occupation',
+      label: 'Occupation',
+      minWidth: 150,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.occupation}
+        </Typography>
+      ),
+    },
+    {
+      id: 'introducer',
+      label: 'Introducer ID',
+      minWidth: 130,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.introducer}
+        </Typography>
+      ),
+    },
+    {
+      id: 'introducer_name',
+      label: 'Introducer Name',
+      minWidth: 150,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.introducer_name}
+        </Typography>
+      ),
+    },
+    {
+      id: 'branch_id',
+      label: 'Branch ID',
+      minWidth: 120,
+      align: 'center' as const,
+      renderCell: (row: Member) => (
+        <Typography variant="body2" sx={{ color: '#1e293b', fontSize: '0.9rem', fontWeight: 500 }}>
+          {row.branch_id}
+        </Typography>
       ),
     },
     {
@@ -237,6 +421,11 @@ const Members: React.FC = () => {
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     setPage(1); // Reset to first page on search
+  };
+
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setPage(1); // Reset to first page when changing rows per page
   };
 
   const handleModifyClick = (memberId: string) => {
@@ -382,13 +571,14 @@ const Members: React.FC = () => {
         title="Member Management"
         isLoading={isLoading}
         onSearchChange={handleSearchChange}
-        paginationPerPage={10}
+        paginationPerPage={rowsPerPage}
         actions={tableActions}
         onExport={handleExportMembers}
         emptyMessage="No members found"
         totalCount={membersData?.pagination?.total}
         currentPage={page - 1}
         onPageChange={(newPage) => setPage(newPage + 1)}
+        onRowsPerPageChange={handleRowsPerPageChange}
       />
 
       {/* Modify Dialog */}

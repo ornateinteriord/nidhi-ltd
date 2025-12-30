@@ -32,6 +32,7 @@ interface Interest {
 
 const Interests: React.FC = () => {
     const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(25);
     const [searchQuery, setSearchQuery] = useState('');
     const [snackbar, setSnackbar] = useState({
         open: false,
@@ -42,7 +43,7 @@ const Interests: React.FC = () => {
     const [selectedInterestId, setSelectedInterestId] = useState<string | null>(null);
 
     // React Query Hooks
-    const { data: interestsData, isLoading } = useGetInterests(page, 10, searchQuery);
+    const { data: interestsData, isLoading } = useGetInterests(page, rowsPerPage, searchQuery);
     const createInterestMutation = useCreateInterest();
     const updateInterestMutation = useUpdateInterest();
 
@@ -206,6 +207,11 @@ const Interests: React.FC = () => {
         setPage(1); // Reset to first page on search
     };
 
+    const handleRowsPerPageChange = (newRowsPerPage: number) => {
+        setRowsPerPage(newRowsPerPage);
+        setPage(1); // Reset to first page when changing rows per page
+    };
+
     const handleModifyClick = (interestId: string) => {
         setSelectedInterestId(interestId);
         setModifyDialogOpen(true);
@@ -349,13 +355,14 @@ const Interests: React.FC = () => {
                 title="Interest Management"
                 isLoading={isLoading}
                 onSearchChange={handleSearchChange}
-                paginationPerPage={10}
+                paginationPerPage={rowsPerPage}
                 actions={tableActions}
                 onExport={handleExportInterests}
                 emptyMessage="No interests found"
                 totalCount={interestsData?.pagination?.total}
                 currentPage={page - 1}
                 onPageChange={(newPage) => setPage(newPage + 1)}
+                onRowsPerPageChange={handleRowsPerPageChange}
             />
 
             {/* Modify Dialog */}

@@ -173,8 +173,8 @@ const AdminReusableTable = <T extends Record<string, any>>({
   isLoading = false,
   onSearchChange,
   searchQuery = '',
-  paginationPerPage = 10,
-  paginationRowsPerPageOptions = [10, 25, 50, 100],
+  paginationPerPage = 25,
+  paginationRowsPerPageOptions = [25, 50, 100, 200],
   onRowClick,
   actions,
   enableSelection = false,
@@ -273,6 +273,9 @@ const AdminReusableTable = <T extends Record<string, any>>({
     const newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
     setPage(0);
+    if (onPageChange) {
+      onPageChange(0); // Reset to first page
+    }
     if (onRowsPerPageChange) {
       onRowsPerPageChange(newRowsPerPage);
     }
@@ -458,13 +461,7 @@ const AdminReusableTable = <T extends Record<string, any>>({
           </TableHead>
 
           <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={columns.length + (enableSelection ? 1 : 0)} align="center" sx={{ py: 8 }}>
-                  <CircularProgress size={40} sx={{ color: '#1a237e' }} />
-                </TableCell>
-              </TableRow>
-            ) : paginatedData.length === 0 ? (
+            {paginatedData.length === 0 && !isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length + (enableSelection ? 1 : 0)} align="center" sx={{ py: 8 }}>
                   <Box sx={{ textAlign: 'center' }}>
@@ -474,7 +471,7 @@ const AdminReusableTable = <T extends Record<string, any>>({
                   </Box>
                 </TableCell>
               </TableRow>
-            ) : (
+            ) : !isLoading ? (
               paginatedData.map((row, index) => {
                 const isItemSelected = isSelected(row);
                 const labelId = `table-checkbox-${index}`;
@@ -528,7 +525,7 @@ const AdminReusableTable = <T extends Record<string, any>>({
                   </TableRow>
                 );
               })
-            )}
+            ) : null}
           </TableBody>
         </Table>
       </TableContainer>
@@ -636,6 +633,39 @@ const AdminReusableTable = <T extends Record<string, any>>({
           </Box>
         </Box>
       </Box>
+
+      {/* Loading Overlay - Centered on screen viewport */}
+      {isLoading && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            zIndex: 9999,
+            backdropFilter: 'blur(2px)',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+            }}
+          >
+            <CircularProgress size={48} sx={{ color: '#1a237e' }} />
+            <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 500 }}>
+              Loading data...
+            </Typography>
+          </Box>
+        </Box>
+      )}
     </Paper>
   );
 };
