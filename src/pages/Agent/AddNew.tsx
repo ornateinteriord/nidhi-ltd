@@ -13,6 +13,7 @@ import {
   Grid,
   CircularProgress,
   Divider,
+  InputAdornment,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
@@ -23,6 +24,7 @@ import {
   useGetMemberById,
   useCreateAccountByAgent,
 } from '../../queries/admin';
+import { useGetAgentById } from '../../queries/Agent';
 import TokenService from '../../queries/token/tokenService';
 
 // Modern Input Styles - Blue Theme (Member Section)
@@ -91,6 +93,11 @@ const AddNew: React.FC = () => {
   const [memberInfo, setMemberInfo] = useState<any>(null);
   const [accountGroupId, setAccountGroupId] = useState<string>('');
 
+  // State for introducer auto-population
+  const [introducerCode, setIntroducerCode] = useState<string>('');
+  const [shouldFetchAgent, setShouldFetchAgent] = useState<boolean>(false);
+  const [agentError, setAgentError] = useState<boolean>(false);
+
   const [form, setForm] = useState<any>({
     accountType: '',
     accountOperation: 'Single',
@@ -122,6 +129,12 @@ const AddNew: React.FC = () => {
     !!accountGroupId
   );
 
+  // Fetch agent data when introducer code is entered and onBlur triggered (using agent API)
+  const { data: agentData, isLoading: isLoadingAgent, isError: isAgentError } = useGetAgentById(
+    introducerCode,
+    shouldFetchAgent && !!introducerCode && introducerCode.length > 0
+  );
+
   // Create account mutation
   const createAccountMutation = useCreateAccountByAgent();
 
@@ -136,6 +149,27 @@ const AddNew: React.FC = () => {
       }
     }
   }, [form.accountType, accountGroupsData]);
+
+  // Auto-populate introducer name when agent data is fetched
+  useEffect(() => {
+    if (agentData?.data?.name) {
+      setForm((prev: any) => ({
+        ...prev,
+        introducerName: agentData.data.name || ''
+      }));
+      setAgentError(false);
+      // Reset fetch trigger after successful fetch
+      setShouldFetchAgent(false);
+    } else if (isAgentError && shouldFetchAgent) {
+      // Agent not found
+      setAgentError(true);
+      setForm((prev: any) => ({
+        ...prev,
+        introducerName: ''
+      }));
+      setShouldFetchAgent(false);
+    }
+  }, [agentData, isAgentError, shouldFetchAgent]);
 
   // Handle member info fetch
   const handleGetInfo = async () => {
@@ -170,6 +204,28 @@ const AddNew: React.FC = () => {
 
   const handleChange = (field: string, value: any) => {
     setForm((prev: any) => ({ ...prev, [field]: value }));
+
+    // If introducer code is changed, update the introducer code state
+    if (field === 'introducer') {
+      setIntroducerCode(value);
+      setAgentError(false); // Clear error when user types
+      // Clear introducer name and stop fetching if code is cleared
+      if (!value) {
+        setShouldFetchAgent(false);
+        setForm((prev: any) => ({
+          ...prev,
+          introducerName: ''
+        }));
+      }
+    }
+  };
+
+  // Handle onBlur for introducer field to trigger API call
+  const handleIntroducerBlur = () => {
+    if (form.introducer && form.introducer.trim().length > 0) {
+      setIntroducerCode(form.introducer.trim());
+      setShouldFetchAgent(true);
+    }
   };
 
   // Handle interest slab selection
@@ -542,6 +598,16 @@ const AddNew: React.FC = () => {
                       size="small"
                       value={form.introducer}
                       onChange={(e) => handleChange('introducer', e.target.value)}
+                      onBlur={handleIntroducerBlur}
+                      error={agentError}
+                      helperText={agentError ? 'Agent not found' : ''}
+                      InputProps={{
+                        endAdornment: isLoadingAgent ? (
+                          <InputAdornment position="end">
+                            <CircularProgress size={20} />
+                          </InputAdornment>
+                        ) : null,
+                      }}
                       sx={accountInputStyle}
                     />
                   </Grid>
