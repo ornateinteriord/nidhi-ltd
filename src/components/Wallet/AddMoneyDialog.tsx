@@ -38,12 +38,18 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
     let cashfree: any;
     try {
         if ((window as any).Cashfree) {
+            // Check if we're in development mode to adjust Cashfree mode accordingly
+            const isDevMode = process.env.NODE_ENV === 'development';
             cashfree = new (window as any).Cashfree({
-                mode: "production", // Must match backend environment (production)
+                mode: isDevMode ? "sandbox" : "production", // Match backend environment
             });
+        } else {
+            console.error("Cashfree SDK not loaded on the page");
+            toast.error("Payment gateway not ready. Please try again later.");
         }
     } catch (e) {
         console.error("Cashfree SDK not found or failed to initialize", e);
+        toast.error("Failed to initialize payment gateway");
     }
 
     // Flatten accounts for dropdown
@@ -91,12 +97,21 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
             createOrder(request, {
                 onSuccess: (data: any) => {
                     if (data?.payment_session_id && cashfree) {
+                        // Verify the payment session ID format
+                        if (typeof data.payment_session_id !== 'string' || data.payment_session_id.trim() === '') {
+                            toast.error("Invalid payment session ID received");
+                            return;
+                        }
                         cashfree.checkout({
                             paymentSessionId: data.payment_session_id
                         });
                         handleClose();
                     } else {
-                        toast.error("Failed to initialize payment gateway");
+                        if (!cashfree) {
+                            toast.error("Payment gateway not properly initialized");
+                        } else {
+                            toast.error("Failed to initialize payment gateway");
+                        }
                     }
                 },
                 onError: (error: any) => {
