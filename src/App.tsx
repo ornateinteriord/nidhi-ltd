@@ -77,6 +77,7 @@ const UserProfile = lazy(() => import("./pages/User/Profile"));
 const UserCollections = lazy(() => import("./pages/User/Collections"));
 const UserAddNew = lazy(() => import("./pages/User/AddNew"));
 const UserReport = lazy(() => import("./pages/User/Report"));
+const UserTransaction = lazy(() => import("./user/Transaction/UserTransaction"));
 const Wallet = lazy(() => import("./pages/Shared/Wallet"));
 import ProtectedRoute from "./routeProtecter/RouteProtecter";
 import useAuth from "./hooks/use-auth";
@@ -297,6 +298,7 @@ const RoutesProvider = ({
               <Route path="/user/collections" element={<UserCollections />} />
               <Route path="/user/add-new" element={<UserAddNew />} />
               <Route path="/user/report" element={<UserReport />} />
+              <Route path="/user/transaction" element={<UserTransaction />} />
               <Route path="/user/wallet" element={<Wallet />} />
             </Route>
 
