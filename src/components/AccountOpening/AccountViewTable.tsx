@@ -21,9 +21,11 @@ import {
     CircularProgress,
     Chip,
     InputAdornment,
+    Button,
 } from '@mui/material';
 import { Edit, Delete, Visibility, Search } from '@mui/icons-material';
 import { useGetAccounts, useGetAccountGroups, type Account } from '../../queries/admin';
+import TransactionDialog from '../Dialogs/TransactionDialog';
 
 export type AccountType = 'SB' | 'CA' | 'RD' | 'FD' | 'PIGMY' | 'MIS';
 
@@ -38,6 +40,9 @@ const AccountViewTable: React.FC<Props> = ({ accountType, title }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [accountGroupId, setAccountGroupId] = useState<string>('');
+    const [transactionDialogOpen, setTransactionDialogOpen] = useState(false);
+    const [selectedMemberId, setSelectedMemberId] = useState('');
+    const [selectedAccountType, setSelectedAccountType] = useState('');
 
     // Fetch account groups to map account type name to ID
     const { data: accountGroupsData } = useGetAccountGroups();
@@ -168,6 +173,7 @@ const AccountViewTable: React.FC<Props> = ({ accountType, title }) => {
                                             <TableCell sx={{ fontWeight: 600 }}>Maturity Date</TableCell>
                                             <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
                                             <TableCell sx={{ fontWeight: 600 }} align="center">Actions</TableCell>
+                                            <TableCell sx={{ fontWeight: 600 }} align="center">Transactions</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -213,6 +219,28 @@ const AccountViewTable: React.FC<Props> = ({ accountType, title }) => {
                                                         <Delete fontSize="small" />
                                                     </IconButton>
                                                 </TableCell>
+                                                <TableCell align="center">
+                                                    <Button
+                                                        variant="outlined"
+                                                        size="small"
+                                                        onClick={() => {
+                                                            setSelectedMemberId(account.member_id || '');
+                                                            setSelectedAccountType(accountGroupId); // Use accountGroupId instead of accountType
+                                                            setTransactionDialogOpen(true);
+                                                        }}
+                                                        sx={{
+                                                            textTransform: 'none',
+                                                            borderColor: '#6366f1',
+                                                            color: '#6366f1',
+                                                            '&:hover': {
+                                                                borderColor: '#4f46e5',
+                                                                background: 'rgba(99, 102, 241, 0.04)',
+                                                            }
+                                                        }}
+                                                    >
+                                                        View
+                                                    </Button>
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -233,6 +261,13 @@ const AccountViewTable: React.FC<Props> = ({ accountType, title }) => {
                     )}
                 </CardContent>
             </Card>
+
+            <TransactionDialog
+                open={transactionDialogOpen}
+                onClose={() => setTransactionDialogOpen(false)}
+                memberId={selectedMemberId}
+                accountType={selectedAccountType}
+            />
         </Box>
     );
 };

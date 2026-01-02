@@ -11,6 +11,7 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import { useGetMyAccounts } from '../../queries/Member';
+import TokenService from '../../queries/token/tokenService';
 
 // Icon mapping for account types
 const getAccountIcon = (accountType: string) => {
@@ -40,6 +41,7 @@ const getAccountGradient = (index: number) => {
 
 const UserDashboard = () => {
     const navigate = useNavigate();
+    const memberId = TokenService.getMemberId() || '';
     const { data: accountsData, isLoading, isError } = useGetMyAccounts();
 
     // Calculate total balance from all accounts
@@ -99,17 +101,20 @@ const UserDashboard = () => {
                     <Grid container spacing={3}>
                         {accountsData.data.accountTypes.map((accountType: any, index: number) => (
                             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={accountType.account_type}>
-                                <Card sx={{
-                                    borderRadius: '16px',
-                                    background: getAccountGradient(index),
-                                    color: 'white',
-                                    boxShadow: '0 4px 20px rgba(99, 102, 241, 0.3)',
-                                    transition: 'all 0.3s ease',
-                                    '&:hover': {
-                                        transform: 'translateY(-8px)',
-                                        boxShadow: '0 8px 30px rgba(99, 102, 241, 0.4)',
-                                    }
-                                }}>
+                                <Card
+                                    onClick={() => navigate(`/user/transaction?memberid=${memberId}&account_type=${accountType.account_type}&account_name=${accountType.account_group_name}`)}
+                                    sx={{
+                                        borderRadius: '16px',
+                                        background: getAccountGradient(index),
+                                        color: 'white',
+                                        boxShadow: '0 4px 20px rgba(99, 102, 241, 0.3)',
+                                        transition: 'all 0.3s ease',
+                                        cursor: 'pointer',
+                                        '&:hover': {
+                                            transform: 'translateY(-8px)',
+                                            boxShadow: '0 8px 30px rgba(99, 102, 241, 0.4)',
+                                        }
+                                    }}>
                                     <CardContent sx={{ p: 3 }}>
                                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                                             <Box>
