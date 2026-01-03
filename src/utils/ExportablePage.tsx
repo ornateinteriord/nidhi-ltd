@@ -26,10 +26,10 @@ import {
 } from '@mui/icons-material';
 
 // Types
-export type MenuTreeItem  = {
+export type MenuTreeItem = {
   id: string | number;
   label: string;
-  children?: MenuTreeItem [];
+  children?: MenuTreeItem[];
 };
 
 export type Column = {
@@ -40,7 +40,7 @@ export type Column = {
 export interface ExportablePageProps {
   title?: string;
   leftContent?: React.ReactNode;
-  menuTree?: MenuTreeItem [];
+  menuTree?: MenuTreeItem[];
   initialSelected?: Array<string | number>;
   onSelectionChange?: (selected: Array<string | number>) => void;
   columns?: Column[];
@@ -53,7 +53,7 @@ export interface ExportablePageProps {
 
 // CheckboxTree Component
 const CheckboxTree: React.FC<{
-  items?: MenuTreeItem [];
+  items?: MenuTreeItem[];
   selected: Array<string | number>;
   onToggle: (id: string | number) => void;
 }> = ({ items = [], selected, onToggle }) => {
@@ -150,9 +150,9 @@ const ExportablePage: React.FC<ExportablePageProps> = ({
   }, [selected]);
 
   const allIds = useMemo(() => {
-    const flattenMenuIds = (items: MenuTreeItem [] = []): Array<string | number> => {
+    const flattenMenuIds = (items: MenuTreeItem[] = []): Array<string | number> => {
       const ids: Array<string | number> = [];
-      const walk = (nodes: MenuTreeItem []) => {
+      const walk = (nodes: MenuTreeItem[]) => {
         for (const n of nodes) {
           ids.push(n.id);
           if (n.children) walk(n.children);
@@ -210,7 +210,7 @@ const ExportablePage: React.FC<ExportablePageProps> = ({
             <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, color: 'primary.main' }}>
               {title}
             </Typography>
-            
+
             <Box sx={{ mb: 3 }}>
               {leftContent}
             </Box>
@@ -251,7 +251,7 @@ const ExportablePage: React.FC<ExportablePageProps> = ({
                   onClick={exportCSV}
                   sx={{ flex: { xs: 1, sm: 'none' } }}
                 >
-                  EXPORT CSV
+                  EXPORT Excel
                 </Button>
               )}
             </Box>

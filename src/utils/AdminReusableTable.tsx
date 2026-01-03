@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import {
   Box,
   TextField,
-  Button,
   Typography,
   InputAdornment,
   CircularProgress,
@@ -20,10 +19,10 @@ import {
   alpha,
   useTheme,
   Stack,
+  Button,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import DownloadIcon from '@mui/icons-material/Download';
-// import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ClearIcon from '@mui/icons-material/Clear';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPageIcon from '@mui/icons-material/LastPage';
@@ -48,6 +47,8 @@ interface AdminReusableTableProps<T> {
   title?: string;
   isLoading?: boolean;
   onSearchChange?: (query: string) => void;
+  onSearch?: () => void;
+  onClearSearch?: () => void;
   searchQuery?: string;
   paginationPerPage?: number;
   paginationRowsPerPageOptions?: number[];
@@ -68,6 +69,8 @@ interface TableToolbarProps {
   title?: string;
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  onSearch?: () => void;
+  onClearSearch?: () => void;
   selectedCount: number;
   actions?: React.ReactNode;
   onRefresh?: () => void;
@@ -79,11 +82,11 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
   title,
   searchQuery,
   onSearchChange,
+  onSearch,
+  onClearSearch,
   selectedCount,
   actions,
   onRefresh,
-  onExport,
-  enableExport = true,
 }) => {
   return (
     <Box
@@ -119,31 +122,20 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           )}
 
           {actions}
-
-          {enableExport && onExport && (
-            <Button
-              variant="outlined"
-              startIcon={<DownloadIcon />}
-              onClick={onExport}
-              size="small"
-              sx={{ textTransform: 'none' }}
-            >
-              Excel
-            </Button>
-          )}
         </Stack>
       </Stack>
 
       {/* Search and Filters Row */}
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ xs: 'stretch', sm: 'center' }}>
         <TextField
           size="small"
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && onSearch && onSearch()}
           sx={{
             flex: 1,
-            maxWidth: { xs: '100%', sm: 400 },
+            maxWidth: { xs: '100%', sm: 350 },
             '& .MuiOutlinedInput-root': {
               borderRadius: 2,
               backgroundColor: '#f8fafc',
@@ -160,6 +152,49 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
             ),
           }}
         />
+        {onSearch && (
+          <Button
+            variant="contained"
+            startIcon={<SearchIcon />}
+            onClick={onSearch}
+            size="small"
+            sx={{
+              textTransform: 'none',
+              borderRadius: 2,
+              px: 2,
+              background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+              '&:hover': { background: 'linear-gradient(135deg, #0369a1 0%, #075985 100%)' }
+            }}
+          >
+            Search
+          </Button>
+        )}
+        {onClearSearch && (
+          <Button
+            variant="outlined"
+            startIcon={<ClearIcon />}
+            onClick={onClearSearch}
+            disabled={!searchQuery}
+            size="small"
+            sx={{
+              textTransform: 'none',
+              borderRadius: 2,
+              px: 2,
+              borderColor: '#94a3b8',
+              color: '#64748b',
+              '&:hover': {
+                borderColor: '#64748b',
+                backgroundColor: '#f1f5f9',
+              },
+              '&:disabled': {
+                borderColor: '#e2e8f0',
+                color: '#cbd5e1',
+              },
+            }}
+          >
+            Clear
+          </Button>
+        )}
       </Stack>
     </Box>
 
@@ -172,6 +207,8 @@ const AdminReusableTable = <T extends Record<string, any>>({
   title,
   isLoading = false,
   onSearchChange,
+  onSearch,
+  onClearSearch,
   searchQuery = '',
   paginationPerPage = 25,
   paginationRowsPerPageOptions = [25, 50, 100, 200],
@@ -195,6 +232,10 @@ const AdminReusableTable = <T extends Record<string, any>>({
   const [selected, setSelected] = useState<T[]>([]);
   const [orderBy, setOrderBy] = useState<keyof T>();
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+
+  React.useEffect(() => {
+    setLocalQuery(searchQuery);
+  }, [searchQuery]);
 
   const handleSearch = (value: string) => {
     setLocalQuery(value);
@@ -405,6 +446,8 @@ const AdminReusableTable = <T extends Record<string, any>>({
         title={title}
         searchQuery={localQuery}
         onSearchChange={handleSearch}
+        onSearch={onSearch}
+        onClearSearch={onClearSearch}
         selectedCount={selected.length}
         actions={actions}
         onExport={handleExportCSV}
