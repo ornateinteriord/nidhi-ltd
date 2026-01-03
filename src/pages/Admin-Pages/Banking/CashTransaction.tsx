@@ -134,18 +134,18 @@ const CashTransaction: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 12, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: { xs: 9, sm: 12 }, mb: 4, px: { xs: 1, sm: 2, md: 3 } }}>
       {/* Summary Cards */}
       <Box sx={{
         display: 'grid',
         gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
-        gap: 3,
+        gap: { xs: 2, sm: 3 },
         mb: 3
       }}>
         <Paper
           elevation={0}
           sx={{
-            p: 3,
+            p: { xs: 2, sm: 3 },
             textAlign: 'center',
             background: '#667eea',
             color: 'white',
@@ -154,7 +154,7 @@ const CashTransaction: React.FC = () => {
           <Typography variant="body2" sx={{ mb: 1, opacity: 0.9 }}>
             Opening Balance
           </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          <Typography variant="h5" sx={{ fontWeight: 700, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
             ₹ {cashTransactionsData?.summary?.openingBalance?.toFixed(2) || '0.00'}
           </Typography>
         </Paper>
@@ -162,7 +162,7 @@ const CashTransaction: React.FC = () => {
         <Paper
           elevation={0}
           sx={{
-            p: 3,
+            p: { xs: 2, sm: 3 },
             textAlign: 'center',
             background: '#667eea',
             color: 'white',
@@ -171,7 +171,7 @@ const CashTransaction: React.FC = () => {
           <Typography variant="body2" sx={{ mb: 1, opacity: 0.9 }}>
             Debit Amount
           </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          <Typography variant="h5" sx={{ fontWeight: 700, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
             ₹ {cashTransactionsData?.summary?.debitAmount?.toFixed(2) || '0.00'}
           </Typography>
         </Paper>

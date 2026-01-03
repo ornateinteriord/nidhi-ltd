@@ -351,13 +351,14 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
   const agents = agentsData?.data || [];
 
   return (
-    <Box sx={{ mt: 10, px: 3, pb: 4 }}>
+    <Box sx={{ mt: { xs: 8, sm: 10 }, px: { xs: 1.5, sm: 2, md: 3 }, pb: 4 }}>
       <Typography
         variant="h4"
         sx={{
           fontWeight: 700,
           color: '#1a237e',
           mb: 3,
+          fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
         }}
       >
         {title ?? `${form.accountType} Account Opening`}
@@ -366,7 +367,7 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
         boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
         borderRadius: '16px',
       }}>
-        <CardContent sx={{ p: 4 }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
           <Grid container spacing={4}>
             {/* Member Information Section */}
             <Grid component="div" size={{ xs: 12, md: 6 }}>

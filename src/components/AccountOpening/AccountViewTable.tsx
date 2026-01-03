@@ -109,21 +109,21 @@ const AccountViewTable: React.FC<Props> = ({ accountType, title }) => {
     };
 
     return (
-        <Box sx={{ mt: 10, px: 3 }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 3 }}>
+        <Box sx={{ mt: 10, px: { xs: 1.5, sm: 2, md: 3 } }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 3, fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' } }}>
                 {title}
             </Typography>
 
             <Card>
                 <CardContent>
                     {/* Filters Section */}
-                    <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+                    <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, mb: 3, flexWrap: 'wrap', flexDirection: { xs: 'column', sm: 'row' } }}>
                         <TextField
                             placeholder="Search by Account No, Member ID..."
                             size="small"
                             value={searchQuery}
                             onChange={handleSearchChange}
-                            sx={{ minWidth: 300, flexGrow: 1 }}
+                            sx={{ minWidth: { xs: '100%', sm: 300 }, flexGrow: 1 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">

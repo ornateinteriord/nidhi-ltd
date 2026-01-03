@@ -63,7 +63,8 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
       style={{
         zIndex: 100,
         background: '#3e2cdeff',
-        boxShadow: '4px 0 20px rgba(99, 102, 241, 0.3)',
+        boxShadow: isOpen ? '4px 0 20px rgba(99, 102, 241, 0.3)' : 'none',
+        overflow: 'hidden',
       }}
     >
       <Toolbar className="navbar-toolbar" />

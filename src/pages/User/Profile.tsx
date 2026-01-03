@@ -142,7 +142,7 @@ const Profile: React.FC = () => {
     );
 
     return (
-        <Box sx={{ px: 3, py: 4, mt: 8, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+        <Box sx={{ px: { xs: 2, sm: 3 }, py: { xs: 2, sm: 4 }, mt: { xs: 7, sm: 8 }, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
             {/* Header */}
             <Box sx={{ mb: 4, textAlign: 'center' }}>
                 <Typography variant="h4" sx={{ fontWeight: 700, color: '#4f46e5', mb: 1 }}>
@@ -166,8 +166,8 @@ const Profile: React.FC = () => {
                     <Avatar
                         src={form.member_image || ''}
                         sx={{
-                            width: 120,
-                            height: 120,
+                            width: { xs: 80, sm: 100, md: 120 },
+                            height: { xs: 80, sm: 100, md: 120 },
                             border: '4px solid white',
                             boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
                         }}
@@ -201,7 +201,7 @@ const Profile: React.FC = () => {
 
             {/* Personal Information */}
             <Card sx={{ mb: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-                <CardContent sx={{ p: 4 }}>
+                <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
                         <AccountCircleIcon sx={{ color: '#6366f1', fontSize: 28 }} />
                         <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937' }}>
@@ -484,7 +484,7 @@ const Profile: React.FC = () => {
             </Card>
 
             {/* Action Buttons */}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'flex-end' }, gap: 2, flexWrap: 'wrap' }}>
                 <Button
                     variant="outlined"
                     size="large"

@@ -2,21 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   overflow-x: hidden;
   background-color: #eaeaea;
 }
+
 @media (min-width: 769px) {
   .sidebar-overlay {
     display: none !important;
   }
 }
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -53,6 +56,7 @@ html, body {
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -93,6 +97,7 @@ html, body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -151,4 +156,36 @@ html, body {
 .MuiTableContainer-root {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+/* Responsive Typography */
+@media (max-width: 600px) {
+  .MuiTypography-h4 {
+    font-size: 1.5rem !important;
+  }
+
+  .MuiTypography-h5 {
+    font-size: 1.25rem !important;
+  }
+
+  .MuiTypography-h6 {
+    font-size: 1rem !important;
+  }
+}
+
+/* Mobile-first table improvements */
+@media (max-width: 768px) {
+  .MuiTableContainer-root {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .MuiTableCell-root {
+    padding: 8px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .MuiTableCell-head {
+    white-space: nowrap;
+  }
 }

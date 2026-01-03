@@ -80,13 +80,14 @@ const Navbar = ({
           <Typography
             variant="h4"
             className="navbar-title"
-            style={{
+            sx={{
               marginLeft: "12px",
               cursor: "pointer",
               fontWeight: "bold",
               background: "linear-gradient(to right, #ffffff, #f0f9ff)",
               WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent"
+              WebkitTextFillColor: "transparent",
+              fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2rem' }
             }}
             onClick={() => navigate(`/${role?.toLocaleLowerCase()}/dashboard`)}
           >
@@ -130,7 +131,8 @@ const Navbar = ({
                       sx={{
                         color: "white",
                         fontWeight: "500",
-                        textShadow: "0 1px 2px rgba(0,0,0,0.2)"
+                        textShadow: "0 1px 2px rgba(0,0,0,0.2)",
+                        display: { xs: 'none', sm: 'block' }
                       }}
                     >
                       {displayName}

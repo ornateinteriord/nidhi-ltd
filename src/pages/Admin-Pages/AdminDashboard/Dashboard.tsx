@@ -28,7 +28,7 @@ const AdminDashboard = () => {
 
   return (
     <div style={{ backgroundColor: "#f8f9fa" }}>
-      <div className="my-20" />
+      <Box sx={{ mt: { xs: 8, sm: 10, md: 12 } }} />
       <div className="mb-4">
         {/* <WalletCard
           balance="₹ 00.00"
