@@ -28,6 +28,7 @@ import {
   useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -76,11 +77,19 @@ const AgentAssignment: React.FC = () => {
 
   // Helper function to check if agent is assigned
   const isAgentAssigned = (account: AccountForAssignment): boolean => {
+    if (account && !account.assigned_to) return false
     return !!(account.assigned_to && account.assigned_to.trim() !== "");
   };
 
   const handleSearch = () => {
     setSearchTrigger(accountNoSearch);
+    setPage(0);
+  };
+
+  const handleClearFilters = () => {
+    setSelectedAccountType("");
+    setAccountNoSearch("");
+    setSearchTrigger("");
     setPage(0);
   };
 
@@ -236,6 +245,32 @@ const AgentAssignment: React.FC = () => {
               }}
             >
               Search
+            </Button>
+
+            <Button
+              variant="outlined"
+              startIcon={<ClearIcon />}
+              onClick={handleClearFilters}
+              disabled={!selectedAccountType && !accountNoSearch && !searchTrigger}
+              sx={{
+                textTransform: "none",
+                fontWeight: 600,
+                borderRadius: 2,
+                px: 2,
+                py: 1,
+                borderColor: "#94a3b8",
+                color: "#64748b",
+                "&:hover": {
+                  borderColor: "#64748b",
+                  backgroundColor: "#f1f5f9",
+                },
+                "&:disabled": {
+                  borderColor: "#e2e8f0",
+                  color: "#cbd5e1",
+                },
+              }}
+            >
+              Clear
             </Button>
           </Stack>
         </Stack>
