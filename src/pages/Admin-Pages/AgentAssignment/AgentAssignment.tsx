@@ -408,6 +408,17 @@ const AgentAssignment: React.FC = () => {
                                   fontSize: "0.75rem",
                                 }}
                               />
+                            ) : hasAgent && !account.agentDetails ? (
+                              <Chip
+                                label={`Agent Not Found (${account.assigned_to})`}
+                                size="small"
+                                sx={{
+                                  backgroundColor: "#fee2e2",
+                                  color: "#dc2626",
+                                  fontWeight: 500,
+                                  fontSize: "0.75rem",
+                                }}
+                              />
                             ) : (
                               <Chip
                                 label="Not Assigned"
