@@ -20,6 +20,7 @@ import {
     RecentDataResponse,
     PreMaturityAccountsResponse,
     PostMaturityAccountsResponse,
+    AccountsForAssignmentResponse,
 } from "../../types";
 
 
@@ -418,5 +419,38 @@ export const useGetPostMaturityAccounts = (
     });
 };
 
+// ==================== AGENT ASSIGNMENT ====================
 
+// GET ACCOUNTS FOR ASSIGNMENT
+export const useGetAccountsForAssignment = (
+    page: number = 1,
+    limit: number = 10,
+    account_type?: string,
+    account_no?: string
+) => {
+    return useQuery({
+        queryKey: ["accountsForAssignment", page, limit, account_type, account_no],
+        queryFn: async () => {
+            const params: Record<string, any> = { page, limit };
+            if (account_type) params.account_type = account_type;
+            if (account_no) params.account_no = account_no;
 
+            return await useApi<AccountsForAssignmentResponse>("GET", "/admin/get-accounts-for-assignment", undefined, params);
+        },
+    });
+};
+
+// UPDATE ACCOUNT ASSIGNMENT
+export const useUpdateAccountAssignment = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ accountId, assigned_to }: { accountId: string; assigned_to: string | null }) => {
+            return await useApi<AccountResponse>("PUT", `/admin/update-account-assignment/${accountId}`, { assigned_to });
+        },
+        onSuccess: () => {
+            // Invalidate and refetch accounts for assignment list
+            queryClient.invalidateQueries({ queryKey: ["accountsForAssignment"] });
+        },
+    });
+};

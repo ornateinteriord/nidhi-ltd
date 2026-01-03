@@ -2,7 +2,7 @@
 import { Member } from './member';
 import { Agent } from './agent';
 import { Interest } from './admin';
-import { Account, AccountBook, AccountGroup } from './accounts';
+import { Account, AccountBook, AccountGroup, AccountForAssignment } from './accounts';
 
 // Pagination interface
 export interface Pagination {
@@ -85,3 +85,12 @@ export interface InterestsByGroupResponse {
     message: string;
     data: Interest[];
 }
+
+// Agent Assignment response
+export interface AccountsForAssignmentResponse {
+    success: boolean;
+    message: string;
+    data: AccountForAssignment[];
+    pagination: Pagination;
+}
+
