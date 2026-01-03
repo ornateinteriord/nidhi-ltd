@@ -16,6 +16,7 @@ export interface MemberAccountType {
 export interface MemberAccountsData {
     accountTypes: MemberAccountType[];
     totalAccounts: number;
+    totalBalance: number;
 }
 
 export interface MemberAccountsResponse {
