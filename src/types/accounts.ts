@@ -50,3 +50,13 @@ export interface Account {
     createdAt?: Date | string;
     updatedAt?: Date | string;
 }
+
+// Extended account interface for agent assignment with additional details
+export interface AccountForAssignment extends Account {
+    account_type_name?: string;  // From AccountGroup
+    agentDetails?: {
+        agent_id: string;
+        name: string;
+    };
+}
+

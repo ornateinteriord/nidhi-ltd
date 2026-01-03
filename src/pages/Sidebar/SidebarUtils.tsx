@@ -56,15 +56,15 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
     isExpandable: false,
   },
 
-  {
-    name: "Shares",
-    icon: <LucideIcons.TrendingUp />,
-    isExpandable: true,
-    subItems: [
-      { name: "Share", path: "/banking/share", icon: <LucideIcons.IndianRupee /> },
-      { name: "Share Deposits", path: "/banking/share-deposits", icon: <MuiIcons.Savings /> },
-    ],
-  },
+  // {
+  //   name: "Shares",
+  //   icon: <LucideIcons.TrendingUp />,
+  //   isExpandable: true,
+  //   subItems: [
+  //     { name: "Share", path: "/banking/share", icon: <LucideIcons.IndianRupee /> },
+  //     { name: "Share Deposits", path: "/banking/share-deposits", icon: <MuiIcons.Savings /> },
+  //   ],
+  // },
   {
     name: "Banking",
     icon: <LucideIcons.Landmark />,
@@ -145,30 +145,30 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Calculator", path: "/banking/mis-calculator", icon: <LucideIcons.Calculator /> },
     ],
   },
-  {
-    name: "Loan",
-    icon: <LucideIcons.HandCoins />,
-    isExpandable: true,
-    subItems: [
-      { name: "Opening", path: "/loan-opening", icon: <LucideIcons.PlusCircle /> },
-      { name: "ViewAll / Search", path: "/loan-viewall", icon: <LucideIcons.Search /> },
-      { name: "Disbursement", path: "/loan-disbursement", icon: <MuiIcons.Payments /> },
-      { name: "Receive Payments", path: "/loan-recieve-payments", icon: <MuiIcons.Receipt /> },
-      { name: "Close", path: "/loan-close", icon: <LucideIcons.XCircle /> },
-    ],
-  },
-  {
-    name: "Overdraft",
-    icon: <MuiIcons.FileCopy />,
-    isExpandable: true,
-    subItems: [
-      { name: "Opening", path: "/od-opening", icon: <LucideIcons.PlusCircle /> },
-      { name: "ViewAll / Search", path: "/od-viewall", icon: <LucideIcons.Search /> },
-      { name: "Disbursement", path: "/od-disbursement", icon: <MuiIcons.Payments /> },
-      { name: "Receive Payments", path: "/od-recieve-payments", icon: <MuiIcons.Receipt /> },
-      { name: "Close", path: "/od-close", icon: <LucideIcons.XCircle /> },
-    ],
-  },
+  // {
+  //   name: "Loan",
+  //   icon: <LucideIcons.HandCoins />,
+  //   isExpandable: true,
+  //   subItems: [
+  //     { name: "Opening", path: "/loan-opening", icon: <LucideIcons.PlusCircle /> },
+  //     { name: "ViewAll / Search", path: "/loan-viewall", icon: <LucideIcons.Search /> },
+  //     { name: "Disbursement", path: "/loan-disbursement", icon: <MuiIcons.Payments /> },
+  //     { name: "Receive Payments", path: "/loan-recieve-payments", icon: <MuiIcons.Receipt /> },
+  //     { name: "Close", path: "/loan-close", icon: <LucideIcons.XCircle /> },
+  //   ],
+  // },
+  // {
+  //   name: "Overdraft",
+  //   icon: <MuiIcons.FileCopy />,
+  //   isExpandable: true,
+  //   subItems: [
+  //     { name: "Opening", path: "/od-opening", icon: <LucideIcons.PlusCircle /> },
+  //     { name: "ViewAll / Search", path: "/od-viewall", icon: <LucideIcons.Search /> },
+  //     { name: "Disbursement", path: "/od-disbursement", icon: <MuiIcons.Payments /> },
+  //     { name: "Receive Payments", path: "/od-recieve-payments", icon: <MuiIcons.Receipt /> },
+  //     { name: "Close", path: "/od-close", icon: <LucideIcons.XCircle /> },
+  //   ],
+  // },
 ];
 
 
