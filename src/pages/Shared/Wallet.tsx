@@ -30,11 +30,8 @@ const Wallet: React.FC = () => {
     console.log("transactionsData:", transactionsData
 
     )
-    // Calculate total balance from all accounts ok
-    const totalBalance = accountsData?.data?.accountTypes?.reduce((total: number, accType: any) => {
-        const typeTotal = accType.accounts.reduce((sum: number, acc: any) => sum + (acc.account_amount || 0), 0);
-        return total + typeTotal;
-    }, 0) || 0;
+    // Get total balance from backend (already calculated)
+    const totalBalance = accountsData?.data?.totalBalance || 0;
 
     // Create breakdown by account type
     const accountBreakdown = accountsData?.data?.accountTypes?.map((accType: any) => {

@@ -20,7 +20,7 @@ export const useGetMemberById = (memberId: string, enabled: boolean = true) => {
 // GET MY ACCOUNTS (for logged-in member)
 export const useGetMyAccounts = () => {
     return useQuery({
-        queryKey: ["myAccounts"],
+        queryKey: ["myAccounts",],
         queryFn: async () => {
             return await useApi<MemberAccountsResponse>("GET", "/member/get-my-accounts");
         },
