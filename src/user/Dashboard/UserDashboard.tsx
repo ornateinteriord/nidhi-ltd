@@ -68,8 +68,8 @@ const UserDashboard = () => {
     return (
         <div>
             {/* Account Type Cards Section */}
-            <Box sx={{ px: 3, mt: 4 }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#4f46e5', mb: 3 }}>
+            <Box sx={{ px: { xs: 1.5, sm: 2, md: 3 }, mt: { xs: 3, sm: 4 } }}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#4f46e5', mb: 3, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                     My Accounts
                 </Typography>
 

@@ -74,7 +74,7 @@ const RDPayMaturity: React.FC = () => {
     ];
 
     return (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: { xs: 1.5, sm: 2, md: 3 }, mt: { xs: 7, sm: 8 } }}>
             <AdminReusableTable
                 title="RD Pay Maturity (Post-Maturity) Accounts"
                 columns={columns}

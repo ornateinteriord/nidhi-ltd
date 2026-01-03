@@ -189,7 +189,7 @@ const RoutesProvider = ({
         <div
           style={{
             flex: 1,
-            marginLeft: !shouldHide && isOpen ? "250px" : "0",
+            marginLeft: window.innerWidth >= 900 && !shouldHide && isOpen ? "250px" : "0",
             transition: "margin-left 0.3s ease-in-out",
             width: "100%",
             overflowX: "hidden",

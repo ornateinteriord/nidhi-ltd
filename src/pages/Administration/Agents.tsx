@@ -480,13 +480,13 @@ const Agents: React.FC = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4, mt: 8 }}>
+    <Container maxWidth="xl" sx={{ py: { xs: 2, sm: 3, md: 4 }, mt: { xs: 7, sm: 8 }, px: { xs: 1, sm: 2, md: 3 } }}>
       {/* Page Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>
+      <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1, fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' } }}>
           List of Agent
         </Typography>
-        <Typography variant="body1" sx={{ color: '#64748b' }}>
+        <Typography variant="body1" sx={{ color: '#64748b', fontSize: { xs: '0.875rem', sm: '1rem' } }}>
           Manage and monitor all registered agents in the system
         </Typography>
       </Box>

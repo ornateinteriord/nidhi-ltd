@@ -97,10 +97,10 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
     >
 
       {/* Title and Actions Row */}
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={2} sx={{ mb: 2 }}>
         <Box>
           {title && (
-            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1 }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1a237e', mb: 1, fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' } }}>
               {title}
             </Typography>
           )}
@@ -135,7 +135,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
       </Stack>
 
       {/* Search and Filters Row */}
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
         <TextField
           size="small"
           placeholder="Search..."
@@ -143,7 +143,7 @@ const TableToolbar: React.FC<TableToolbarProps> = ({
           onChange={(e) => onSearchChange(e.target.value)}
           sx={{
             flex: 1,
-            maxWidth: 400,
+            maxWidth: { xs: '100%', sm: 400 },
             '& .MuiOutlinedInput-root': {
               borderRadius: 2,
               backgroundColor: '#f8fafc',
@@ -534,10 +534,12 @@ const AdminReusableTable = <T extends Record<string, any>>({
       <Box
         sx={{
           display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: { xs: 'stretch', sm: 'center' },
+          gap: 2,
           borderTop: '1px solid #e2e8f0',
-          p: 2,
+          p: { xs: 1.5, sm: 2 },
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
