@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Container,
@@ -9,20 +9,36 @@ import {
   Snackbar,
   Typography,
   Stack,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Backdrop,
+  CircularProgress,
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import BlockIcon from '@mui/icons-material/Block';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import PrintIcon from '@mui/icons-material/Print';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import CloseIcon from '@mui/icons-material/Close';
+import { useReactToPrint } from 'react-to-print';
 import AdminReusableTable from '../../utils/AdminReusableTable';
 import AgentModifyDialog from '../../utils/AgentModifyDialog';
+import TablePDF, { PrintColumn } from '../../components/Print-components/TablePDF';
 import {
   useGetAgents,
   useCreateAgent,
   useUpdateAgent,
   Agent as AgentType
 } from '../../queries/admin/index';
+import { exportToExcel } from '../../utils/excelExport';
+
 
 interface Agent {
   id: string;
@@ -46,6 +62,7 @@ interface Agent {
 const Agents: React.FC = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -54,11 +71,31 @@ const Agents: React.FC = () => {
   });
   const [modifyDialogOpen, setModifyDialogOpen] = useState(false);
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
+  const [exportMenuAnchor, setExportMenuAnchor] = useState<null | HTMLElement>(null);
+  const [printDialogOpen, setPrintDialogOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const tablePrintRef = useRef<HTMLDivElement>(null);
 
   // React Query Hooks
   const { data: agentsData, isLoading } = useGetAgents(page, rowsPerPage, searchQuery);
+  // Fetch all agents for printing (without pagination)
+  const { data: allAgentsData } = useGetAgents(1, 9999, '');
   const createAgentMutation = useCreateAgent();
   const updateAgentMutation = useUpdateAgent();
+
+  // Print columns configuration
+  const printColumns: PrintColumn[] = [
+    { id: 'agent_id', label: 'Agent ID', width: '10%' },
+    { id: 'displayName', label: 'Name', width: '15%' },
+    { id: 'email', label: 'Email', width: '15%' },
+    { id: 'mobile', label: 'Mobile', width: '12%' },
+    { id: 'designation', label: 'Designation', width: '10%' },
+    { id: 'gender', label: 'Gender', width: '8%', align: 'center' },
+    { id: 'dob', label: 'DOB', width: '10%' },
+    { id: 'pan_no', label: 'PAN No', width: '10%' },
+    { id: 'status', label: 'Status', width: '10%', align: 'center' },
+  ];
+
 
   // Transform API data to table format
   const agents: Agent[] = agentsData?.data?.map((agent: AgentType) => ({
@@ -346,8 +383,18 @@ const Agents: React.FC = () => {
   };
 
   const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
-    setPage(1); // Reset to first page on search
+    setSearchInput(query);
+  };
+
+  const handleSearch = () => {
+    setSearchQuery(searchInput);
+    setPage(1);
+  };
+
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setSearchQuery('');
+    setPage(1);
   };
 
   const handleRowsPerPageChange = (newRowsPerPage: number) => {
@@ -393,12 +440,97 @@ const Agents: React.FC = () => {
     );
   };
 
-  const handleExportAgents = () => {
-    setSnackbar({
-      open: true,
-      message: 'Agents data exported successfully',
-      severity: 'success'
-    });
+  // Transform all agents data for printing/export
+  const allAgentsForExport = (allAgentsData?.data || []).map((agent: AgentType) => ({
+    id: agent._id || '',
+    agent_id: agent.agent_id,
+    displayName: agent.name || '-',
+    email: agent.emailid || '-',
+    mobile: agent.mobile || '-',
+    designation: agent.designation || '-',
+    gender: agent.gender || '-',
+    dob: agent.dob
+      ? new Date(agent.dob).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })
+      : '-',
+    pan_no: agent.pan_no || '-',
+    aadharcard_no: agent.aadharcard_no || '-',
+    status: agent.status === 'active' ? 'Active' : 'Inactive',
+  }));
+
+  const handleTablePrint = useReactToPrint({
+    contentRef: tablePrintRef,
+  });
+
+  const handleExportMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setExportMenuAnchor(event.currentTarget);
+  };
+
+  const handleExportMenuClose = () => {
+    setExportMenuAnchor(null);
+  };
+
+  const handlePrintClick = () => {
+    handleExportMenuClose();
+    setPrintDialogOpen(true);
+  };
+
+  const handleExcelExport = () => {
+    handleExportMenuClose();
+    setIsExporting(true);
+
+    // Use setTimeout to allow the UI to show the loader before the heavy synchronous export task runs
+    setTimeout(() => {
+      const dataToExport = (allAgentsData?.data || []).map((agent: AgentType) => ({
+        date: agent.date_of_joining ? new Date(agent.date_of_joining).toLocaleDateString('en-GB') : '-',
+        agent_id: agent.agent_id,
+        displayName: `${agent.name} (${agent.agent_id})`,
+        email: agent.emailid || '-',
+        mobile: agent.mobile || '-',
+        designation: agent.designation || '-',
+        gender: agent.gender || '-',
+        dob: agent.dob ? new Date(agent.dob).toLocaleDateString('en-GB') : '-',
+        address: agent.address || '-',
+        pan_no: agent.pan_no || '-',
+        aadharcard_no: agent.aadharcard_no || '-',
+        introducer: agent.introducer || '-',
+        branch_id: agent.branch_id || '-',
+        status: agent.status ? (agent.status.charAt(0).toUpperCase() + agent.status.slice(1)) : '-'
+      }));
+
+      exportToExcel({
+        fileName: `Agents_List_${new Date().toISOString().split('T')[0]}`,
+        title: 'Manipal Society - Agents List',
+        columns: [
+          { header: 'Date', key: 'date', width: 15 },
+          { header: 'Agent ID', key: 'agent_id', width: 15 },
+          { header: 'Name', key: 'displayName', width: 25 },
+          { header: 'Email', key: 'email', width: 25 },
+          { header: 'Mobile', key: 'mobile', width: 15 },
+          { header: 'Designation', key: 'designation', width: 15 },
+          { header: 'Gender', key: 'gender', width: 10 },
+          { header: 'DOB', key: 'dob', width: 15 },
+          { header: 'Address', key: 'address', width: 30 },
+          { header: 'PAN No', key: 'pan_no', width: 15 },
+          { header: 'Aadhar No', key: 'aadharcard_no', width: 15 },
+          { header: 'Introducer', key: 'introducer', width: 15 },
+          { header: 'Branch ID', key: 'branch_id', width: 15 },
+          { header: 'Status', key: 'status', width: 12 }
+        ],
+        data: dataToExport,
+        statusField: 'status'
+      });
+
+      setIsExporting(false);
+      setSnackbar({
+        open: true,
+        message: 'Agents data exported to Excel successfully',
+        severity: 'success'
+      });
+    }, 100);
   };
 
   const handleModifySave = (data: any, isEdit?: boolean) => {
@@ -466,7 +598,8 @@ const Agents: React.FC = () => {
       </Button>
       <Button
         variant="outlined"
-        onClick={handleExportAgents}
+        startIcon={<FileDownloadIcon />}
+        onClick={handleExportMenuOpen}
         sx={{
           textTransform: 'none',
           borderRadius: 1,
@@ -474,8 +607,24 @@ const Agents: React.FC = () => {
           color: '#475569',
         }}
       >
-        Excel
+        Export
       </Button>
+      <Menu
+        anchorEl={exportMenuAnchor}
+        open={Boolean(exportMenuAnchor)}
+        onClose={handleExportMenuClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <MenuItem onClick={handlePrintClick}>
+          <PrintIcon sx={{ mr: 1, fontSize: 20 }} />
+          Print
+        </MenuItem>
+        <MenuItem onClick={handleExcelExport}>
+          <FileDownloadIcon sx={{ mr: 1, fontSize: 20 }} />
+          Excel
+        </MenuItem>
+      </Menu>
     </Stack>
   );
 
@@ -498,9 +647,11 @@ const Agents: React.FC = () => {
         title="Agent Management"
         isLoading={isLoading}
         onSearchChange={handleSearchChange}
+        onSearch={handleSearch}
+        onClearSearch={handleClearSearch}
+        searchQuery={searchInput}
         paginationPerPage={rowsPerPage}
         actions={tableActions}
-        onExport={handleExportAgents}
         emptyMessage="No agents found"
         totalCount={agentsData?.pagination?.total}
         currentPage={page - 1}
@@ -520,6 +671,17 @@ const Agents: React.FC = () => {
         isLoading={createAgentMutation.isPending || updateAgentMutation.isPending}
       />
 
+      {/* Export Loader */}
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isExporting}
+      >
+        <Stack alignItems="center" spacing={2}>
+          <CircularProgress color="inherit" />
+          <Typography variant="h6">Exporting to Excel...</Typography>
+        </Stack>
+      </Backdrop>
+
       {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
@@ -538,6 +700,78 @@ const Agents: React.FC = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+      {/* Print Preview Dialog */}
+      <Dialog
+        open={printDialogOpen}
+        onClose={() => setPrintDialogOpen(false)}
+        maxWidth="lg"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: { borderRadius: '16px' }
+          }
+        }}
+      >
+        <DialogTitle
+          sx={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            py: 2
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Agents Print Preview
+          </Typography>
+          <IconButton
+            onClick={() => setPrintDialogOpen(false)}
+            sx={{ color: 'white' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ p: 0, backgroundColor: '#f3f4f6' }}>
+          <Box sx={{ maxHeight: '70vh', overflow: 'auto', p: 2 }}>
+            <TablePDF
+              ref={tablePrintRef}
+              title="Agent Register"
+              columns={printColumns}
+              data={allAgentsForExport}
+            />
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
+          <Button
+            onClick={() => setPrintDialogOpen(false)}
+            variant="outlined"
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+            }}
+          >
+            Close
+          </Button>
+          <Button
+            onClick={handleTablePrint}
+            variant="contained"
+            startIcon={<PrintIcon />}
+            sx={{
+              borderRadius: '12px',
+              textTransform: 'none',
+              px: 3,
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            }}
+          >
+            Print
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

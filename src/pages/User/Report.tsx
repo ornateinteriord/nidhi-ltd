@@ -1,15 +1,25 @@
-import React from 'react';
-import { Box, Chip } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Box, Chip, Button, Dialog, DialogContent, DialogActions } from '@mui/material';
+import PrintIcon from '@mui/icons-material/Print';
+import { useReactToPrint } from 'react-to-print';
 import AdminReusableTable, { ColumnDefinition } from '../../utils/AdminReusableTable';
 import { useGetUserTransactions } from '../../queries/User';
 import TokenService from '../../queries/token/tokenService';
 import { UserTransaction } from '../../types';
+import TablePDF, { PrintColumn } from '../../components/Print-components/TablePDF';
 
 const Report: React.FC = () => {
     const memberId = TokenService.getMemberId();
     const { data: transactionsData, isLoading: transactionsLoading } = useGetUserTransactions(memberId || '', !!memberId);
 
+    const [printDialogOpen, setPrintDialogOpen] = useState(false);
+    const tablePrintRef = useRef<HTMLDivElement>(null);
+
     const transactions = transactionsData?.data || [];
+
+    const handleTablePrint = useReactToPrint({
+        contentRef: tablePrintRef,
+    });
 
     // Transaction columns
     const transactionColumns: ColumnDefinition<UserTransaction>[] = [
@@ -102,6 +112,28 @@ const Report: React.FC = () => {
         },
     ];
 
+    const printColumns: PrintColumn[] = [
+        { id: 'transaction_date', label: 'Date', width: '12%' },
+        { id: 'transaction_id', label: 'Txn ID', width: '12%' },
+        { id: 'account_number', label: 'Account No', width: '12%' },
+        { id: 'transaction_type', label: 'Type', width: '12%' },
+        { id: 'description', label: 'Description', width: '16%' },
+        { id: 'debit', label: 'Debit', width: '12%', align: 'right' },
+        { id: 'credit', label: 'Credit', width: '12%', align: 'right' },
+        { id: 'balance', label: 'Balance', width: '12%', align: 'right' },
+    ];
+
+    // Transform data for print
+    const printData = transactions.map(row => ({
+        ...row,
+        transaction_date: new Date(row.transaction_date).toLocaleDateString('en-GB'),
+        account_number: row.account_number || '-',
+        description: row.description || '-',
+        debit: row.debit > 0 ? `₹${row.debit.toLocaleString('en-IN')}` : '-',
+        credit: row.credit > 0 ? `₹${row.credit.toLocaleString('en-IN')}` : '-',
+        balance: `₹${row.balance.toLocaleString('en-IN')}`,
+    }));
+
     return (
         <Box sx={{ mt: 10, px: 3, pb: 4 }}>
             <AdminReusableTable
@@ -110,10 +142,46 @@ const Report: React.FC = () => {
                 title="Transactions"
                 isLoading={transactionsLoading}
                 emptyMessage="No transactions found"
-                onExport={() => {
-                    console.log('Export transactions');
-                }}
+                actions={
+                    <Button
+                        variant="contained"
+                        startIcon={<PrintIcon />}
+                        onClick={() => setPrintDialogOpen(true)}
+                        disabled={!transactions.length}
+                        sx={{ textTransform: 'none' }}
+                    >
+                        Print
+                    </Button>
+                }
             />
+
+            {/* Print Preview Dialog */}
+            <Dialog
+                open={printDialogOpen}
+                onClose={() => setPrintDialogOpen(false)}
+                maxWidth="lg"
+                fullWidth
+            >
+                <DialogContent>
+                    <Box ref={tablePrintRef}>
+                        <TablePDF
+                            title="Transaction Report"
+                            columns={printColumns}
+                            data={printData}
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setPrintDialogOpen(false)}>Cancel</Button>
+                    <Button
+                        variant="contained"
+                        onClick={handleTablePrint}
+                        startIcon={<PrintIcon />}
+                    >
+                        Print
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

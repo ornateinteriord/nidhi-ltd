@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { 
-  Box, 
-  TextField, 
-  Button, 
-  Typography, 
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
   CircularProgress,
-  InputAdornment 
+  InputAdornment
 } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -78,18 +78,18 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
           {title}
         </Typography>
       )}
-      
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
         mb: 2,
         flexWrap: 'wrap',
         gap: 2
       }}>
-        <Box sx={{ 
-          display: 'flex', 
-          gap: 1, 
+        <Box sx={{
+          display: 'flex',
+          gap: 1,
           flexWrap: 'wrap',
           alignItems: 'center'
         }}>
@@ -109,7 +109,7 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
           >
             PRINT
           </Button>
-          
+
           <Button
             variant="outlined"
             size="small"
@@ -126,7 +126,7 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
           >
             COPY
           </Button>
-          
+
           <Button
             variant="outlined"
             size="small"
@@ -143,7 +143,7 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
           >
             PDF
           </Button>
-          
+
           <Button
             variant="outlined"
             size="small"
@@ -158,9 +158,9 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
               }
             }}
           >
-            CSV
+            Excel
           </Button>
-          
+
           <Button
             variant="outlined"
             size="small"
@@ -188,7 +188,7 @@ const ExportableTable: React.FC<ExportableTableProps> = ({
             value={localSearchQuery}
             onChange={handleSearchChange}
             placeholder="Search..."
-            sx={{ 
+            sx={{
               minWidth: 200,
               '& .MuiOutlinedInput-root': {
                 '&:hover fieldset': {
