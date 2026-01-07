@@ -34,23 +34,8 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
     const { data: accountsData, isLoading: accountsLoading } = useGetMyAccounts();
     const { mutate: createOrder, isPending } = useCreatePaymentOrder();
 
-    // Initialize Cashfree
-    let cashfree: any;
-    try {
-        if ((window as any).Cashfree) {
-            // Check if we're in development mode to adjust Cashfree mode accordingly
-            const isDevMode = process.env.NODE_ENV === 'development';
-            cashfree = new (window as any).Cashfree({
-                mode: isDevMode ? "sandbox" : "production", // Match backend environment
-            });
-        } else {
-            console.error("Cashfree SDK not loaded on the page");
-            toast.error("Payment gateway not ready. Please try again later.");
-        }
-    } catch (e) {
-        console.error("Cashfree SDK not found or failed to initialize", e);
-        toast.error("Failed to initialize payment gateway");
-    }
+    // Note: Using URL redirect method instead of SDK checkout
+    // This bypasses SDK compatibility issues
 
     // Flatten accounts for dropdown
     const myAccounts = accountsData?.data?.accountTypes?.flatMap((accType: any) =>
@@ -96,27 +81,38 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
 
             createOrder(request, {
                 onSuccess: (data: any) => {
-                    if (data?.payment_session_id && cashfree) {
-                        // Verify the payment session ID format
-                        if (typeof data.payment_session_id !== 'string' || data.payment_session_id.trim() === '') {
-                            toast.error("Invalid payment session ID received");
-                            return;
-                        }
-                        cashfree.checkout({
-                            paymentSessionId: data.payment_session_id
-                        });
-                        handleClose();
-                    } else {
-                        if (!cashfree) {
-                            toast.error("Payment gateway not properly initialized");
-                        } else {
-                            toast.error("Failed to initialize payment gateway");
-                        }
+                    console.log("💳 Payment created:", data);
+
+                    // Handle both Payment Session (Orders) and Payment Link response patterns
+                    // const redirectUrl = data.link_url || data.checkout_url || data.payment_session_id ? `https://sandbox.cashfree.com/pg/view/sessions?session_id=${data.payment_session_id}` : null;
+
+                    // Specific check for payment link URL (Backend seems to be returning this now)
+                    if (data.link_url) {
+                        console.log("🔗 Redirecting to Payment Link:", data.link_url);
+                        window.location.href = data.link_url;
+                        return;
                     }
+
+                    if (data.checkout_url) {
+                        console.log("🚀 Redirecting to Checkout URL:", data.checkout_url);
+                        window.location.href = data.checkout_url;
+                        return;
+                    }
+
+                    if (data.payment_session_id) {
+                        const sessionUrl = `https://sandbox.cashfree.com/pg/orders/sessions/pay?payment_session_id=${data.payment_session_id}`;
+                        console.log("🚀 Redirecting to Session URL:", sessionUrl);
+                        window.location.href = sessionUrl;
+                        return;
+                    }
+
+                    console.error("❌ No valid redirect URL found in response");
+                    toast.error("Invalid payment response received");
                 },
                 onError: (error: any) => {
-                    console.error("Error creating order:", error);
-                    toast.error(error?.response?.data?.message || "Failed to initiate payment");
+                    console.error("❌ Order creation failed:", error);
+                    console.error("Response data:", error?.response?.data);
+                    toast.error(error?.response?.data?.message || "Failed to create payment order");
                 }
             });
         } else {
