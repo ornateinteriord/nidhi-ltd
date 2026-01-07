@@ -109,8 +109,9 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
                     }
                 },
                 onError: (error: any) => {
-                    console.error("Error creating order:", error);
-                    toast.error(error?.response?.data?.message || "Failed to initiate payment");
+                    console.error("❌ Order creation failed:", error);
+                    console.error("Response data:", error?.response?.data);
+                    toast.error(error?.response?.data?.message || "Failed to create payment order");
                 }
             });
         } else {
