@@ -34,23 +34,8 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
     const { data: accountsData, isLoading: accountsLoading } = useGetMyAccounts();
     const { mutate: createOrder, isPending } = useCreatePaymentOrder();
 
-    // Initialize Cashfree
-    let cashfree: any;
-    try {
-        if ((window as any).Cashfree) {
-            // Check if we're in development mode to adjust Cashfree mode accordingly
-            const isDevMode = process.env.NODE_ENV === 'development';
-            cashfree = new (window as any).Cashfree({
-                mode: isDevMode ? "sandbox" : "production", // Match backend environment
-            });
-        } else {
-            console.error("Cashfree SDK not loaded on the page");
-            toast.error("Payment gateway not ready. Please try again later.");
-        }
-    } catch (e) {
-        console.error("Cashfree SDK not found or failed to initialize", e);
-        toast.error("Failed to initialize payment gateway");
-    }
+    // Note: Cashfree SDK is initialized dynamically in handleAddMoney 
+    // after receiving cashfree_env from backend response
 
     // Flatten accounts for dropdown
     const myAccounts = accountsData?.data?.accountTypes?.flatMap((accType: any) =>
@@ -96,19 +81,28 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
 
             createOrder(request, {
                 onSuccess: (data: any) => {
-                    if (data?.payment_session_id && cashfree) {
+                    if (data?.payment_session_id && (window as any).Cashfree) {
                         // Verify the payment session ID format
                         if (typeof data.payment_session_id !== 'string' || data.payment_session_id.trim() === '') {
                             toast.error("Invalid payment session ID received");
                             return;
                         }
-                        cashfree.checkout({
+
+                        // Initialize Cashfree with mode from backend response (like BICCSL-Server)
+                        const cashfreeMode = data.cashfree_env || "sandbox";
+                        console.log("Initializing Cashfree in", cashfreeMode, "mode");
+
+                        const cashfreeInstance = new (window as any).Cashfree({
+                            mode: cashfreeMode,
+                        });
+
+                        cashfreeInstance.checkout({
                             paymentSessionId: data.payment_session_id
                         });
                         handleClose();
                     } else {
-                        if (!cashfree) {
-                            toast.error("Payment gateway not properly initialized");
+                        if (!(window as any).Cashfree) {
+                            toast.error("Payment gateway not properly initialized. Please reload the page.");
                         } else {
                             toast.error("Failed to initialize payment gateway");
                         }
