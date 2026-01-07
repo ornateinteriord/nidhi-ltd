@@ -34,8 +34,8 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
     const { data: accountsData, isLoading: accountsLoading } = useGetMyAccounts();
     const { mutate: createOrder, isPending } = useCreatePaymentOrder();
 
-    // Note: Using URL redirect method instead of SDK checkout
-    // This bypasses SDK compatibility issues
+    // Note: Cashfree SDK is initialized dynamically in handleAddMoney 
+    // after receiving cashfree_env from backend response
 
     // Flatten accounts for dropdown
     const myAccounts = accountsData?.data?.accountTypes?.flatMap((accType: any) =>
@@ -81,33 +81,32 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
 
             createOrder(request, {
                 onSuccess: (data: any) => {
-                    console.log("💳 Payment created:", data);
+                    if (data?.payment_session_id && (window as any).Cashfree) {
+                        // Verify the payment session ID format
+                        if (typeof data.payment_session_id !== 'string' || data.payment_session_id.trim() === '') {
+                            toast.error("Invalid payment session ID received");
+                            return;
+                        }
 
-                    // Handle both Payment Session (Orders) and Payment Link response patterns
-                    // const redirectUrl = data.link_url || data.checkout_url || data.payment_session_id ? `https://sandbox.cashfree.com/pg/view/sessions?session_id=${data.payment_session_id}` : null;
+                        // Initialize Cashfree with mode from backend response (like BICCSL-Server)
+                        const cashfreeMode = data.cashfree_env || "sandbox";
+                        console.log("Initializing Cashfree in", cashfreeMode, "mode");
 
-                    // Specific check for payment link URL (Backend seems to be returning this now)
-                    if (data.link_url) {
-                        console.log("🔗 Redirecting to Payment Link:", data.link_url);
-                        window.location.href = data.link_url;
-                        return;
+                        const cashfreeInstance = new (window as any).Cashfree({
+                            mode: cashfreeMode,
+                        });
+
+                        cashfreeInstance.checkout({
+                            paymentSessionId: data.payment_session_id
+                        });
+                        handleClose();
+                    } else {
+                        if (!(window as any).Cashfree) {
+                            toast.error("Payment gateway not properly initialized. Please reload the page.");
+                        } else {
+                            toast.error("Failed to initialize payment gateway");
+                        }
                     }
-
-                    if (data.checkout_url) {
-                        console.log("🚀 Redirecting to Checkout URL:", data.checkout_url);
-                        window.location.href = data.checkout_url;
-                        return;
-                    }
-
-                    if (data.payment_session_id) {
-                        const sessionUrl = `https://sandbox.cashfree.com/pg/orders/sessions/pay?payment_session_id=${data.payment_session_id}`;
-                        console.log("🚀 Redirecting to Session URL:", sessionUrl);
-                        window.location.href = sessionUrl;
-                        return;
-                    }
-
-                    console.error("❌ No valid redirect URL found in response");
-                    toast.error("Invalid payment response received");
                 },
                 onError: (error: any) => {
                     console.error("❌ Order creation failed:", error);
