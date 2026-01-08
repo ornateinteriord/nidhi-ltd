@@ -256,6 +256,18 @@ const TransferMoneyDialog: React.FC<TransferMoneyDialogProps> = ({ open, onClose
                     </Paper>
                 )}
 
+                {/* Recipient Not Found */}
+                {!loadingRecipient && recipientInfo && !recipientInfo.success && (
+                    <Paper sx={{ p: 2, mb: 2, bgcolor: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#dc2626' }}>
+                            Member not found
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            Please check the Member ID and try again
+                        </Typography>
+                    </Paper>
+                )}
+
                 {/* Recipient Account Selection - Loading */}
                 {loadingRecipientAccounts && recipientInfo?.success && (
                     <TextField

@@ -267,6 +267,20 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                             </Grid>
                         )}
 
+                        {/* Member Not Found */}
+                        {!loadingMember && memberInfo && !memberInfo.success && (
+                            <Grid size={{ xs: 12 }}>
+                                <Paper sx={{ p: 2, bgcolor: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca' }}>
+                                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#dc2626' }}>
+                                        Member not found
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Please check the Member ID and try again
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                        )}
+
                         {/* Account Selection Dropdown - Loading State */}
                         {loadingAccounts && memberInfo?.success && (
                             <Grid size={{ xs: 12 }}>
