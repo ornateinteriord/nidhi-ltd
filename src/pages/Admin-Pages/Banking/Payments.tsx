@@ -36,10 +36,13 @@ interface Payment {
   amount: number;
   status: 'active' | 'inactive';
   rowNumber?: number;
+  member_id?: string;
+  account_no?: string;
 }
 
 const Payments: React.FC = () => {
   const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
@@ -74,6 +77,8 @@ const Payments: React.FC = () => {
     amount: payment.amount || 0,
     status: payment.status as 'active' | 'inactive',
     rowNumber: (page - 1) * 10 + index + 1,
+    member_id: (payment as any).member_id || '-',
+    account_no: (payment as any).account_details?.account_no || '-',
   })) || [];
 
   const columns = [
@@ -110,6 +115,26 @@ const Payments: React.FC = () => {
       label: 'Paid To',
       sortable: true,
       minWidth: 150,
+    },
+    {
+      id: 'member_id',
+      label: 'Member ID',
+      minWidth: 120,
+      renderCell: (row: Payment) => (
+        <Typography variant="body2" sx={{ fontWeight: 500, color: '#475569' }}>
+          {row.member_id}
+        </Typography>
+      ),
+    },
+    {
+      id: 'account_no',
+      label: 'Account No',
+      minWidth: 130,
+      renderCell: (row: Payment) => (
+        <Typography variant="body2" sx={{ fontWeight: 500, color: '#475569' }}>
+          {row.account_no}
+        </Typography>
+      ),
     },
     {
       id: 'description',
@@ -257,7 +282,17 @@ const Payments: React.FC = () => {
   ];
 
   const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
+    setSearchInput(query);
+  };
+
+  const handleSearch = () => {
+    setSearchQuery(searchInput);
+    setPage(1);
+  };
+
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setSearchQuery('');
     setPage(1);
   };
 
@@ -354,6 +389,9 @@ const Payments: React.FC = () => {
         title="Payment Management"
         isLoading={isLoading}
         onSearchChange={handleSearchChange}
+        onSearch={handleSearch}
+        onClearSearch={handleClearSearch}
+        searchQuery={searchInput}
         paginationPerPage={10}
         actions={tableActions}
         onExport={handleExport}

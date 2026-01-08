@@ -20,6 +20,7 @@ interface CashTx {
 
 const CashTransaction: React.FC = () => {
   const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [tablePrintDialogOpen, setTablePrintDialogOpen] = useState(false);
   const tablePrintRef = useRef<HTMLDivElement>(null);
@@ -110,7 +111,17 @@ const CashTransaction: React.FC = () => {
   ];
 
   const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
+    setSearchInput(query);
+  };
+
+  const handleSearch = () => {
+    setSearchQuery(searchInput);
+    setPage(1);
+  };
+
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setSearchQuery('');
     setPage(1);
   };
 
@@ -218,6 +229,9 @@ const CashTransaction: React.FC = () => {
         title="Cash Transactions"
         isLoading={isLoading}
         onSearchChange={handleSearchChange}
+        onSearch={handleSearch}
+        onClearSearch={handleClearSearch}
+        searchQuery={searchInput}
         paginationPerPage={10}
         actions={tableActions}
         emptyMessage="No cash transactions found"
