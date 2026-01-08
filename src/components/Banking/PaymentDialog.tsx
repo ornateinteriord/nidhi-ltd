@@ -15,10 +15,14 @@ import {
     Radio,
     FormLabel,
     Grid,
+    MenuItem,
+    Paper,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { toast } from 'react-toastify';
 import { useGetPaymentById, useCreatePayment, useUpdatePayment } from '../../queries/banking';
+import { useGetMemberBasicInfo, useGetMemberAccountsPublic } from '../../queries/transfer';
 import TokenService from '../../queries/token/tokenService';
 
 interface PaymentDialogProps {
@@ -34,8 +38,9 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
     const [formData, setFormData] = useState({
         payment_date: new Date().toISOString().split('T')[0],
         paid_to: '',
+        member_id: '',
         member_name: '',
-        account_type: '',
+        selected_account: '',
         payment_details: '',
         amount: '',
         mode_of_payment_paid: 'Cash',
@@ -43,9 +48,21 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
         entered_by: entered_by,
     });
 
+    const [fetchMemberInfo, setFetchMemberInfo] = useState(false);
+
     const { data: paymentData, isLoading: loadingPayment } = useGetPaymentById(paymentId || '', !!paymentId);
     const createMutation = useCreatePayment();
     const updateMutation = useUpdatePayment();
+
+    // Member lookup hooks
+    const { data: memberInfo, isLoading: loadingMember } = useGetMemberBasicInfo(
+        formData.member_id,
+        fetchMemberInfo
+    );
+    const { data: memberAccounts, isLoading: loadingAccounts } = useGetMemberAccountsPublic(
+        formData.member_id,
+        fetchMemberInfo && !!memberInfo?.success
+    );
 
     useEffect(() => {
         if (paymentId && paymentData?.success) {
@@ -53,31 +70,67 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
             setFormData({
                 payment_date: payment.payment_date ? new Date(payment.payment_date).toISOString().split('T')[0] : '',
                 paid_to: payment.paid_to || '',
+                member_id: payment.member_id || '',
                 member_name: '',
-                account_type: '',
+                selected_account: payment.account_details?.account_id || '',
                 payment_details: payment.payment_details || '',
                 amount: payment.amount?.toString() || '',
                 mode_of_payment_paid: payment.mode_of_payment_paid || 'Cash',
                 branch_code: payment.branch_code || branch_code,
                 entered_by: payment.entered_by || entered_by,
             });
+            // If there's a member_id, trigger fetch
+            if (payment.member_id) {
+                setFetchMemberInfo(true);
+            }
         } else if (!paymentId) {
             setFormData({
                 payment_date: new Date().toISOString().split('T')[0],
                 paid_to: '',
+                member_id: '',
                 member_name: '',
-                account_type: '',
+                selected_account: '',
                 payment_details: '',
                 amount: '',
                 mode_of_payment_paid: 'Cash',
                 branch_code: branch_code,
                 entered_by: entered_by,
             });
+            setFetchMemberInfo(false);
         }
     }, [paymentId, paymentData, branch_code, entered_by]);
 
+    // Auto-populate member name when info is fetched
+    useEffect(() => {
+        if (memberInfo?.success && memberInfo.data) {
+            setFormData(prev => ({
+                ...prev,
+                member_name: memberInfo.data.name || '',
+                paid_to: memberInfo.data.name || prev.paid_to,
+            }));
+        }
+    }, [memberInfo]);
+
     const handleChange = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+        // Reset fetch when member_id changes
+        if (field === 'member_id') {
+            setFetchMemberInfo(false);
+            setFormData(prev => ({
+                ...prev,
+                [field]: value,
+                member_name: '',
+                selected_account: '',
+            }));
+        }
+    };
+
+    const handleGetMemberInfo = () => {
+        if (!formData.member_id.trim()) {
+            toast.error('Please enter a Member ID');
+            return;
+        }
+        setFetchMemberInfo(true);
     };
 
     const handleSubmit = async () => {
@@ -87,9 +140,23 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
             return;
         }
 
+        // Get selected account details
+        const selectedAcc = memberAccounts?.data?.find((acc: any) => acc.account_id === formData.selected_account);
+
         const submitData = {
-            ...formData,
+            payment_date: formData.payment_date,
+            paid_to: formData.paid_to,
+            payment_details: formData.payment_details,
             amount: parseFloat(formData.amount),
+            mode_of_payment_paid: formData.mode_of_payment_paid,
+            branch_code: formData.branch_code,
+            entered_by: formData.entered_by,
+            member_id: formData.member_id || undefined,
+            account_details: selectedAcc ? {
+                account_no: selectedAcc.account_no,
+                account_type: selectedAcc.account_type,
+                account_id: selectedAcc.account_id,
+            } : undefined,
         };
 
         try {
@@ -139,23 +206,13 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
                 </IconButton>
             </DialogTitle>
 
-            <DialogContent sx={{ mt: 3 }}>
+            <DialogContent >
                 {loadingPayment ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                         <CircularProgress />
                     </Box>
                 ) : (
-                    <Grid container spacing={2}>
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="Voucher No"
-                                value={paymentId || 'Auto-generated'}
-                                disabled
-                                sx={{ '& .MuiInputBase-input': { fontWeight: 600, color: '#10b981' } }}
-                            />
-                        </Grid>
-
+                    <Grid container spacing={2} sx={{ mt: 3 }}>
                         <Grid size={{ xs: 12 }}>
                             <TextField
                                 fullWidth
@@ -167,6 +224,70 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
                             />
                         </Grid>
 
+                        {/* Member ID with Get Info Button */}
+                        <Grid size={{ xs: 12 }}>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                <TextField
+                                    fullWidth
+                                    label="Member ID"
+                                    value={formData.member_id}
+                                    onChange={(e) => handleChange('member_id', e.target.value)}
+                                    placeholder="Enter member ID"
+                                />
+                                <Button
+                                    variant="contained"
+                                    onClick={handleGetMemberInfo}
+                                    disabled={loadingMember || !formData.member_id}
+                                    sx={{
+                                        minWidth: '120px',
+                                        background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
+                                    }}
+                                    startIcon={loadingMember ? <CircularProgress size={20} color="inherit" /> : <PersonSearchIcon />}
+                                >
+                                    Get Info
+                                </Button>
+                            </Box>
+                        </Grid>
+
+                        {/* Member Info Display */}
+                        {memberInfo?.success && (
+                            <Grid size={{ xs: 12 }}>
+                                <Paper sx={{ p: 2, bgcolor: '#ecfdf5', borderRadius: '8px', border: '1px solid #a7f3d0' }}>
+                                    <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                                        {memberInfo.data.name}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Member ID: {memberInfo.data.member_id}
+                                    </Typography>
+                                    <br />
+                                    <Typography variant="caption" color="text.secondary">
+                                        Contact: {memberInfo.data.contact}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                        )}
+
+                        {/* Account Selection Dropdown */}
+                        {memberAccounts?.success && memberAccounts.data.length > 0 && (
+                            <Grid size={{ xs: 12 }}>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    value={formData.selected_account}
+                                    onChange={(e) => handleChange('selected_account', e.target.value)}
+                                    disabled={loadingAccounts}
+                                    label="Select Account"
+                                >
+                                    <MenuItem value="">Select Account</MenuItem>
+                                    {memberAccounts.data.map((acc: any) => (
+                                        <MenuItem key={acc.account_id} value={acc.account_id}>
+                                            {acc.account_group_name} - {acc.account_no}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                        )}
+
                         <Grid size={{ xs: 12 }}>
                             <TextField
                                 fullWidth
@@ -175,26 +296,6 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
                                 onChange={(e) => handleChange('paid_to', e.target.value)}
                                 placeholder="Enter paid to"
                                 required
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="Member Name"
-                                value={formData.member_name}
-                                onChange={(e) => handleChange('member_name', e.target.value)}
-                                placeholder="Enter member name"
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="Account Type"
-                                value={formData.account_type}
-                                onChange={(e) => handleChange('account_type', e.target.value)}
-                                placeholder="Enter account type"
                             />
                         </Grid>
 

@@ -15,10 +15,14 @@ import {
     Radio,
     FormLabel,
     Grid,
+    MenuItem,
+    Paper,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { toast } from 'react-toastify';
 import { useGetReceiptById, useCreateReceipt, useUpdateReceipt } from '../../queries/banking';
+import { useGetMemberBasicInfo, useGetMemberAccountsPublic } from '../../queries/transfer';
 import TokenService from '../../queries/token/tokenService';
 
 interface ReceiptDialogProps {
@@ -34,8 +38,9 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
     const [formData, setFormData] = useState({
         receipt_date: new Date().toISOString().split('T')[0],
         received_from: '',
+        member_id: '',
         member_name: '',
-        account_type: '',
+        selected_account: '',
         receipt_details: '',
         amount: '',
         mode_of_payment_received: 'Cash',
@@ -43,9 +48,21 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
         entered_by: entered_by,
     });
 
+    const [fetchMemberInfo, setFetchMemberInfo] = useState(false);
+
     const { data: receiptData, isLoading: loadingReceipt } = useGetReceiptById(receiptId || '', !!receiptId);
     const createMutation = useCreateReceipt();
     const updateMutation = useUpdateReceipt();
+
+    // Member lookup hooks
+    const { data: memberInfo, isLoading: loadingMember } = useGetMemberBasicInfo(
+        formData.member_id,
+        fetchMemberInfo
+    );
+    const { data: memberAccounts, isLoading: loadingAccounts } = useGetMemberAccountsPublic(
+        formData.member_id,
+        fetchMemberInfo && !!memberInfo?.success
+    );
 
     useEffect(() => {
         if (receiptId && receiptData?.success) {
@@ -53,31 +70,67 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
             setFormData({
                 receipt_date: receipt.receipt_date ? new Date(receipt.receipt_date).toISOString().split('T')[0] : '',
                 received_from: receipt.received_from || '',
+                member_id: receipt.member_id || '',
                 member_name: '',
-                account_type: '',
+                selected_account: receipt.account_details?.account_id || '',
                 receipt_details: receipt.receipt_details || '',
                 amount: receipt.amount?.toString() || '',
                 mode_of_payment_received: receipt.mode_of_payment_received || 'Cash',
                 branch_code: receipt.branch_code || branch_code,
                 entered_by: receipt.entered_by || entered_by,
             });
+            // If there's a member_id, trigger fetch
+            if (receipt.member_id) {
+                setFetchMemberInfo(true);
+            }
         } else if (!receiptId) {
             setFormData({
                 receipt_date: new Date().toISOString().split('T')[0],
                 received_from: '',
+                member_id: '',
                 member_name: '',
-                account_type: '',
+                selected_account: '',
                 receipt_details: '',
                 amount: '',
                 mode_of_payment_received: 'Cash',
                 branch_code: branch_code,
                 entered_by: entered_by,
             });
+            setFetchMemberInfo(false);
         }
     }, [receiptId, receiptData, branch_code, entered_by]);
 
+    // Auto-populate member name when info is fetched
+    useEffect(() => {
+        if (memberInfo?.success && memberInfo.data) {
+            setFormData(prev => ({
+                ...prev,
+                member_name: memberInfo.data.name || '',
+                received_from: memberInfo.data.name || prev.received_from,
+            }));
+        }
+    }, [memberInfo]);
+
     const handleChange = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+        // Reset fetch when member_id changes
+        if (field === 'member_id') {
+            setFetchMemberInfo(false);
+            setFormData(prev => ({
+                ...prev,
+                [field]: value,
+                member_name: '',
+                selected_account: '',
+            }));
+        }
+    };
+
+    const handleGetMemberInfo = () => {
+        if (!formData.member_id.trim()) {
+            toast.error('Please enter a Member ID');
+            return;
+        }
+        setFetchMemberInfo(true);
     };
 
     const handleSubmit = async () => {
@@ -87,9 +140,23 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
             return;
         }
 
+        // Get selected account details
+        const selectedAcc = memberAccounts?.data?.find((acc: any) => acc.account_id === formData.selected_account);
+
         const submitData = {
-            ...formData,
+            receipt_date: formData.receipt_date,
+            received_from: formData.received_from,
+            receipt_details: formData.receipt_details,
             amount: parseFloat(formData.amount),
+            mode_of_payment_received: formData.mode_of_payment_received,
+            branch_code: formData.branch_code,
+            entered_by: formData.entered_by,
+            member_id: formData.member_id || undefined,
+            account_details: selectedAcc ? {
+                account_no: selectedAcc.account_no,
+                account_type: selectedAcc.account_type,
+                account_id: selectedAcc.account_id,
+            } : undefined,
         };
 
         try {
@@ -139,15 +206,14 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                 </IconButton>
             </DialogTitle>
 
-            <DialogContent sx={{ mt: 3 }}>
+            <DialogContent >
                 {loadingReceipt ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                         <CircularProgress />
                     </Box>
                 ) : (
-                    <Grid container spacing={2}>
-
-                        <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
+                    <Grid container spacing={2} sx={{ mt: 3 }}>
+                        <Grid size={{ xs: 12 }}>
                             <TextField
                                 fullWidth
                                 type="date"
@@ -158,34 +224,78 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                             />
                         </Grid>
 
+                        {/* Member ID with Get Info Button */}
+                        <Grid size={{ xs: 12 }}>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                <TextField
+                                    fullWidth
+                                    label="Member ID"
+                                    value={formData.member_id}
+                                    onChange={(e) => handleChange('member_id', e.target.value)}
+                                    placeholder="Enter member ID"
+                                />
+                                <Button
+                                    variant="contained"
+                                    onClick={handleGetMemberInfo}
+                                    disabled={loadingMember || !formData.member_id}
+                                    sx={{
+                                        minWidth: '120px',
+                                        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)'
+                                    }}
+                                    startIcon={loadingMember ? <CircularProgress size={20} color="inherit" /> : <PersonSearchIcon />}
+                                >
+                                    Get Info
+                                </Button>
+                            </Box>
+                        </Grid>
+
+                        {/* Member Info Display */}
+                        {memberInfo?.success && (
+                            <Grid size={{ xs: 12 }}>
+                                <Paper sx={{ p: 2, bgcolor: '#eef2ff', borderRadius: '8px', border: '1px solid #c7d2fe' }}>
+                                    <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                                        {memberInfo.data.name}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Member ID: {memberInfo.data.member_id}
+                                    </Typography>
+                                    <br />
+                                    <Typography variant="caption" color="text.secondary">
+                                        Contact: {memberInfo.data.contact}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                        )}
+
+                        {/* Account Selection Dropdown */}
+                        {memberAccounts?.success && memberAccounts.data.length > 0 && (
+                            <Grid size={{ xs: 12 }}>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    value={formData.selected_account}
+                                    onChange={(e) => handleChange('selected_account', e.target.value)}
+                                    disabled={loadingAccounts}
+                                    label="Select Account"
+                                >
+                                    <MenuItem value="">Select Account</MenuItem>
+                                    {memberAccounts.data.map((acc: any) => (
+                                        <MenuItem key={acc.account_id} value={acc.account_id}>
+                                            {acc.account_group_name} - {acc.account_no}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                        )}
+
                         <Grid size={{ xs: 12 }}>
                             <TextField
                                 fullWidth
-                                label="Receipt From"
+                                label="Received From"
                                 value={formData.received_from}
                                 onChange={(e) => handleChange('received_from', e.target.value)}
-                                placeholder="Enter receipt from"
+                                placeholder="Enter received from"
                                 required
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="Member Name"
-                                value={formData.member_name}
-                                onChange={(e) => handleChange('member_name', e.target.value)}
-                                placeholder="Enter member name"
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="Account Type"
-                                value={formData.account_type}
-                                onChange={(e) => handleChange('account_type', e.target.value)}
-                                placeholder="Enter account type"
                             />
                         </Grid>
 
@@ -206,7 +316,7 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="Amount Paid (Rs.)"
+                                label="Amount Received (Rs.)"
                                 value={formData.amount}
                                 onChange={(e) => handleChange('amount', e.target.value)}
                                 placeholder="0.00"
@@ -233,7 +343,7 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                         </Grid>
                     </Grid>
                 )}
-            </DialogContent >
+            </DialogContent>
 
             <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
                 <Button
@@ -262,7 +372,7 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                     {isSubmitting ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Submit'}
                 </Button>
             </DialogActions>
-        </Dialog >
+        </Dialog>
     );
 };
 

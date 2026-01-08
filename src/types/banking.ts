@@ -12,6 +12,12 @@ export interface Receipt {
     receipt_no?: string;
     entered_by: string;
     branch_code: string;
+    member_id?: string;
+    account_details?: {
+        account_no: string;
+        account_type: string;
+        account_id: string;
+    };
     createdAt?: string;
     updatedAt?: string;
 }
@@ -48,6 +54,12 @@ export interface Payment {
     payment_no?: string;
     entered_by: string;
     branch_code: string;
+    member_id?: string;
+    account_details?: {
+        account_no: string;
+        account_type: string;
+        account_id: string;
+    };
     createdAt?: string;
     updatedAt?: string;
 }

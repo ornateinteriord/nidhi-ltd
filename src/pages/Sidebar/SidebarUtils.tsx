@@ -73,8 +73,8 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Receipts", path: "/admin/banking/receipts", icon: <MuiIcons.Receipt /> },
       { name: "Payments", path: "/admin/banking/payments", icon: <MuiIcons.Payments /> },
       { name: "Cash Transaction", path: "/admin/banking/cash-transaction", icon: <LucideIcons.IndianRupee /> },
-      { name: "Bank Transaction", path: "/admin/banking/bank-transaction", icon: <MuiIcons.AccountBalance /> },
-      { name: "Journal Entries", path: "/admin/banking/journal-entries", icon: <MuiIcons.Book /> },
+      // { name: "Bank Transaction", path: "/admin/banking/bank-transaction", icon: <MuiIcons.AccountBalance /> },
+      // { name: "Journal Entries", path: "/admin/banking/journal-entries", icon: <MuiIcons.Book /> },
     ],
   },
   {
