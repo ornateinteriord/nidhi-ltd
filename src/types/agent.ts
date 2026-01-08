@@ -15,6 +15,7 @@ export interface Agent {
     introducer?: string;
     entered_by?: string;
     designation?: string;
+    agent_image?: string;
     status?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;

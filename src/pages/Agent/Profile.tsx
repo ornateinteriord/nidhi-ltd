@@ -22,14 +22,14 @@ import {
 import { toast } from 'react-toastify';
 import TokenService from '../../queries/token/tokenService';
 import { useGetAgentById } from '../../queries/Agent';
-import PersonIcon from '@mui/icons-material/Person';
 import BadgeIcon from '@mui/icons-material/Badge';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const Profile: React.FC = () => {
+const AgentProfile: React.FC = () => {
   const userId = TokenService.getMemberId();
-  const { data: agentData, isLoading, isError, error } = useGetAgentById(userId || '');
+  const { data: agentData, isLoading, } = useGetAgentById(userId || '');
 
   const [form, setForm] = useState<any>({
     agent_id: '',
@@ -45,6 +45,7 @@ const Profile: React.FC = () => {
     branch_id: '',
     introducer: '',
     date_of_joining: '',
+    agent_image: '',
   });
 
   useEffect(() => {
@@ -64,6 +65,7 @@ const Profile: React.FC = () => {
         branch_id: agent.branch_id || '',
         introducer: agent.introducer || '',
         date_of_joining: agent.date_of_joining ? new Date(agent.date_of_joining).toISOString().split('T')[0] : '',
+        agent_image: agent.agent_image || '',
       });
     }
   }, [agentData]);
@@ -72,36 +74,50 @@ const Profile: React.FC = () => {
     setForm((prev: any) => ({ ...prev, [field]: value }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const f = e.target.files[0];
+      const url = URL.createObjectURL(f);
+      setForm((prev: any) => ({ ...prev, agent_image: url }));
+    }
+  };
+
   const [saving, setSaving] = useState(false);
   const handleSubmit = async () => {
+    if (!userId) {
+      toast.error('Agent ID not found');
+      return;
+    }
+
     try {
       setSaving(true);
+      // TODO: Add actual profile update mutation when backend endpoint is available
       await new Promise((res) => setTimeout(res, 600));
       setSaving(false);
       toast.success('Profile updated successfully');
     } catch (err: any) {
       setSaving(false);
-      toast.error(err?.message || 'Failed to update profile');
+      toast.error(err?.response?.data?.message || err?.message || 'Failed to update profile');
     }
   };
 
-  if (isLoading) return (
+  if (isLoading && userId) return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-      <CircularProgress size={60} />
+      <CircularProgress size={60} sx={{ color: '#667EEA' }} />
     </Box>
   );
 
-  if (isError) return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-      <Typography color="error" variant="h6">Error loading profile: {(error as any)?.message}</Typography>
-    </Box>
-  );
+  // if (isError && userId) return (
+  //   <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+  //     <Typography color="error" variant="h6">Error loading profile: {(error as any)?.message}</Typography>
+  //   </Box>
+  // );
 
   return (
-    <Box sx={{ px: 3, py: 4, mt: 8, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+    <Box sx={{ px: { xs: 2, sm: 3 }, py: { xs: 2, sm: 4 }, mt: { xs: 7, sm: 7 }, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
       {/* Header */}
       <Box sx={{ mb: 4, textAlign: 'center' }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, color: '#4f46e5', mb: 1 }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#667EEA', mb: 1 }}>
           Agent Profile
         </Typography>
         <Typography variant="body1" sx={{ color: '#6b7280' }}>
@@ -109,23 +125,24 @@ const Profile: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Profile Header Section */}
+      {/* Profile Image Section */}
       <Paper sx={{
         p: 4,
         mb: 3,
         borderRadius: '16px',
-        background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+        background: 'linear-gradient(135deg, #667EEA 0%, #818CF8 100%)',
         color: 'white',
         textAlign: 'center',
       }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
           <Avatar
+            src={form.agent_image || ''}
             sx={{
-              width: 120,
-              height: 120,
+              width: { xs: 80, sm: 100, md: 120 },
+              height: { xs: 80, sm: 100, md: 120 },
               border: '4px solid white',
               boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-              bgcolor: '#059669',
+              bgcolor: '#5B21B6',
             }}
           >
             <WorkIcon sx={{ fontSize: 60 }} />
@@ -141,14 +158,28 @@ const Profile: React.FC = () => {
               {form.designation || 'Designation'}
             </Typography>
           </Box>
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              backdropFilter: 'blur(10px)',
+              '&:hover': {
+                backgroundColor: 'rgba(255,255,255,0.3)',
+              }
+            }}
+          >
+            Upload Photo
+            <input type="file" hidden accept="image/*" onChange={handleFileChange} />
+          </Button>
         </Box>
       </Paper>
 
       {/* Personal Information */}
       <Card sx={{ mb: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-        <CardContent sx={{ p: 4 }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-            <PersonIcon sx={{ color: '#10b981', fontSize: 28 }} />
+            <AccountCircleIcon sx={{ color: '#667EEA', fontSize: 28 }} />
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937' }}>
               Personal Information
             </Typography>
@@ -174,9 +205,9 @@ const Profile: React.FC = () => {
                   value={form.gender}
                   onChange={(e) => handleChange('gender', e.target.value)}
                 >
-                  <FormControlLabel value="Male" control={<Radio />} label="Male" />
-                  <FormControlLabel value="Female" control={<Radio />} label="Female" />
-                  <FormControlLabel value="Other" control={<Radio />} label="Other" />
+                  <FormControlLabel value="Male" control={<Radio sx={{ '&.Mui-checked': { color: '#667EEA' } }} />} label="Male" />
+                  <FormControlLabel value="Female" control={<Radio sx={{ '&.Mui-checked': { color: '#667EEA' } }} />} label="Female" />
+                  <FormControlLabel value="Other" control={<Radio sx={{ '&.Mui-checked': { color: '#667EEA' } }} />} label="Other" />
                 </RadioGroup>
               </FormControl>
             </Grid>
@@ -215,9 +246,9 @@ const Profile: React.FC = () => {
 
       {/* Contact Information */}
       <Card sx={{ mb: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-        <CardContent sx={{ p: 4 }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-            <HomeIcon sx={{ color: '#10b981', fontSize: 28 }} />
+            <HomeIcon sx={{ color: '#667EEA', fontSize: 28 }} />
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937' }}>
               Contact Information
             </Typography>
@@ -276,9 +307,9 @@ const Profile: React.FC = () => {
 
       {/* Identity Documents */}
       <Card sx={{ mb: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-        <CardContent sx={{ p: 4 }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-            <BadgeIcon sx={{ color: '#10b981', fontSize: 28 }} />
+            <BadgeIcon sx={{ color: '#667EEA', fontSize: 28 }} />
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937' }}>
               Identity Documents
             </Typography>
@@ -312,10 +343,13 @@ const Profile: React.FC = () => {
 
       {/* Organization Details */}
       <Card sx={{ mb: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
-        <CardContent sx={{ p: 4 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937', mb: 3 }}>
-            Organization Details
-          </Typography>
+        <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+            <WorkIcon sx={{ color: '#667EEA', fontSize: 28 }} />
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1f2937' }}>
+              Organization Details
+            </Typography>
+          </Box>
           <Divider sx={{ mb: 3 }} />
 
           <Grid container spacing={3}>
@@ -370,18 +404,18 @@ const Profile: React.FC = () => {
       </Card>
 
       {/* Action Buttons */}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'flex-end' }, gap: 2, flexWrap: 'wrap' }}>
         <Button
           variant="outlined"
           size="large"
           sx={{
             borderRadius: '12px',
             px: 4,
-            borderColor: '#10b981',
-            color: '#10b981',
+            borderColor: '#667EEA',
+            color: '#667EEA',
             '&:hover': {
-              borderColor: '#059669',
-              backgroundColor: 'rgba(16, 185, 129, 0.04)',
+              borderColor: '#5B21B6',
+              backgroundColor: 'rgba(102, 126, 234, 0.04)',
             }
           }}
           onClick={() => window.location.reload()}
@@ -396,11 +430,11 @@ const Profile: React.FC = () => {
           sx={{
             borderRadius: '12px',
             px: 4,
-            background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
-            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+            background: 'linear-gradient(135deg, #667EEA 0%, #818CF8 100%)',
+            boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
             '&:hover': {
-              background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-              boxShadow: '0 6px 16px rgba(16, 185, 129, 0.4)',
+              background: 'linear-gradient(135deg, #5B21B6 0%, #667EEA 100%)',
+              boxShadow: '0 6px 16px rgba(102, 126, 234, 0.4)',
             }
           }}
         >
@@ -411,4 +445,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default AgentProfile;

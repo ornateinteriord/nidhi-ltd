@@ -27,7 +27,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Profile: React.FC = () => {
     const userId = TokenService.getMemberId();
-    const { data: userData, isLoading, isError, error } = useGetMemberById(userId || '');
+    const { data: userData, isLoading, } = useGetMemberById(userId || '');
     const updateProfileMutation = useUpdateMemberProfile();
 
     const [form, setForm] = useState<any>({
@@ -135,11 +135,11 @@ const Profile: React.FC = () => {
         </Box>
     );
 
-    if (isError && userId) return (
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-            <Typography color="error" variant="h6">Error loading profile: {(error as any)?.message}</Typography>
-        </Box>
-    );
+    // if (isError && userId) return (
+    //     <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+    //         <Typography color="error" variant="h6">Error loading profile: {(error as any)?.message}</Typography>
+    //     </Box>
+    // );
 
     return (
         <Box sx={{ px: { xs: 2, sm: 3 }, py: { xs: 2, sm: 4 }, mt: { xs: 7, sm: 8 }, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
