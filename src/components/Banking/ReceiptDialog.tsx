@@ -55,7 +55,7 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
     const updateMutation = useUpdateReceipt();
 
     // Member lookup hooks
-    const { data: memberInfo, isLoading: loadingMember } = useGetMemberBasicInfo(
+    const { data: memberInfo, isLoading: loadingMember, isError: memberError } = useGetMemberBasicInfo(
         formData.member_id,
         fetchMemberInfo
     );
@@ -267,15 +267,59 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                             </Grid>
                         )}
 
-                        {/* Account Selection Dropdown */}
-                        {memberAccounts?.success && memberAccounts.data.length > 0 && (
+                        {/* Member Not Found */}
+                        {!loadingMember && fetchMemberInfo && (memberError || (memberInfo && !memberInfo.success)) && (
+                            <Grid size={{ xs: 12 }}>
+                                <Paper sx={{ p: 2, bgcolor: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca' }}>
+                                    <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#dc2626' }}>
+                                        Member not found
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Please check the Member ID and try again
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                        )}
+
+                        {/* Account Selection Dropdown - Loading State */}
+                        {loadingAccounts && memberInfo?.success && (
+                            <Grid size={{ xs: 12 }}>
+                                <TextField
+                                    fullWidth
+                                    disabled
+                                    value=""
+                                    label="Select Account"
+                                    InputProps={{
+                                        startAdornment: <CircularProgress size={20} sx={{ mr: 1 }} />
+                                    }}
+                                    placeholder="Fetching accounts..."
+                                    helperText="Fetching accounts..."
+                                />
+                            </Grid>
+                        )}
+
+                        {/* Account Selection Dropdown - No Accounts Found */}
+                        {!loadingAccounts && memberAccounts?.success && memberAccounts.data.length === 0 && (
+                            <Grid size={{ xs: 12 }}>
+                                <TextField
+                                    fullWidth
+                                    disabled
+                                    value=""
+                                    label="Select Account"
+                                    error
+                                    helperText="No bank account found for this member"
+                                />
+                            </Grid>
+                        )}
+
+                        {/* Account Selection Dropdown - With Accounts */}
+                        {!loadingAccounts && memberAccounts?.success && memberAccounts.data.length > 0 && (
                             <Grid size={{ xs: 12 }}>
                                 <TextField
                                     select
                                     fullWidth
                                     value={formData.selected_account}
                                     onChange={(e) => handleChange('selected_account', e.target.value)}
-                                    disabled={loadingAccounts}
                                     label="Select Account"
                                 >
                                     <MenuItem value="">Select Account</MenuItem>

@@ -42,7 +42,7 @@ const TransferMoneyDialog: React.FC<TransferMoneyDialogProps> = ({ open, onClose
     const [amount, setAmount] = useState('');
 
     // Fetch recipient info and accounts
-    const { data: recipientInfo, isLoading: loadingRecipient } = useGetMemberBasicInfo(
+    const { data: recipientInfo, isLoading: loadingRecipient, isError: recipientError } = useGetMemberBasicInfo(
         recipientMemberId,
         fetchRecipient
     );
@@ -256,14 +256,40 @@ const TransferMoneyDialog: React.FC<TransferMoneyDialogProps> = ({ open, onClose
                     </Paper>
                 )}
 
+                {/* Recipient Not Found */}
+                {!loadingRecipient && fetchRecipient && (recipientError || (recipientInfo && !recipientInfo.success)) && (
+                    <Paper sx={{ p: 2, mb: 2, bgcolor: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#dc2626' }}>
+                            Member not found
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            Please check the Member ID and try again
+                        </Typography>
+                    </Paper>
+                )}
+
+                {/* Recipient Account Selection - Loading */}
+                {loadingRecipientAccounts && recipientInfo?.success && (
+                    <TextField
+                        fullWidth
+                        disabled
+                        value=""
+                        label="Select Recipient Account"
+                        InputProps={{
+                            startAdornment: <CircularProgress size={20} sx={{ mr: 1 }} />
+                        }}
+                        helperText="Fetching accounts..."
+                        sx={{ mb: 2 }}
+                    />
+                )}
+
                 {/* Recipient Account Selection */}
-                {recipientAccounts?.success && recipientAccounts.data.length > 0 && (
+                {!loadingRecipientAccounts && recipientAccounts?.success && recipientAccounts.data.length > 0 && (
                     <TextField
                         select
                         fullWidth
                         value={selectedToAccount}
                         onChange={(e) => setSelectedToAccount(e.target.value)}
-                        disabled={loadingRecipientAccounts}
                         sx={{ mb: 2 }}
                         label="Select Recipient Account"
                     >
@@ -275,9 +301,9 @@ const TransferMoneyDialog: React.FC<TransferMoneyDialogProps> = ({ open, onClose
                     </TextField>
                 )}
 
-                {recipientAccounts?.success && recipientAccounts.data.length === 0 && (
+                {!loadingRecipientAccounts && recipientAccounts?.success && recipientAccounts.data.length === 0 && (
                     <Alert severity="warning" sx={{ mb: 2 }}>
-                        No active accounts found for this member
+                        No bank account found for this member
                     </Alert>
                 )}
 
