@@ -42,7 +42,7 @@ const TransferMoneyDialog: React.FC<TransferMoneyDialogProps> = ({ open, onClose
     const [amount, setAmount] = useState('');
 
     // Fetch recipient info and accounts
-    const { data: recipientInfo, isLoading: loadingRecipient } = useGetMemberBasicInfo(
+    const { data: recipientInfo, isLoading: loadingRecipient, isError: recipientError } = useGetMemberBasicInfo(
         recipientMemberId,
         fetchRecipient
     );
@@ -257,7 +257,7 @@ const TransferMoneyDialog: React.FC<TransferMoneyDialogProps> = ({ open, onClose
                 )}
 
                 {/* Recipient Not Found */}
-                {!loadingRecipient && recipientInfo && !recipientInfo.success && (
+                {!loadingRecipient && fetchRecipient && (recipientError || (recipientInfo && !recipientInfo.success)) && (
                     <Paper sx={{ p: 2, mb: 2, bgcolor: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca' }}>
                         <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#dc2626' }}>
                             Member not found

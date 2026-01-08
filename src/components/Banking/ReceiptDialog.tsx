@@ -55,7 +55,7 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
     const updateMutation = useUpdateReceipt();
 
     // Member lookup hooks
-    const { data: memberInfo, isLoading: loadingMember } = useGetMemberBasicInfo(
+    const { data: memberInfo, isLoading: loadingMember, isError: memberError } = useGetMemberBasicInfo(
         formData.member_id,
         fetchMemberInfo
     );
@@ -268,7 +268,7 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                         )}
 
                         {/* Member Not Found */}
-                        {!loadingMember && memberInfo && !memberInfo.success && (
+                        {!loadingMember && fetchMemberInfo && (memberError || (memberInfo && !memberInfo.success)) && (
                             <Grid size={{ xs: 12 }}>
                                 <Paper sx={{ p: 2, bgcolor: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca' }}>
                                     <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#dc2626' }}>
