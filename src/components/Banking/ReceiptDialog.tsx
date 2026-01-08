@@ -267,15 +267,45 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                             </Grid>
                         )}
 
-                        {/* Account Selection Dropdown */}
-                        {memberAccounts?.success && memberAccounts.data.length > 0 && (
+                        {/* Account Selection Dropdown - Loading State */}
+                        {loadingAccounts && memberInfo?.success && (
+                            <Grid size={{ xs: 12 }}>
+                                <TextField
+                                    fullWidth
+                                    disabled
+                                    value=""
+                                    label="Select Account"
+                                    InputProps={{
+                                        startAdornment: <CircularProgress size={20} sx={{ mr: 1 }} />
+                                    }}
+                                    placeholder="Fetching accounts..."
+                                    helperText="Fetching accounts..."
+                                />
+                            </Grid>
+                        )}
+
+                        {/* Account Selection Dropdown - No Accounts Found */}
+                        {!loadingAccounts && memberAccounts?.success && memberAccounts.data.length === 0 && (
+                            <Grid size={{ xs: 12 }}>
+                                <TextField
+                                    fullWidth
+                                    disabled
+                                    value=""
+                                    label="Select Account"
+                                    error
+                                    helperText="No bank account found for this member"
+                                />
+                            </Grid>
+                        )}
+
+                        {/* Account Selection Dropdown - With Accounts */}
+                        {!loadingAccounts && memberAccounts?.success && memberAccounts.data.length > 0 && (
                             <Grid size={{ xs: 12 }}>
                                 <TextField
                                     select
                                     fullWidth
                                     value={formData.selected_account}
                                     onChange={(e) => handleChange('selected_account', e.target.value)}
-                                    disabled={loadingAccounts}
                                     label="Select Account"
                                 >
                                     <MenuItem value="">Select Account</MenuItem>

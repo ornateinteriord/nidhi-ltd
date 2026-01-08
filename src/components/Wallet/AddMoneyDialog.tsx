@@ -158,7 +158,11 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
                     >
                         {accountsLoading ? (
                             <MenuItem disabled>
-                                <CircularProgress size={20} />
+                                <CircularProgress size={20} sx={{ mr: 1 }} /> Fetching accounts...
+                            </MenuItem>
+                        ) : myAccounts.length === 0 ? (
+                            <MenuItem disabled>
+                                No bank account found
                             </MenuItem>
                         ) : (
                             myAccounts.map((acc: any) => (
@@ -168,6 +172,11 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
                             ))
                         )}
                     </TextField>
+                    {!accountsLoading && myAccounts.length === 0 && (
+                        <Typography variant="caption" color="error">
+                            No bank account found for this member
+                        </Typography>
+                    )}
 
                     <TextField
                         label="Enter Amount"
