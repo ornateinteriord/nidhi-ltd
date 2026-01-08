@@ -17,6 +17,7 @@ import {
     Grid,
     MenuItem,
     Paper,
+    Alert,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
@@ -49,6 +50,7 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
     });
 
     const [fetchMemberInfo, setFetchMemberInfo] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
 
     const { data: paymentData, isLoading: loadingPayment } = useGetPaymentById(paymentId || '', !!paymentId);
     const createMutation = useCreatePayment();
@@ -160,6 +162,7 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
         };
 
         try {
+            setFormError(null);
             if (paymentId) {
                 await updateMutation.mutateAsync({
                     paymentId: paymentId,
@@ -172,7 +175,8 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
             }
             onClose();
         } catch (error: any) {
-            toast.error(error?.response?.data?.message || error?.message || 'Operation failed');
+            const errorMessage = error?.response?.data?.message || error?.message || 'Operation failed';
+            setFormError(errorMessage);
         }
     };
 
@@ -365,11 +369,21 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({ open, onClose, paymentId 
                                 onChange={(e) => handleChange('amount', e.target.value)}
                                 placeholder="0.00"
                                 required
+                                disabled={!!paymentId}
+                                helperText={paymentId ? "Amount cannot be modified" : ""}
                                 InputProps={{
                                     startAdornment: <Typography sx={{ mr: 1 }}>₹</Typography>
                                 }}
                             />
                         </Grid>
+
+                        {formError && (
+                            <Grid size={{ xs: 12 }}>
+                                <Alert severity="error" onClose={() => setFormError(null)}>
+                                    {formError}
+                                </Alert>
+                            </Grid>
+                        )}
 
                         <Grid size={{ xs: 12 }}>
                             <FormLabel component="legend" sx={{ mb: 1, color: '#374151', fontWeight: 600 }}>
