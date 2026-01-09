@@ -104,6 +104,13 @@ const Navbar = lazy(() => import("./pages/Navbar/Navbar"));
 const Sidebar = lazy(() => import("./pages/Sidebar/Sidebar"));
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
 
+// Cashfree Mandatory Pages
+const AboutUs = lazy(() => import("./pages/Public/AboutUs"));
+const ContactUs = lazy(() => import("./pages/Public/ContactUs"));
+const PrivacyPolicy = lazy(() => import("./pages/Public/PrivacyPolicy"));
+const TermsConditions = lazy(() => import("./pages/Public/TermsConditions"));
+const RefundPolicy = lazy(() => import("./pages/Public/RefundPolicy"));
+
 export const LoadingComponent = () => {
   return (
     <Dialog open={true}>
@@ -116,7 +123,7 @@ export const LoadingComponent = () => {
 
 const ShouldHideSidebarComponent = () => {
   const location = useLocation();
-  const publicPaths = ["/", "/login"];
+  const publicPaths = ["/", "/login", "/about", "/contact", "/privacy-policy", "/terms", "/refund-policy"];
   return publicPaths.includes(location.pathname);
 };
 
@@ -201,8 +208,17 @@ const RoutesProvider = ({
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<Login />} />
             </Route>
+
+            {/* Cashfree Mandatory Public Pages */}
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsConditions />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+
             {/* agent routes */}
             <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}>
+
               <Route path="/agent/dashboard" element={<AgentDashboard />} />
               {/* <Route path="/agent/list" element={<AgentList />} /> */}
               <Route path="/agent/profile" element={<AgentProfile />} />
