@@ -8,6 +8,7 @@ import { SideBarMenuItemType } from '../../store/store';
 import { MuiIcons } from '../Icons';
 import { LoadingComponent } from '../../App';
 import TokenService from '../../queries/token/tokenService';
+import { useGetMemberById } from '../../queries/Member';
 
 const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => void, role: string | null }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
@@ -50,9 +51,10 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
           role === "USER" ? UserSideBarMenuItems :  // USER role shows UserSideBarMenuItems
             UserSideBarMenuItems;
 
-  // Get logged-in user's name from token
-  const userName = TokenService.getUserName();
-  const name = userName || "User";
+  // Get logged-in user's ID and fetch member data
+  const userId = TokenService.getMemberId();
+  const { data: userData } = useGetMemberById(userId || '');
+  const name = userData?.data?.name || "User";
 
   return (
     <motion.div
@@ -97,13 +99,6 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
               {name?.charAt(0).toUpperCase()}
             </Avatar>
             <div className="welcome-text" style={{ padding: '10px', color: '#fff' }}>
-              {/* <Typography style={{
-                color: 'rgba(255, 255, 255, 0.8)',
-                fontSize: '0.875rem',
-                fontWeight: '400',
-              }}>
-                Welcome,
-              </Typography> */}
               <Typography style={{
                 fontWeight: 'bold',
                 color: 'white',
@@ -112,6 +107,14 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                 lineHeight: '1.2',
               }}>
                 {name}
+              </Typography>
+              <Typography style={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                fontSize: '0.75rem',
+                fontWeight: '400',
+                marginTop: '4px',
+              }}>
+                ID: {userData?.data?.member_id || userId || ''}
               </Typography>
             </div>
           </motion.div>

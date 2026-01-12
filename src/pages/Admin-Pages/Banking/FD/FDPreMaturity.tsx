@@ -6,15 +6,18 @@ import AdminReusableTable, { ColumnDefinition } from '../../../../utils/AdminReu
 import { useGetPreMaturityAccounts } from '../../../../queries/admin';
 import { MaturityAccount } from '../../../../types';
 import TablePDF, { PrintColumn } from '../../../../components/Print-components/TablePDF';
+import AccountCloseDialog from '../../../../components/Banking/AccountCloseDialog';
 
 const FDPreMaturity: React.FC = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
 
     const [printDialogOpen, setPrintDialogOpen] = useState(false);
+    const [closeDialogOpen, setCloseDialogOpen] = useState(false);
+    const [selectedAccount, setSelectedAccount] = useState<MaturityAccount | null>(null);
     const tablePrintRef = useRef<HTMLDivElement>(null);
 
-    const { data, isLoading } = useGetPreMaturityAccounts(
+    const { data, isLoading, refetch } = useGetPreMaturityAccounts(
         page + 1,
         rowsPerPage,
         'AGP004' // FD account type
@@ -30,6 +33,11 @@ const FDPreMaturity: React.FC = () => {
     const handleTablePrint = useReactToPrint({
         contentRef: tablePrintRef,
     });
+
+    const handleOpenCloseDialog = (account: MaturityAccount) => {
+        setSelectedAccount(account);
+        setCloseDialogOpen(true);
+    };
 
     const columns: ColumnDefinition<MaturityAccount>[] = [
         {
@@ -92,14 +100,19 @@ const FDPreMaturity: React.FC = () => {
             id: 'actions',
             label: 'Actions',
             minWidth: 100,
-            renderCell: () => (
+            renderCell: (row) => (
                 <Button
                     variant="outlined"
                     size="small"
                     color="error"
                     sx={{ textTransform: 'none' }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenCloseDialog(row);
+                    }}
+                    disabled={row.status === 'Closed'}
                 >
-                    Close
+                    {row.status === 'Closed' ? 'Closed' : 'Close'}
                 </Button>
             ),
         },
@@ -108,14 +121,13 @@ const FDPreMaturity: React.FC = () => {
     const printColumns: PrintColumn[] = [
         { id: 'account_no', label: 'Account No', width: '15%' },
         { id: 'member_id', label: 'Member ID', width: '10%' },
-        { id: 'member_name-print', label: 'Member Name', width: '20%' }, // mapped in transformation or robust access
+        { id: 'member_name-print', label: 'Member Name', width: '20%' },
         { id: 'account_amount', label: 'Amount', width: '15%', align: 'right' },
         { id: 'interest_rate', label: 'Interest', width: '10%', align: 'right' },
         { id: 'date_of_opening', label: 'Opening Date', width: '15%' },
         { id: 'date_of_maturity', label: 'Maturity Date', width: '15%' },
     ];
 
-    // Transform data for print to ensure member name is accessible or formatted nicely
     const printData = (allData?.data || []).map(row => ({
         ...row,
         'member_name-print': row.memberDetails?.name || '-',
@@ -151,33 +163,25 @@ const FDPreMaturity: React.FC = () => {
                 }
             />
 
-            {/* Print Dialog */}
-            <Dialog
-                open={printDialogOpen}
-                onClose={() => setPrintDialogOpen(false)}
-                maxWidth="lg"
-                fullWidth
-            >
+            <Dialog open={printDialogOpen} onClose={() => setPrintDialogOpen(false)} maxWidth="lg" fullWidth>
                 <DialogContent>
                     <Box ref={tablePrintRef}>
-                        <TablePDF
-                            title="FD Pre-Maturity Accounts"
-                            columns={printColumns}
-                            data={printData}
-                        />
+                        <TablePDF title="FD Pre-Maturity Accounts" columns={printColumns} data={printData} />
                     </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setPrintDialogOpen(false)}>Cancel</Button>
-                    <Button
-                        variant="contained"
-                        onClick={handleTablePrint}
-                        startIcon={<PrintIcon />}
-                    >
-                        Print
-                    </Button>
+                    <Button variant="contained" onClick={handleTablePrint} startIcon={<PrintIcon />}>Print</Button>
                 </DialogActions>
             </Dialog>
+
+            <AccountCloseDialog
+                open={closeDialogOpen}
+                onClose={() => setCloseDialogOpen(false)}
+                account={selectedAccount}
+                isMatured={false}
+                onSuccess={() => refetch()}
+            />
         </Box>
     );
 };
