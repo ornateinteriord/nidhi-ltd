@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent, Typography, Avatar, Button, Grid, Box, CircularProgress, Chip } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 // import PeopleIcon from '@mui/icons-material/People';
@@ -11,6 +12,8 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import TokenService from '../../queries/token/tokenService';
 import { useGetAssignedAccounts, useGetCollectionTransactions, useGetAgentById } from '../../queries/Agent';
+import AgentWalletCard from '../../components/Dashboard/AgentWalletCard';
+import WithdrawMoneyDialog from '../../components/Wallet/WithdrawMoneyDialog';
 
 // Icon mapping for account types
 const getAccountIcon = (accountType: string) => {
@@ -42,11 +45,18 @@ const AgentDashboard = () => {
   const navigate = useNavigate();
   const agentId = TokenService.getMemberId() || '';
 
+  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
+
   const { data: agentData, isLoading: agentLoading } = useGetAgentById(agentId);
   const { data: accountsData, isLoading: accountsLoading } = useGetAssignedAccounts(agentId);
   const { data: transactionsData, isLoading: transactionsLoading } = useGetCollectionTransactions(agentId);
 
   const isLoading = agentLoading || accountsLoading || transactionsLoading;
+
+  // Calculate total balance from assigned accounts
+  const totalBalance = accountsData?.data?.reduce((sum: number, account: any) => {
+    return sum + (account.balance || 0);
+  }, 0) || 0;
 
   // Calculate statistics
   // const totalAssignedAccounts = accountsData?.data?.length || 0;
@@ -251,6 +261,15 @@ const AgentDashboard = () => {
             ))}
           </Grid>
         )}
+      </Box>
+
+      {/* Agent Wallet Card */}
+      <Box sx={{ px: { xs: 1.5, sm: 2, md: 1 }, mb: 3 }}>
+        <AgentWalletCard
+          balance={totalBalance}
+          isLoading={accountsLoading}
+          onWithdraw={() => setWithdrawDialogOpen(true)}
+        />
       </Box>
 
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
@@ -481,6 +500,12 @@ const AgentDashboard = () => {
           </Card>
         </Grid>
       </Grid>
+
+      {/* Withdraw Dialog */}
+      <WithdrawMoneyDialog
+        open={withdrawDialogOpen}
+        onClose={() => setWithdrawDialogOpen(false)}
+      />
     </div >
   );
 }
