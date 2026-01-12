@@ -6,15 +6,18 @@ import AdminReusableTable, { ColumnDefinition } from '../../../../utils/AdminReu
 import { useGetPreMaturityAccounts } from '../../../../queries/admin';
 import { MaturityAccount } from '../../../../types';
 import TablePDF, { PrintColumn } from '../../../../components/Print-components/TablePDF';
+import AccountCloseDialog from '../../../../components/Banking/AccountCloseDialog';
 
 const RDPreMaturity: React.FC = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
 
     const [printDialogOpen, setPrintDialogOpen] = useState(false);
+    const [closeDialogOpen, setCloseDialogOpen] = useState(false);
+    const [selectedAccount, setSelectedAccount] = useState<MaturityAccount | null>(null);
     const tablePrintRef = useRef<HTMLDivElement>(null);
 
-    const { data, isLoading } = useGetPreMaturityAccounts(
+    const { data, isLoading, refetch } = useGetPreMaturityAccounts(
         page + 1,
         rowsPerPage,
         'AGP003' // RD account type
@@ -30,6 +33,11 @@ const RDPreMaturity: React.FC = () => {
     const handleTablePrint = useReactToPrint({
         contentRef: tablePrintRef,
     });
+
+    const handleOpenCloseDialog = (account: MaturityAccount) => {
+        setSelectedAccount(account);
+        setCloseDialogOpen(true);
+    };
 
     const columns: ColumnDefinition<MaturityAccount>[] = [
         {
@@ -92,14 +100,19 @@ const RDPreMaturity: React.FC = () => {
             id: 'actions',
             label: 'Actions',
             minWidth: 100,
-            renderCell: () => (
+            renderCell: (row) => (
                 <Button
                     variant="outlined"
                     size="small"
                     color="error"
                     sx={{ textTransform: 'none' }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenCloseDialog(row);
+                    }}
+                    disabled={row.status === 'Closed'}
                 >
-                    Close
+                    {row.status === 'Closed' ? 'Closed' : 'Close'}
                 </Button>
             ),
         },
@@ -178,6 +191,15 @@ const RDPreMaturity: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            {/* Account Close Dialog */}
+            <AccountCloseDialog
+                open={closeDialogOpen}
+                onClose={() => setCloseDialogOpen(false)}
+                account={selectedAccount}
+                isMatured={false}
+                onSuccess={() => refetch()}
+            />
         </Box>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Button,
@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { toast } from 'react-toastify';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import AdminReusableTable, { ColumnDefinition } from '../../utils/AdminReusableTable';
 import { useGetAssignedAccounts, useCollectPayment } from '../../queries/Agent';
 import TokenService from '../../queries/token/tokenService';
@@ -20,6 +21,10 @@ import { AssignedAccount } from '../../types';
 
 const Collections: React.FC = () => {
   const agentId = TokenService.getMemberId();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const typeFilter = searchParams.get('type');
+
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<AssignedAccount | null>(null);
   const [amount, setAmount] = useState('');
@@ -27,7 +32,13 @@ const Collections: React.FC = () => {
   const { data, isLoading } = useGetAssignedAccounts(agentId || '', !!agentId);
   const collectPaymentMutation = useCollectPayment(agentId || '');
 
-  const accounts = data?.data || [];
+  const allAccounts = data?.data || [];
+
+  // Filter accounts by type if filter is specified in URL
+  const accounts = useMemo(() => {
+    if (!typeFilter) return allAccounts;
+    return allAccounts.filter((acc: AssignedAccount) => acc.account_type === typeFilter);
+  }, [allAccounts, typeFilter]);
 
   const handleOpenDialog = (account: AssignedAccount) => {
     setSelectedAccount(account);
@@ -86,6 +97,23 @@ const Collections: React.FC = () => {
       id: 'account_holder',
       label: 'Account Holder',
       sortable: true,
+    },
+    {
+      id: 'account_type',
+      label: 'Account Type',
+      sortable: true,
+      renderCell: (row) => (
+        <Chip
+          label={row.account_type || '-'}
+          size="small"
+          sx={{
+            backgroundColor: '#e0e7ff',
+            color: '#4338ca',
+            fontWeight: 600,
+            borderRadius: 1,
+          }}
+        />
+      ),
     },
     {
       id: 'date_of_maturity',
@@ -164,12 +192,55 @@ const Collections: React.FC = () => {
   return (
     <>
       <Box sx={{ mt: 10, px: 3, pb: 4 }}>
+        {/* Filter Header */}
+        {typeFilter && (
+          <Box sx={{
+            mb: 2,
+            p: 2,
+            borderRadius: 2,
+            background: 'linear-gradient(135deg, #667EEA 0%, #818CF8 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ color: 'white', fontWeight: 500 }}>
+                Showing accounts for:
+              </Typography>
+              <Chip
+                label={typeFilter}
+                sx={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  color: '#4338ca',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                }}
+              />
+            </Box>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => navigate('/agent/collections')}
+              sx={{
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                color: 'white',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                },
+              }}
+            >
+              Show All Accounts
+            </Button>
+          </Box>
+        )}
+
         <AdminReusableTable
           columns={columns}
           data={accounts}
-          title="List Of Collections"
+          title={typeFilter ? `${typeFilter} Accounts` : 'List Of Collections'}
           isLoading={isLoading}
-          emptyMessage="No assigned accounts found"
+          emptyMessage={typeFilter ? `No ${typeFilter} accounts found` : 'No assigned accounts found'}
           onExport={() => {
             // TODO: Implement export functionality if needed
             console.log('Export accounts');

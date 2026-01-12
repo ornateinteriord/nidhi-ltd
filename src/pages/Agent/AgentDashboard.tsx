@@ -209,7 +209,7 @@ const AgentDashboard = () => {
             {Object.entries(accountsByType).map(([type, data]: [string, any], index: number) => (
               <Grid size={{ xs: 12, sm: 6, md: 4 }} key={type}>
                 <Card
-                  onClick={() => navigate(`/agent/collection?type=${type}`)}
+                  onClick={() => navigate(`/agent/collections?type=${type}`)}
                   sx={{
                     borderRadius: '16px',
                     background: getCardGradient(index),
@@ -418,7 +418,7 @@ const AgentDashboard = () => {
               <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                   variant="contained"
-                  onClick={() => navigate('/agent/collection')}
+                  onClick={() => navigate('/agent/collections')}
                   sx={{
                     background: 'linear-gradient(135deg, #667EEA 0%, #818CF8 100%)',
                     borderRadius: '12px',
@@ -481,7 +481,7 @@ const AgentDashboard = () => {
           </Card>
         </Grid>
       </Grid>
-    </div>
+    </div >
   );
 }
 

@@ -419,6 +419,58 @@ export const useGetPostMaturityAccounts = (
     });
 };
 
+// PROCESS MATURITY PAYMENT AND CLOSE ACCOUNT
+export interface MaturityPaymentData {
+    principalAmount: number;
+    interestAmount: number;
+    totalPayout: number;
+    paymentMode?: string;
+    paymentReference?: string;
+}
+
+export const useProcessMaturityPayment = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ accountId, paymentData }: { accountId: string; paymentData: MaturityPaymentData }) => {
+            return await useApi<AccountResponse>("PUT", `/admin/update-account/${accountId}`, {
+                status: "Closed",
+                date_of_close: new Date().toISOString(),
+                account_amount: 0,
+                payout_amount: paymentData.totalPayout,
+                interest_paid: paymentData.interestAmount,
+                payment_mode: paymentData.paymentMode,
+                payment_reference: paymentData.paymentReference
+            });
+        },
+        onSuccess: () => {
+            // Invalidate all related queries
+            queryClient.invalidateQueries({ queryKey: ["preMaturityAccounts"] });
+            queryClient.invalidateQueries({ queryKey: ["postMaturityAccounts"] });
+            queryClient.invalidateQueries({ queryKey: ["accounts"] });
+        },
+    });
+};
+
+// CLOSE ACCOUNT WITHOUT PAYMENT (balance already 0)
+export const useCloseAccount = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (accountId: string) => {
+            return await useApi<AccountResponse>("PUT", `/admin/update-account/${accountId}`, {
+                status: "Closed",
+                date_of_close: new Date().toISOString()
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["preMaturityAccounts"] });
+            queryClient.invalidateQueries({ queryKey: ["postMaturityAccounts"] });
+            queryClient.invalidateQueries({ queryKey: ["accounts"] });
+        },
+    });
+};
+
 // ==================== AGENT ASSIGNMENT ====================
 
 // GET ACCOUNTS FOR ASSIGNMENT
@@ -451,6 +503,15 @@ export const useUpdateAccountAssignment = () => {
         onSuccess: () => {
             // Invalidate and refetch accounts for assignment list
             queryClient.invalidateQueries({ queryKey: ["accountsForAssignment"] });
+        },
+    });
+};
+
+// CREATE MATURITY PAYMENT WITH CASHFREE
+export const useCreateMaturityPaymentWithCashfree = () => {
+    return useMutation({
+        mutationFn: async (maturityPaymentData: any) => {
+            return await useApi("POST", "/admin/maturity-payment", maturityPaymentData);
         },
     });
 };
