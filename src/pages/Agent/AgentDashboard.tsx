@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Card, CardContent, Typography, Avatar, Button, Grid, Box, CircularProgress, Chip } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 // import PeopleIcon from '@mui/icons-material/People';
@@ -11,9 +10,8 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import TokenService from '../../queries/token/tokenService';
-import { useGetAssignedAccounts, useGetCollectionTransactions, useGetAgentById } from '../../queries/Agent';
+import { useGetAssignedAccounts, useGetCollectionTransactions, useGetAgentById, useGetAgentCommissionTransactions } from '../../queries/Agent';
 import AgentWalletCard from '../../components/Dashboard/AgentWalletCard';
-import WithdrawMoneyDialog from '../../components/Wallet/WithdrawMoneyDialog';
 
 // Icon mapping for account types
 const getAccountIcon = (accountType: string) => {
@@ -45,18 +43,23 @@ const AgentDashboard = () => {
   const navigate = useNavigate();
   const agentId = TokenService.getMemberId() || '';
 
-  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
-
   const { data: agentData, isLoading: agentLoading } = useGetAgentById(agentId);
   const { data: accountsData, isLoading: accountsLoading } = useGetAssignedAccounts(agentId);
   const { data: transactionsData, isLoading: transactionsLoading } = useGetCollectionTransactions(agentId);
+  const { data: commissionData, isLoading: commissionLoading } = useGetAgentCommissionTransactions(agentId);
+
+  console.log("recent collectio:", transactionsData)
 
   const isLoading = agentLoading || accountsLoading || transactionsLoading;
 
-  // Calculate total balance from assigned accounts
-  const totalBalance = accountsData?.data?.reduce((sum: number, account: any) => {
-    return sum + (account.balance || 0);
-  }, 0) || 0;
+  // Get commission balance from commission transactions summary
+  const totalBalance = commissionData?.data?.summary?.availableBalance || 0;
+
+  // Get collection balance - calculate from transactions array since API returns data as array
+  const collectionTransactions = transactionsData?.data || [];
+  const totalCollected = collectionTransactions.reduce((sum: number, tx: any) => sum + (tx.credit || 0), 0);
+  const totalPaid = collectionTransactions.reduce((sum: number, tx: any) => sum + (tx.debit || 0), 0);
+  const netCollectedAmount = totalCollected - totalPaid;
 
   // Calculate statistics
   // const totalAssignedAccounts = accountsData?.data?.length || 0;
@@ -263,13 +266,68 @@ const AgentDashboard = () => {
         )}
       </Box>
 
-      {/* Agent Wallet Card */}
+      {/* Wallet and Collection Balance Cards - Side by Side */}
       <Box sx={{ px: { xs: 1.5, sm: 2, md: 1 }, mb: 3 }}>
-        <AgentWalletCard
-          balance={totalBalance}
-          isLoading={accountsLoading}
-          onWithdraw={() => setWithdrawDialogOpen(true)}
-        />
+        <Grid container spacing={3}>
+          {/* Agent Wallet Card - Clickable to navigate to wallet page */}
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box
+              onClick={() => navigate('/agent/wallet')}
+              sx={{ height: '100%' }}
+            >
+              <AgentWalletCard
+                balance={totalBalance}
+                isLoading={commissionLoading}
+              />
+            </Box>
+          </Grid>
+
+          {/* Collection Balance Card */}
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Card
+              sx={{
+                borderRadius: '16px',
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                color: 'white',
+                boxShadow: '0 4px 20px rgba(16, 185, 129, 0.3)',
+                minHeight: '200px',
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <CardContent sx={{ zIndex: 1, textAlign: 'center', width: '100%', py: 4 }}>
+                <Typography variant="subtitle1" sx={{ opacity: 0.9, mb: 1 }}>
+                  Collection Balance
+                </Typography>
+                {transactionsLoading ? (
+                  <CircularProgress size={40} sx={{ color: 'white', my: 2 }} />
+                ) : (
+                  <>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+                      ₹{netCollectedAmount.toFixed(2)}
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                      <Box>
+                        <Typography variant="body2" sx={{ opacity: 0.8 }}>Collected</Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>₹{totalCollected.toFixed(2)}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" sx={{ opacity: 0.8 }}>Paid</Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>₹{totalPaid.toFixed(2)}</Typography>
+                      </Box>
+                    </Box>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
 
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
@@ -501,11 +559,6 @@ const AgentDashboard = () => {
         </Grid>
       </Grid>
 
-      {/* Withdraw Dialog */}
-      <WithdrawMoneyDialog
-        open={withdrawDialogOpen}
-        onClose={() => setWithdrawDialogOpen(false)}
-      />
     </div >
   );
 }

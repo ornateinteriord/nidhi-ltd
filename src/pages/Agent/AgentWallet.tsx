@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Box, Typography, Card, CardContent, Button, Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, Paper, CircularProgress, Alert
@@ -6,26 +6,27 @@ import {
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
-import { useGetMemberCommissionTransactions } from '../../queries/Member';
-import WithdrawMoneyDialog from '../../components/Wallet/WithdrawMoneyDialog';
 import TokenService from '../../queries/token/tokenService';
+import { useGetAgentById, useGetAgentCommissionTransactions } from '../../queries/Agent';
+import WithdrawMoneyDialog from '../../components/Wallet/WithdrawMoneyDialog';
 
-const Wallet: React.FC = () => {
+const AgentWallet = () => {
     const navigate = useNavigate();
+    const agentId = TokenService.getMemberId() || '';
     const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
 
-    const memberId = TokenService.getMemberId() || '';
+    const { data: agentData } = useGetAgentById(agentId);
     const {
-        data: commissionData,
-        isLoading: commissionLoading,
-        error: commissionError
-    } = useGetMemberCommissionTransactions(memberId);
-    console.log("commission:0", commissionData)
-    // Get commission balance from summary
-    const commissionBalance = commissionData?.data?.summary?.availableBalance || 0;
+        data: transactionsData,
+        isLoading: transactionsLoading,
+        error: transactionsError
+    } = useGetAgentCommissionTransactions(agentId);
+
+    // Get commission balance from commission transactions summary
+    const totalBalance = transactionsData?.data?.summary?.availableBalance || 0;
 
     // Get commission transactions
-    const transactions = commissionData?.data?.transactions || [];
+    const transactions = transactionsData?.data?.transactions || [];
 
     // Format transaction for display
     const formatTransaction = (transaction: any) => {
@@ -55,7 +56,7 @@ const Wallet: React.FC = () => {
             {/* Back Button */}
             <Button
                 startIcon={<ArrowBackIcon />}
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/agent/dashboard')}
                 sx={{
                     mb: 3,
                     color: '#667EEA',
@@ -65,15 +66,20 @@ const Wallet: React.FC = () => {
                     }
                 }}
             >
-                Back
+                Back to Dashboard
             </Button>
 
             {/* Header */}
             <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', color: '#1f2937' }}>
-                My Wallet
+                Agent Wallet
             </Typography>
 
-            {/* Commission Balance Section */}
+            {/* Welcome Text */}
+            <Typography variant="body1" sx={{ mb: 3, color: '#6b7280' }}>
+                Welcome, {agentData?.data?.name || 'Agent'}. Manage your commission balance and withdrawals here.
+            </Typography>
+
+            {/* Balance Section */}
             <Card sx={{
                 mb: 4,
                 borderRadius: '16px',
@@ -92,11 +98,11 @@ const Wallet: React.FC = () => {
                         <Typography variant="subtitle1" sx={{ opacity: 0.8 }}>
                             Commission Balance
                         </Typography>
-                        {commissionLoading ? (
+                        {transactionsLoading ? (
                             <CircularProgress size={40} sx={{ color: 'white', mt: 1 }} />
                         ) : (
                             <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 1 }}>
-                                ₹{commissionBalance.toFixed(2)}
+                                ₹{totalBalance.toFixed(2)}
                             </Typography>
                         )}
                         <Typography variant="body2" sx={{ opacity: 0.7 }}>
@@ -131,17 +137,17 @@ const Wallet: React.FC = () => {
 
             {/* Commission Transactions Section */}
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', color: '#374151' }}>
-                Commission Transactions
+                Recent Commission Transactions
             </Typography>
             <Typography variant="body2" sx={{ mb: 3, color: '#6b7280' }}>
                 Showing commission received and commission withdrawal transactions
             </Typography>
 
-            {commissionLoading ? (
+            {transactionsLoading ? (
                 <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
                     <CircularProgress sx={{ color: '#667EEA' }} />
                 </Box>
-            ) : commissionError ? (
+            ) : transactionsError ? (
                 <Alert severity="info" sx={{ borderRadius: '12px' }}>
                     No commission transactions found yet. Your commission history will appear here.
                 </Alert>
@@ -208,20 +214,16 @@ const Wallet: React.FC = () => {
                                                 borderRadius: '6px',
                                                 fontSize: '0.75rem',
                                                 fontWeight: 'bold',
-                                                bgcolor: formatted.status === 'CREDITED' || formatted.status === 'Success'
+                                                bgcolor: formatted.status === 'Completed' || formatted.status === 'Success'
                                                     ? '#dcfce7'
-                                                    : formatted.status === 'PENDING'
+                                                    : formatted.status === 'Pending'
                                                         ? '#fef9c3'
-                                                        : formatted.status === 'WITHDRAWN'
-                                                            ? '#dbeafe'
-                                                            : '#fee2e2',
-                                                color: formatted.status === 'CREDITED' || formatted.status === 'Success'
+                                                        : '#fee2e2',
+                                                color: formatted.status === 'Completed' || formatted.status === 'Success'
                                                     ? '#166534'
-                                                    : formatted.status === 'PENDING'
+                                                    : formatted.status === 'Pending'
                                                         ? '#854d0e'
-                                                        : formatted.status === 'WITHDRAWN'
-                                                            ? '#1e40af'
-                                                            : '#991b1b',
+                                                        : '#991b1b',
                                             }}>
                                                 {formatted.status}
                                             </Box>
@@ -243,4 +245,4 @@ const Wallet: React.FC = () => {
     );
 };
 
-export default Wallet;
+export default AgentWallet;

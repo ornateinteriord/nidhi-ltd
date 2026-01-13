@@ -58,3 +58,35 @@ export const useGetMemberTransactions = (
         enabled: enabled && !!memberId,
     });
 };
+
+// Hook to get member commission transactions (commission received and commission withdrawal)
+export const useGetMemberCommissionTransactions = (memberId: string, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["memberCommissionTransactions", memberId],
+        queryFn: async () => {
+            return await useApi<{
+                success: boolean;
+                message: string;
+                data: {
+                    transactions: Array<{
+                        _id: string;
+                        beneficiary_id: string;
+                        commission_amount: number;
+                        status: 'CREDITED' | 'PENDING' | 'WITHDRAWN';
+                        createdAt: Date | string;
+                        source?: string;
+                        description?: string;
+                        transaction_type?: string;
+                    }>;
+                    summary: {
+                        totalEarned: number;
+                        totalPending: number;
+                        totalWithdrawn: number;
+                        availableBalance: number;
+                    };
+                };
+            }>("GET", `/user/get-commission-transactions/${memberId}`);
+        },
+        enabled: enabled && !!memberId,
+    });
+};
