@@ -1,14 +1,13 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Button, CircularProgress } from '@mui/material';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import { Card, CardContent, Typography, CircularProgress } from '@mui/material';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
 
 interface AgentWalletCardProps {
     balance: string | number;
     isLoading?: boolean;
-    onWithdraw: () => void;
 }
 
-const AgentWalletCard: React.FC<AgentWalletCardProps> = ({ balance, isLoading = false, onWithdraw }) => {
+const AgentWalletCard: React.FC<AgentWalletCardProps> = ({ balance, isLoading = false }) => {
     return (
         <Card
             sx={{
@@ -16,12 +15,14 @@ const AgentWalletCard: React.FC<AgentWalletCardProps> = ({ balance, isLoading = 
                 background: 'linear-gradient(135deg, #667EEA 0%, #5B21B6 100%)',
                 color: 'white',
                 boxShadow: '0 4px 20px rgba(102, 126, 234, 0.3)',
-                transition: 'transform 0.2s',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                cursor: 'pointer',
                 '&:hover': {
-                    transform: 'scale(1.01)',
-                    boxShadow: '0 6px 24px rgba(102, 126, 234, 0.4)',
+                    transform: 'scale(1.02)',
+                    boxShadow: '0 8px 30px rgba(102, 126, 234, 0.5)',
                 },
-                minHeight: '160px',
+                minHeight: '200px',
+                height: '100%',
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -33,7 +34,7 @@ const AgentWalletCard: React.FC<AgentWalletCardProps> = ({ balance, isLoading = 
         >
             <CardContent sx={{ zIndex: 1, textAlign: 'center', width: '100%', py: 4 }}>
                 <Typography variant="subtitle1" sx={{ opacity: 0.9, mb: 1 }}>
-                    Total Balance
+                    Total Commission Balance
                 </Typography>
                 {isLoading ? (
                     <CircularProgress size={40} sx={{ color: 'white', my: 2 }} />
@@ -42,37 +43,10 @@ const AgentWalletCard: React.FC<AgentWalletCardProps> = ({ balance, isLoading = 
                         {typeof balance === 'number' ? `₹${balance.toFixed(2)}` : balance}
                     </Typography>
                 )}
-                <Typography variant="body2" sx={{ opacity: 0.8, mb: 3 }}>
-                    Wallet Balance
+                <Typography variant="body2" sx={{ opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                    <TouchAppIcon sx={{ fontSize: 18 }} />
+                    Tap to manage wallet
                 </Typography>
-
-                {/* Withdraw Button */}
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                    <Button
-                        variant="contained"
-                        startIcon={<AccountBalanceWalletIcon />}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onWithdraw();
-                        }}
-                        sx={{
-                            bgcolor: 'rgba(255,255,255,0.2)',
-                            backdropFilter: 'blur(10px)',
-                            borderRadius: '12px',
-                            px: 4,
-                            py: 1.5,
-                            fontWeight: 600,
-                            textTransform: 'none',
-                            fontSize: '1rem',
-                            '&:hover': {
-                                bgcolor: 'rgba(255,255,255,0.3)',
-                                transform: 'scale(1.02)'
-                            }
-                        }}
-                    >
-                        Withdraw
-                    </Button>
-                </Box>
             </CardContent>
         </Card>
     );

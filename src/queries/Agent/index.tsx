@@ -66,11 +66,46 @@ export const useGetCollectionTransactions = (agentId: string, enabled: boolean =
                     account_number: string;
                     Name: string;
                     credit: number;
+                    debit: number;
                     balance: number;
                     status: string;
                     description: string;
+                    collected_by?: string;
+                    paid_by?: string;
                 }>;
             }>("GET", `/agent/get-collection-transactions/${agentId}`);
+        },
+        enabled: enabled && !!agentId,
+    });
+};
+
+// Hook to get agent commission transactions (commission received and commission withdrawal)
+export const useGetAgentCommissionTransactions = (agentId: string, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["agentCommissionTransactions", agentId],
+        queryFn: async () => {
+            return await useApi<{
+                success: boolean;
+                message: string;
+                data: {
+                    transactions: Array<{
+                        _id: string;
+                        beneficiary_id: string;
+                        commission_amount: number;
+                        status: 'CREDITED' | 'PENDING' | 'WITHDRAWN';
+                        createdAt: Date | string;
+                        source?: string;
+                        description?: string;
+                        transaction_type?: string;
+                    }>;
+                    summary: {
+                        totalEarned: number;
+                        totalPending: number;
+                        totalWithdrawn: number;
+                        availableBalance: number;
+                    };
+                };
+            }>("GET", `/agent/get-commission-transactions/${agentId}`);
         },
         enabled: enabled && !!agentId,
     });

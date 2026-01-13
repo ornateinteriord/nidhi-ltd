@@ -26,6 +26,7 @@ const AgentProfile = lazy(() => import("./pages/Agent/Profile"));
 const AgentCollections = lazy(() => import("./pages/Agent/Collections"));
 const AgentAddNew = lazy(() => import("./pages/Agent/AddNew"));
 const AgentReport = lazy(() => import("./pages/Agent/Report"));
+const AgentWallet = lazy(() => import("./pages/Agent/AgentWallet"));
 const BankingMembers = lazy(() => import("./pages/Administration/Members"));
 const BankingAgents = lazy(() => import("./pages/Administration/Agents"));
 const InterestRate = lazy(() => import("./pages/Admin-Pages/Interest/interest"));
@@ -79,6 +80,7 @@ const UserAddNew = lazy(() => import("./pages/User/AddNew"));
 const UserReport = lazy(() => import("./pages/User/Report"));
 const UserTransaction = lazy(() => import("./user/Transaction/UserTransaction"));
 const Wallet = lazy(() => import("./pages/Shared/Wallet"));
+const AccountWallet = lazy(() => import("./pages/Shared/AccountWallet"));
 import ProtectedRoute from "./routeProtecter/RouteProtecter";
 import useAuth from "./hooks/use-auth";
 import PublicRoute from "./routeProtecter/PublicRoutes";
@@ -316,6 +318,7 @@ const RoutesProvider = ({
               <Route path="/user/report" element={<UserReport />} />
               <Route path="/user/transaction" element={<UserTransaction />} />
               <Route path="/user/wallet" element={<Wallet />} />
+              <Route path="/user/account-wallet" element={<AccountWallet />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
@@ -323,7 +326,7 @@ const RoutesProvider = ({
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}>
-              <Route path="/agent/wallet" element={<Wallet />} />
+              <Route path="/agent/wallet" element={<AgentWallet />} />
             </Route>
 
 

@@ -4,13 +4,13 @@ import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import WalletCard from '../../components/Dashboard/WalletCard';
 import { useNavigate } from 'react-router-dom';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SavingsIcon from '@mui/icons-material/Savings';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import { useGetMyAccounts } from '../../queries/Member';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
+import { useGetMyAccounts, useGetMemberCommissionTransactions } from '../../queries/Member';
 import TokenService from '../../queries/token/tokenService';
 
 // Icon mapping for account types
@@ -43,6 +43,7 @@ const UserDashboard = () => {
     const navigate = useNavigate();
     const memberId = TokenService.getMemberId() || '';
     const { data: accountsData, isLoading, isError } = useGetMyAccounts();
+    const { data: commissionData, isLoading: commissionLoading } = useGetMemberCommissionTransactions(memberId);
 
     // Calculate total balance from all accounts
     const totalBalance = accountsData?.data?.accountTypes?.reduce((total: number, accType: any) => {
@@ -50,14 +51,8 @@ const UserDashboard = () => {
         return total + typeTotal;
     }, 0) || 0;
 
-    // Create breakdown by account type
-    const accountBreakdown = accountsData?.data?.accountTypes?.map((accType: any) => {
-        const typeTotal = accType.accounts.reduce((sum: number, acc: any) => sum + (acc.account_amount || 0), 0);
-        return {
-            type: accType.account_group_name,
-            amount: typeTotal
-        };
-    }) || [];
+    // Get commission balance
+    const commissionBalance = commissionData?.data?.summary?.availableBalance || 0;
 
     const latestUsers = [
         { id: 1, name: 'Tracey Newman', date: '25 March 2018', time: '12:23PM', status: 'Active', subStatus: 'Premium', amount: '$403.22' },
@@ -159,16 +154,96 @@ const UserDashboard = () => {
                 )}
             </Box>
 
-            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
+            {/* Commission Balance and Account Balance Cards - Side by Side */}
+            <Box sx={{ px: { xs: 1.5, sm: 2, md: 3 }, my: 3 }}>
+                <Grid container spacing={3}>
+                    {/* Commission Balance Card - Clickable */}
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <Card
+                            onClick={() => navigate('/user/wallet')}
+                            sx={{
+                                borderRadius: '16px',
+                                background: 'linear-gradient(135deg, #667EEA 0%, #5B21B6 100%)',
+                                color: 'white',
+                                boxShadow: '0 4px 20px rgba(102, 126, 234, 0.3)',
+                                transition: 'transform 0.2s, box-shadow 0.2s',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    transform: 'scale(1.02)',
+                                    boxShadow: '0 8px 30px rgba(102, 126, 234, 0.5)',
+                                },
+                                minHeight: '200px',
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <CardContent sx={{ textAlign: 'center', width: '100%', py: 4 }}>
+                                <Typography variant="subtitle1" sx={{ opacity: 0.9, mb: 1 }}>
+                                    Commission Balance
+                                </Typography>
+                                {commissionLoading ? (
+                                    <CircularProgress size={40} sx={{ color: 'white', my: 2 }} />
+                                ) : (
+                                    <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+                                        ₹{commissionBalance.toFixed(2)}
+                                    </Typography>
+                                )}
+                                <Typography variant="body2" sx={{ opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                                    <TouchAppIcon sx={{ fontSize: 18 }} />
+                                    Tap to manage withdrawals
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-
-                <Grid size={{ xs: 12, sm: 12, md: 12 }}>
-                    <WalletCard
-                        balance={isLoading ? "Loading..." : `₹${totalBalance.toFixed(2)}`}
-                        onClick={() => navigate('/user/wallet')}
-                        breakdown={accountBreakdown}
-                    />
+                    {/* Account Balance Card - Clickable */}
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <Card
+                            onClick={() => navigate('/user/account-wallet')}
+                            sx={{
+                                borderRadius: '16px',
+                                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                                color: 'white',
+                                boxShadow: '0 4px 20px rgba(16, 185, 129, 0.3)',
+                                transition: 'transform 0.2s, box-shadow 0.2s',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                    transform: 'scale(1.02)',
+                                    boxShadow: '0 8px 30px rgba(16, 185, 129, 0.5)',
+                                },
+                                minHeight: '200px',
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <CardContent sx={{ textAlign: 'center', width: '100%', py: 4 }}>
+                                <Typography variant="subtitle1" sx={{ opacity: 0.9, mb: 1 }}>
+                                    Total Account Balance
+                                </Typography>
+                                {isLoading ? (
+                                    <CircularProgress size={40} sx={{ color: 'white', my: 2 }} />
+                                ) : (
+                                    <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+                                        ₹{totalBalance.toFixed(2)}
+                                    </Typography>
+                                )}
+                                <Typography variant="body2" sx={{ opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                                    <TouchAppIcon sx={{ fontSize: 18 }} />
+                                    Tap to manage accounts
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 </Grid>
+            </Box>
+
+            <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
 
                 <Grid size={{ xs: 12, sm: 12, md: 8 }}>
                     <Card sx={{
