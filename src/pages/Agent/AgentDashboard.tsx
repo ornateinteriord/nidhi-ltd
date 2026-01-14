@@ -55,10 +55,11 @@ const AgentDashboard = () => {
   // Get commission balance from commission transactions summary
   const totalBalance = commissionData?.data?.summary?.availableBalance || 0;
 
-  // Get collection balance - calculate from transactions array since API returns data as array
+  // Get collection balance from transactions data (API returns data as an array)
   const collectionTransactions = transactionsData?.data || [];
-  const totalCollected = collectionTransactions.reduce((sum: number, tx: any) => sum + (tx.credit || 0), 0);
-  const totalPaid = collectionTransactions.reduce((sum: number, tx: any) => sum + (tx.debit || 0), 0);
+  console.log("Collection transactions data:", transactionsData);
+  const totalCollected = Array.isArray(collectionTransactions) ? collectionTransactions.reduce((sum: number, tx: any) => sum + (tx.credit || 0), 0) : 0;
+  const totalPaid = Array.isArray(collectionTransactions) ? collectionTransactions.reduce((sum: number, tx: any) => sum + (tx.debit || 0), 0) : 0;
   const netCollectedAmount = totalCollected - totalPaid;
 
   // Calculate statistics
@@ -352,14 +353,14 @@ const AgentDashboard = () => {
                 <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                   <CircularProgress sx={{ color: '#667EEA' }} />
                 </Box>
-              ) : !transactionsData?.data?.length ? (
+              ) : !collectionTransactions.length ? (
                 <Box sx={{ textAlign: 'center', py: 4 }}>
                   <CollectionsIcon sx={{ fontSize: 48, color: '#9ca3af', mb: 2 }} />
                   <Typography sx={{ color: '#6b7280' }}>No recent collections</Typography>
                 </Box>
               ) : (
                 <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  {transactionsData.data.slice(0, 5).map((tx: any) => (
+                  {collectionTransactions.slice(0, 5).map((tx: any) => (
                     <Box
                       key={tx.transaction_id}
                       sx={{
@@ -471,7 +472,7 @@ const AgentDashboard = () => {
                     Total Transactions
                   </Typography>
                   <Typography sx={{ fontWeight: 'bold', fontSize: '1rem' }}>
-                    {transactionsData?.data?.length || 0}
+                    {collectionTransactions.length || 0}
                   </Typography>
                 </Box>
               </Box>
