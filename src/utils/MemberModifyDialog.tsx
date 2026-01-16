@@ -485,6 +485,8 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
                 onChange={handleChange}
                 onBlur={handleIntroducerBlur}
                 size="small"
+                disabled={isEditMode}
+                sx={isEditMode ? { backgroundColor: '#f5f5f5' } : {}}
                 InputProps={{
                   endAdornment: isLoadingAgent ? (
                     <InputAdornment position="end">
@@ -492,6 +494,7 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
                     </InputAdornment>
                   ) : null,
                 }}
+                helperText={isEditMode ? "Introducer cannot be changed after member creation" : ""}
               />
               {isAgentError && <Typography color="error">Introducer not found</Typography>}
             </Grid>
