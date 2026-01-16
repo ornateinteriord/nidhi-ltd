@@ -56,13 +56,19 @@ const TransferMoneyDialog: React.FC<TransferMoneyDialogProps> = ({ open, onClose
     const transferMutation = useTransferMoney();
 
     // Flatten accounts for dropdown
-    const myAccounts = myAccountsData?.data?.accountTypes?.flatMap((accType: any) =>
+    const allAccounts = myAccountsData?.data?.accountTypes?.flatMap((accType: any) =>
         accType.accounts.map((acc: any) => ({
             ...acc,
             account_type: accType.account_type,
             account_group_name: accType.account_group_name
         }))
     ) || [];
+
+    // Filter to show only SB (Savings Bank) and Current accounts for Transfer
+    const myAccounts = allAccounts.filter((acc: any) => {
+        const accountGroup = acc.account_group_name?.toUpperCase();
+        return accountGroup === 'SB' || accountGroup === 'CA';
+    });
 
     const handleFetchRecipient = () => {
         if (!recipientMemberId.trim()) {

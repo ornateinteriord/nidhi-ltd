@@ -17,7 +17,7 @@ import {
     Alert
 } from '@mui/material';
 import { MaturityAccount } from '../../types';
-import { useCreateMaturityPaymentWithCashfree } from '../../queries/admin';
+import { useCreateMaturityPaymentWithCashfree, useCloseAccount } from '../../queries/admin';
 import { toast } from 'react-toastify';
 
 interface AccountCloseDialogProps {
@@ -39,6 +39,7 @@ const AccountCloseDialog: React.FC<AccountCloseDialogProps> = ({
     const [paymentReference, setPaymentReference] = useState('');
 
     const createMaturityPaymentMutation = useCreateMaturityPaymentWithCashfree();
+    const closeAccountMutation = useCloseAccount();
 
     // Reset form when dialog opens
     useEffect(() => {
@@ -70,6 +71,21 @@ const AccountCloseDialog: React.FC<AccountCloseDialogProps> = ({
         if (!account.account_id) return;
 
         try {
+            // If balance is 0, just close the account directly without payment
+            if (!hasBalance) {
+                const response: any = await closeAccountMutation.mutateAsync(account.account_id);
+
+                if (response && response.success) {
+                    toast.success('Account closed successfully');
+                    onSuccess();
+                    onClose();
+                } else {
+                    toast.error(response?.message || 'Failed to close account');
+                }
+                return;
+            }
+
+            // If balance > 0, process maturity payment
             // Map frontend payment modes to backend values
             const paymentMethodMap: Record<string, string> = {
                 'Cash': 'cash',
@@ -105,7 +121,7 @@ const AccountCloseDialog: React.FC<AccountCloseDialogProps> = ({
         }
     };
 
-    const isLoading = createMaturityPaymentMutation.isPending;
+    const isLoading = createMaturityPaymentMutation.isPending || closeAccountMutation.isPending;
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
