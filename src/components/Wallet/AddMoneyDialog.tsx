@@ -37,14 +37,27 @@ const AddMoneyDialog: React.FC<AddMoneyDialogProps> = ({ open, onClose }) => {
     // Note: Cashfree SDK is initialized dynamically in handleAddMoney 
     // after receiving cashfree_env from backend response
 
-    // Flatten accounts for dropdown
-    const myAccounts = accountsData?.data?.accountTypes?.flatMap((accType: any) =>
+    // Flatten accounts for dropdown - Filter for FD, RD, PIGMY accounts only
+    const allAccounts = accountsData?.data?.accountTypes?.flatMap((accType: any) =>
         accType.accounts.map((acc: any) => ({
             ...acc,
             account_type: accType.account_type,
             account_group_name: accType.account_group_name
         }))
     ) || [];
+
+    // Debug: Log all accounts to see the actual account_type values
+    console.log("All accounts for Add Money:", allAccounts);
+    console.log("Account types available:", allAccounts.map((a: any) => ({ type: a.account_type, group: a.account_group_name })));
+
+    // Filter to show only FD, RD, PIGMY, MIS accounts for Add Money
+    const myAccounts = allAccounts.filter((acc: any) => {
+        const accountGroup = acc.account_group_name?.toUpperCase();
+        return accountGroup === 'FD' ||
+            accountGroup === 'RD' ||
+            accountGroup === 'PIGMY' ||
+            accountGroup === 'MIS';
+    });
 
     const handleClose = () => {
         setAmount('');

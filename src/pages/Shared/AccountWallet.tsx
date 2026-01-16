@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+// import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { useGetMyAccounts, useGetMemberTransactions } from '../../queries/Member';
@@ -176,6 +176,7 @@ const AccountWallet: React.FC = () => {
                         >
                             Transfer
                         </Button>
+                        {/* Withdraw button commented out for now
                         <Button
                             variant="contained"
                             startIcon={<AccountBalanceWalletIcon />}
@@ -197,6 +198,7 @@ const AccountWallet: React.FC = () => {
                         >
                             Withdraw
                         </Button>
+                        */}
                     </Box>
                 </CardContent>
             </Card>
