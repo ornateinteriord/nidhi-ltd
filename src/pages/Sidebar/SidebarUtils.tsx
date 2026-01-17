@@ -18,6 +18,12 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     isExpandable: false,
   },
   {
+    name: "Add New",
+    icon: <MuiIcons.AddCircle />,
+    path: "/user/add-new",
+    isExpandable: false,
+  },
+  {
     name: "Report",
     icon: <MuiIcons.Assessment />,
     path: "/user/report",
