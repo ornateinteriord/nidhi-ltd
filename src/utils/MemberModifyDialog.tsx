@@ -88,14 +88,21 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
     isEditMode && open
   );
 
-  // State to track introducer code for fetching agent data
+  // State to track introducer code for fetching data
   const [introducerCode, setIntroducerCode] = useState<string>('');
-  const [shouldFetchAgent, setShouldFetchAgent] = useState<boolean>(false);
+  const [shouldFetchIntroducer, setShouldFetchIntroducer] = useState<boolean>(false);
+  const [introducerError, setIntroducerError] = useState<boolean>(false);
 
   // Fetch agent data when introducer code is entered and onBlur triggered
   const { data: agentData, isLoading: isLoadingAgent, isError: isAgentError } = useGetAgentById(
     introducerCode,
-    shouldFetchAgent && !!introducerCode && introducerCode.length > 0
+    shouldFetchIntroducer && !!introducerCode && introducerCode.length > 0
+  );
+
+  // Also try to fetch as member if agent not found
+  const { data: introducerMemberData, isLoading: isLoadingIntroducerMember, isError: isIntroducerMemberError, } = useGetMemberById(
+    introducerCode,
+    shouldFetchIntroducer && !!introducerCode && introducerCode.length > 0 && isAgentError
   );
 
   const [formData, setFormData] = useState<MemberFormData>({
@@ -123,6 +130,9 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
     date_of_joining: '',
     entered_by: '',
   });
+
+  // Validation state for contact number
+  const [contactError, setContactError] = useState<string>('');
 
   // Update form data when member data is fetched
   useEffect(() => {
@@ -189,17 +199,38 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
     }
   }, [memberData, isEditMode, open, isError]);
 
-  // Auto-populate introducer name when agent data is fetched
+  // Auto-populate introducer name when agent or member data is fetched
   useEffect(() => {
-    if (agentData?.data?.name) {
-      setFormData(prev => ({
-        ...prev,
-        introducer_name: agentData.data.name || ''
-      }));
-      // Reset fetch trigger after successful fetch
-      setShouldFetchAgent(false);
+    if (shouldFetchIntroducer) {
+      // First try agent data
+      if (agentData?.data?.name) {
+        setFormData(prev => ({
+          ...prev,
+          introducer_name: agentData.data.name || ''
+        }));
+        setIntroducerError(false);
+        setShouldFetchIntroducer(false);
+      }
+      // If agent not found, try member data
+      else if (isAgentError && introducerMemberData?.data?.name) {
+        setFormData(prev => ({
+          ...prev,
+          introducer_name: introducerMemberData.data.name || ''
+        }));
+        setIntroducerError(false);
+        setShouldFetchIntroducer(false);
+      }
+      // If both failed, show error
+      else if (isAgentError && isIntroducerMemberError) {
+        setIntroducerError(true);
+        setFormData(prev => ({
+          ...prev,
+          introducer_name: ''
+        }));
+        setShouldFetchIntroducer(false);
+      }
     }
-  }, [agentData]);
+  }, [agentData, introducerMemberData, isAgentError, isIntroducerMemberError, shouldFetchIntroducer]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -212,9 +243,10 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
     // If introducer code is changed, update the introducer code state
     if (name === 'introducer') {
       setIntroducerCode(value);
+      setIntroducerError(false); // Clear error when user types
       // Clear introducer name and stop fetching if code is cleared
       if (!value) {
-        setShouldFetchAgent(false);
+        setShouldFetchIntroducer(false);
         setFormData(prev => ({
           ...prev,
           introducer_name: ''
@@ -228,7 +260,8 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
     // Use formData.introducer to get the current value directly
     if (formData.introducer && formData.introducer.trim().length > 0) {
       setIntroducerCode(formData.introducer.trim());
-      setShouldFetchAgent(true);
+      setShouldFetchIntroducer(true);
+      setIntroducerError(false);
     }
   };
 
@@ -240,6 +273,14 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
   };
 
   const handleSave = () => {
+    // Validate contact number - must be exactly 10 digits
+    const contactRegex = /^[0-9]{10}$/;
+    if (formData.contactno && !contactRegex.test(formData.contactno)) {
+      setContactError('Please enter a valid 10-digit mobile number');
+      return;
+    }
+    setContactError('');
+
     // When updating, remove member_id from formData as it shouldn't be changed
     // The member_id comes from the URL parameter only
     if (isEditMode) {
@@ -446,8 +487,16 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
                 label="Contact No"
                 name="contactno"
                 value={formData.contactno}
-                onChange={handleChange}
+                onChange={(e) => {
+                  // Only allow digits and max 10 characters
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  setFormData({ ...formData, contactno: value });
+                  if (contactError) setContactError('');
+                }}
                 size="small"
+                error={!!contactError}
+                helperText={contactError || 'Enter 10-digit mobile number'}
+                inputProps={{ maxLength: 10 }}
               />
             </Grid>
 
@@ -486,17 +535,23 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
                 onBlur={handleIntroducerBlur}
                 size="small"
                 disabled={isEditMode}
+                error={introducerError}
                 sx={isEditMode ? { backgroundColor: '#f5f5f5' } : {}}
                 InputProps={{
-                  endAdornment: isLoadingAgent ? (
+                  endAdornment: (isLoadingAgent || isLoadingIntroducerMember) ? (
                     <InputAdornment position="end">
                       <CircularProgress size={20} />
                     </InputAdornment>
                   ) : null,
                 }}
-                helperText={isEditMode ? "Introducer cannot be changed after member creation" : ""}
+                helperText={
+                  isEditMode
+                    ? "Introducer cannot be changed after member creation"
+                    : introducerError
+                      ? "Introducer ID not found in our records"
+                      : "Enter Agent or Member ID"
+                }
               />
-              {isAgentError && <Typography color="error">Introducer not found</Typography>}
             </Grid>
 
             {/* Introducer Name */}
@@ -605,6 +660,9 @@ const AgentModifyDialog: React.FC<{
     address: initialData?.address || '',
   });
 
+  // Validation state for contact number
+  const [contactError, setContactError] = useState<string>('');
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -620,6 +678,14 @@ const AgentModifyDialog: React.FC<{
   };
 
   const handleSave = () => {
+    // Validate contact number - must be exactly 10 digits
+    const contactRegex = /^[0-9]{10}$/;
+    if (formData.contactno && !contactRegex.test(formData.contactno)) {
+      setContactError('Please enter a valid 10-digit mobile number');
+      return;
+    }
+    setContactError('');
+
     onSave(formData);
     onClose();
   };
@@ -747,8 +813,16 @@ const AgentModifyDialog: React.FC<{
                 label="Contact No"
                 name="contactno"
                 value={formData.contactno}
-                onChange={handleChange}
+                onChange={(e) => {
+                  // Only allow digits and max 10 characters
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  setFormData({ ...formData, contactno: value });
+                  if (contactError) setContactError('');
+                }}
                 size="small"
+                error={!!contactError}
+                helperText={contactError || 'Enter 10-digit mobile number'}
+                inputProps={{ maxLength: 10 }}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
