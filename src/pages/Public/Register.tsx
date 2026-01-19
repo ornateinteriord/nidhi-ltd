@@ -112,10 +112,9 @@ const Register = () => {
         if (!validateForm()) return;
 
         try {
-            const response = await registerMutation.mutateAsync({
+            const response: any = await registerMutation.mutateAsync({
                 name: formData.fullName,
                 emailid: formData.email,
-                password: formData.password,
                 contactno: formData.mobileNumber,
                 pincode: formData.pinCode,
                 gender: formData.gender,
@@ -124,7 +123,6 @@ const Register = () => {
             });
 
             if (response.success) {
-                toast.success('Registration successful! Please login.');
                 navigate('/login');
             } else {
                 toast.error(response.message || 'Registration failed');
