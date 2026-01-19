@@ -49,6 +49,11 @@ export interface Account {
     memberDetails?: MemberDetails;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    // Account closure fields
+    payout_amount?: number;
+    interest_paid?: number;
+    payment_mode?: string;
+    payment_reference?: string;
 }
 
 // Extended account interface for agent assignment with additional details

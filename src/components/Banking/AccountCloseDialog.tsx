@@ -17,7 +17,7 @@ import {
     Alert
 } from '@mui/material';
 import { MaturityAccount } from '../../types';
-import { useCreateMaturityPaymentWithCashfree, useCloseAccount } from '../../queries/admin';
+import { useCreateMaturityPaymentWithCashfree, useCloseAccount, useUpdateAccount } from '../../queries/admin';
 import { toast } from 'react-toastify';
 
 interface AccountCloseDialogProps {
@@ -35,16 +35,17 @@ const AccountCloseDialog: React.FC<AccountCloseDialogProps> = ({
     isMatured,
     onSuccess
 }) => {
-    const [paymentMode, setPaymentMode] = useState('Bank Transfer');
+    const [paymentMode, setPaymentMode] = useState('Cash');
     const [paymentReference, setPaymentReference] = useState('');
 
     const createMaturityPaymentMutation = useCreateMaturityPaymentWithCashfree();
     const closeAccountMutation = useCloseAccount();
+    const updateAccountMutation = useUpdateAccount();
 
     // Reset form when dialog opens
     useEffect(() => {
         if (open) {
-            setPaymentMode('Bank Transfer');
+            setPaymentMode('Cash');
             setPaymentReference('');
         }
     }, [open]);
@@ -85,10 +86,33 @@ const AccountCloseDialog: React.FC<AccountCloseDialogProps> = ({
                 return;
             }
 
-            // If balance > 0, process maturity payment
-            // Map frontend payment modes to backend values
+            // CASH PAYMENT: Directly close the account without external payout
+            if (paymentMode === 'Cash') {
+                const response: any = await updateAccountMutation.mutateAsync({
+                    accountId: account.account_id,
+                    data: {
+                        status: 'Closed',
+                        date_of_close: new Date().toISOString(),
+                        account_amount: 0,
+                        payout_amount: totalPayout,
+                        interest_paid: interestAmount,
+                        payment_mode: 'cash',
+                        payment_reference: paymentReference || undefined
+                    }
+                });
+
+                if (response && response.success) {
+                    toast.success(`Account closed successfully. Cash payment of ₹${totalPayout.toLocaleString('en-IN')} processed.`);
+                    onSuccess();
+                    onClose();
+                } else {
+                    toast.error(response?.message || 'Failed to close account');
+                }
+                return;
+            }
+
+            // DIGITAL PAYMENT (Bank Transfer, UPI, Cheque): Use maturity payment API for external payout
             const paymentMethodMap: Record<string, string> = {
-                'Cash': 'cash',
                 'Bank Transfer': 'online',
                 'UPI': 'online',
                 'Cheque': 'cheque'
@@ -100,12 +124,12 @@ const AccountCloseDialog: React.FC<AccountCloseDialogProps> = ({
                 account_type: account.account_type,
                 member_id: account.member_id,
                 amount: totalPayout,
-                payment_method: paymentMethodMap[paymentMode] || 'cash', // 'online' triggers Cashfree Payout
+                payment_method: paymentMethodMap[paymentMode] || 'online',
                 description: `Maturity payment for account ${account.account_no}`,
                 reference_no: paymentReference || undefined,
             };
 
-            // Call the backend to process the maturity payment
+            // Call the backend to process the digital maturity payment
             const response: any = await createMaturityPaymentMutation.mutateAsync(maturityPaymentData);
 
             // Check if response is successful
@@ -114,14 +138,20 @@ const AccountCloseDialog: React.FC<AccountCloseDialogProps> = ({
                 onSuccess();
                 onClose();
             } else {
-                toast.error(response?.message || 'Failed to process payment');
+                // Show specific error for digital payout failure
+                toast.error(response?.message || 'Digital payout failed. Please try again or use Cash payment.');
             }
         } catch (error: any) {
-            toast.error(error?.message || 'Failed to close account');
+            // If digital payment fails, suggest using cash
+            if (paymentMode !== 'Cash') {
+                toast.error(error?.message || 'Digital payout failed. Please try again or use Cash payment.');
+            } else {
+                toast.error(error?.message || 'Failed to close account');
+            }
         }
     };
 
-    const isLoading = createMaturityPaymentMutation.isPending || closeAccountMutation.isPending;
+    const isLoading = createMaturityPaymentMutation.isPending || closeAccountMutation.isPending || updateAccountMutation.isPending;
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
