@@ -12,6 +12,7 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import { useGetMyAccounts, useGetMemberCommissionTransactions } from '../../queries/Member';
 import TokenService from '../../queries/token/tokenService';
+import ReferralLinkCard from '../../components/Dashboard/ReferralLinkCard';
 
 // Icon mapping for account types
 const getAccountIcon = (accountType: string) => {
@@ -62,8 +63,10 @@ const UserDashboard = () => {
 
     return (
         <div>
+
+
             {/* Account Type Cards Section */}
-            <Box sx={{ px: { xs: 1.5, sm: 2, md: 3 }, mt: { xs: 3, sm: 4 } }}>
+            <Box sx={{ px: { xs: 1.5, sm: 2, md: 3 }, mt: { xs: 2, sm: 3, md: 9 } }}>
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#4f46e5', mb: 3, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                     My Accounts
                 </Typography>
@@ -152,6 +155,11 @@ const UserDashboard = () => {
                         ))}
                     </Grid>
                 )}
+
+            </Box>
+            {/* Referral Link Card */}
+            <Box sx={{ mt: { xs: 1, sm: 1, md: 2 } }}>
+                <ReferralLinkCard />
             </Box>
 
             {/* Commission Balance and Account Balance Cards - Side by Side */}

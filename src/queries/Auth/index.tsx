@@ -1,80 +1,63 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import useApi from "../useApi";
 import TokenService from "../token/tokenService";
 
+// Get sponsor details by reference code (public - no auth required)
+export const useGetSponsorByRef = (refCode: string) => {
+  return useQuery({
+    queryKey: ["sponsor", refCode],
+    queryFn: async () => {
+      // Try to get as agent first, then as member
+      try {
+        const agentResponse: any = await useApi("GET", `/auth/get-sponsor/${refCode}`);
+        if (agentResponse.success) {
+          return agentResponse;
+        }
+      } catch (error) {
+        // Continue to try other options
+      }
+      throw new Error("Sponsor not found");
+    },
+    enabled: !!refCode && refCode.length > 0,
+    retry: false,
+  });
+};
 
-// export const useSignupMutation = () => {
-//   return useMutation({
-//     mutationFn: async (data: any) => {
-//       return await post("/auth/signup", data);
-//     },
-//     onSuccess: (response) => {
-//       if (response.success) {
-//       } else {
-//         console.error(response.message);
-//       }
-//     },
-//     onError: (error: any) => {
-//       toast.error(error.response.data.message);
-//     },
-//   });
-// };
-
-// export const useGetSponserRef = (ref?:string) =>{
-//   return useQuery({
-//     queryKey:["sponsor",ref],
-//     queryFn:async () =>{
-//       if(!ref) return null;
-//       try {
-//         const response = await get(`/auth/get-sponsor/${ref}`);
-//         return response.success ? response : null; 
-//       } catch (err: any) {
-
-//         const errorMessage =
-//           err.response?.data.message ;
-//         throw new Error(errorMessage);
-//       }
-//     },
-//     enabled: false,
-//   })
-// }
-
-// export const useRecoverpassword = () =>{
-//   return useMutation({
-//     mutationFn:async(data:any)=>{
-//       return await post("/auth/recover-password",data);
-//     },
-//     onSuccess:(response)=>{
-//       if(response.success){
-//         toast.success(response.message);
-//       }else{
-//         console.error(response.message)
-//       }
-//     },
-//     onError:(error:any)=>{
-//       toast.error(error.response.data.message)
-//     }
-//   })
-// }
-// export const useResetpassword = () =>{
-//   return useMutation({
-//     mutationFn:async(data:any)=>{
-//       return await post("/auth/reset-password",data);
-//     },
-//     onSuccess:(response)=>{
-//       if(response.success){
-//         toast.success(response.message);
-//       }else{
-//         console.error(response.message)
-//       }
-//     },
-//     onError:(error:any)=>{
-//       toast.error(error.response.data.message)
-//     }
-//   })
-// }
+// Public registration mutation - uses existing /auth/signup endpoint
+export const usePublicRegister = () => {
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      emailid?: string;
+      password?: string;
+      contactno: string;
+      pincode?: string;
+      gender?: string;
+      introducer: string;
+      introducer_name?: string;
+      address?: string;
+      father_name?: string;
+      dob?: string;
+      pan_no?: string;
+      aadharcard_no?: string;
+    }) => {
+      return await useApi("POST", "/auth/signup", data);
+    },
+    onSuccess: (response: any) => {
+      if (response.success) {
+        toast.success(response.message || "Registration successful!");
+      } else {
+        toast.error(response.message || "Registration failed");
+      }
+    },
+    onError: (error: any) => {
+      const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
+      toast.error(errorMessage);
+    },
+  });
+};
 
 export const useLoginMutation = () => {
   const navigate = useNavigate();
@@ -115,4 +98,3 @@ export const useLoginMutation = () => {
     },
   });
 };
-

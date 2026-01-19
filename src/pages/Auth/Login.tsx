@@ -8,12 +8,14 @@ import {
   Card,
   CardContent,
   InputAdornment,
+  Link as MuiLink,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import { LoadingComponent } from "../../App";
 import { useLoginMutation } from "../../queries/Auth";
 import Footer from "../../components/Footer/Footer";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -87,6 +89,14 @@ const Login = () => {
                   Sign In
                 </Button>
               </Box>
+
+              {/* Create New Account Link */}
+              <Typography variant="body2" sx={{ textAlign: "center", mt: 2 }}>
+                Don't have an account?{" "}
+                <MuiLink component={Link} to="/register" sx={{ color: "#7c3aed", fontWeight: 600 }}>
+                  Create new account
+                </MuiLink>
+              </Typography>
             </CardContent>
           </Card>
         </Box>

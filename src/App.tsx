@@ -112,6 +112,7 @@ const ContactUs = lazy(() => import("./pages/Public/ContactUs"));
 const PrivacyPolicy = lazy(() => import("./pages/Public/PrivacyPolicy"));
 const TermsConditions = lazy(() => import("./pages/Public/TermsConditions"));
 const RefundPolicy = lazy(() => import("./pages/Public/RefundPolicy"));
+const Register = lazy(() => import("./pages/Public/Register"));
 
 export const LoadingComponent = () => {
   return (
@@ -125,7 +126,7 @@ export const LoadingComponent = () => {
 
 const ShouldHideSidebarComponent = () => {
   const location = useLocation();
-  const publicPaths = ["/", "/login", "/about", "/contact", "/privacy-policy", "/terms", "/refund-policy"];
+  const publicPaths = ["/", "/login", "/register", "/about", "/contact", "/privacy-policy", "/terms", "/refund-policy"];
   return publicPaths.includes(location.pathname);
 };
 
@@ -217,6 +218,7 @@ const RoutesProvider = ({
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsConditions />} />
             <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/register" element={<Register />} />
 
             {/* agent routes */}
             <Route element={<ProtectedRoute allowedRoles={["AGENT"]} />}>
