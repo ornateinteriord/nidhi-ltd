@@ -19,7 +19,7 @@ import {
     Grid
 } from '@mui/material';
 // import Grid from '@mui/material/Grid2';
-import LockIcon from '@mui/icons-material/Lock';
+
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -39,18 +39,17 @@ const Register = () => {
         sponsorName: '',
         fullName: '',
         email: '',
-        password: '',
-        confirmPassword: '',
         mobileNumber: '',
         pinCode: '',
         gender: 'Male',
+        dob: '',
         termsAccepted: false,
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    // Fetch sponsor details
-    const { data: sponsorData, isLoading: sponsorLoading, isError: sponsorError } = useGetSponsorByRef(refCode);
+    // Fetch sponsor details based on user input
+    const { data: sponsorData, isLoading: sponsorLoading, isError: sponsorError } = useGetSponsorByRef(formData.sponsorCode);
 
     // Register mutation
     const registerMutation = usePublicRegister();
@@ -62,8 +61,14 @@ const Register = () => {
                 ...prev,
                 sponsorName: sponsorData.data.name,
             }));
+        } else if (formData.sponsorCode && !sponsorLoading && !sponsorData?.data?.name) {
+            // Clear sponsor name if sponsor code is invalid or not found
+            setFormData(prev => ({
+                ...prev,
+                sponsorName: '',
+            }));
         }
-    }, [sponsorData]);
+    }, [sponsorData, sponsorLoading, formData.sponsorCode]);
 
     // Update sponsor code from URL
     useEffect(() => {
@@ -90,16 +95,20 @@ const Register = () => {
     const validateForm = () => {
         const newErrors: Record<string, string> = {};
 
+        if (!formData.sponsorCode.trim()) newErrors.sponsorCode = 'Sponsor code is required';
+        else if (sponsorError || !formData.sponsorName) newErrors.sponsorCode = 'Invalid sponsor code';
+        if (!formData.sponsorName.trim()) newErrors.sponsorName = 'Sponsor name is required';
         if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
         if (!formData.email.trim()) newErrors.email = 'Email is required';
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Invalid email format';
-        if (!formData.password) newErrors.password = 'Password is required';
-        else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-        if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+
         if (!formData.mobileNumber.trim()) newErrors.mobileNumber = 'Mobile number is required';
         else if (!/^\d{10}$/.test(formData.mobileNumber)) newErrors.mobileNumber = 'Enter valid 10-digit number';
         if (!formData.pinCode.trim()) newErrors.pinCode = 'Pin code is required';
         else if (!/^\d{6}$/.test(formData.pinCode)) newErrors.pinCode = 'Enter valid 6-digit pin code';
+
+        if (!formData.dob) newErrors.dob = 'Date of birth is required';
+
         if (!formData.termsAccepted) newErrors.termsAccepted = 'You must accept terms and conditions';
 
         setErrors(newErrors);
@@ -118,6 +127,7 @@ const Register = () => {
                 contactno: formData.mobileNumber,
                 pincode: formData.pinCode,
                 gender: formData.gender,
+                dob: formData.dob,
                 introducer: formData.sponsorCode,
                 introducer_name: formData.sponsorName,
             });
@@ -152,6 +162,9 @@ const Register = () => {
             <Container component="main" maxWidth="md" sx={{ flex: 1, py: 4 }}>
                 <Card sx={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
                     <CardContent sx={{ p: { xs: 2, sm: 4 } }}>
+                        <Typography variant="h5" sx={{ textAlign: 'center', mb: 3, fontWeight: 600, color: '#1976d2' }}>
+                            Create New Account
+                        </Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <Grid container spacing={3}>
                                 {/* Left Column */}
@@ -159,28 +172,14 @@ const Register = () => {
                                     {/* Sponsor Code */}
                                     <TextField
                                         fullWidth
+                                        required
                                         label="Sponsor Code"
                                         name="sponsorCode"
                                         value={formData.sponsorCode}
+                                        onChange={handleChange}
+                                        error={!!errors.sponsorCode}
+                                        helperText={errors.sponsorCode}
                                         InputProps={{
-                                            readOnly: true,
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <LockIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{ mb: 3, backgroundColor: '#f8fafc' }}
-                                    />
-
-                                    {/* Sponsor Name */}
-                                    <TextField
-                                        fullWidth
-                                        label="Sponsor Name"
-                                        name="sponsorName"
-                                        value={formData.sponsorName}
-                                        InputProps={{
-                                            readOnly: true,
                                             startAdornment: (
                                                 <InputAdornment position="start">
                                                     <PersonIcon sx={{ color: '#7c3aed' }} />
@@ -192,10 +191,29 @@ const Register = () => {
                                                 </InputAdornment>
                                             ) : null,
                                         }}
+                                        placeholder="Enter sponsor code"
+                                        sx={{ mb: 3 }}
+                                    />
+
+                                    {/* Sponsor Name */}
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        label="Sponsor Name"
+                                        name="sponsorName"
+                                        value={formData.sponsorName}
+                                        error={!!errors.sponsorName || sponsorError}
+                                        helperText={errors.sponsorName || (sponsorError && formData.sponsorCode ? 'Sponsor not found' : '')}
+                                        InputProps={{
+                                            readOnly: true,
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <PersonIcon sx={{ color: '#7c3aed' }} />
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                         sx={{ mb: 3, backgroundColor: '#f8fafc' }}
-                                        placeholder={sponsorError ? 'Sponsor not found' : 'Sponsor Name'}
-                                        error={sponsorError}
-                                        helperText={sponsorError ? 'Invalid sponsor code' : ''}
+                                        placeholder="Auto-filled from sponsor code"
                                     />
                                 </Grid>
 
@@ -240,53 +258,12 @@ const Register = () => {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                        placeholder="Enter your email"
                                         sx={{ mb: 3 }}
                                     />
                                 </Grid>
 
-                                {/* Password Row */}
-                                <Grid size={{ xs: 12, md: 6 }}>
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Password"
-                                        name="password"
-                                        type="password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        error={!!errors.password}
-                                        helperText={errors.password}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <LockIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
-                                </Grid>
 
-                                <Grid size={{ xs: 12, md: 6 }}>
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Confirm Password"
-                                        name="confirmPassword"
-                                        type="password"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                        error={!!errors.confirmPassword}
-                                        helperText={errors.confirmPassword}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <LockIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        placeholder="Confirm your password"
-                                    />
-                                </Grid>
 
                                 {/* Mobile & Pin Code Row */}
                                 <Grid size={{ xs: 12, md: 6 }}>
@@ -334,6 +311,25 @@ const Register = () => {
                                             ),
                                         }}
                                         placeholder="Enter your pincode"
+                                    />
+                                </Grid>
+
+                                {/* Date of Birth */}
+                                <Grid size={12}>
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        label="Date of Birth"
+                                        name="dob"
+                                        type="date"
+                                        value={formData.dob}
+                                        onChange={handleChange}
+                                        error={!!errors.dob}
+                                        helperText={errors.dob}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        sx={{ mb: 3 }}
                                     />
                                 </Grid>
 
@@ -388,16 +384,16 @@ const Register = () => {
                                             variant="contained"
                                             disabled={isLoading || sponsorError}
                                             sx={{
-                                                backgroundColor: '#9ca3af',
+                                                backgroundColor: '#1976d2',
                                                 px: 6,
                                                 py: 1.5,
                                                 textTransform: 'none',
                                                 fontWeight: 600,
                                                 '&:hover': {
-                                                    backgroundColor: '#7c3aed',
+                                                    backgroundColor: '#1565c0',
                                                 },
                                                 '&:disabled': {
-                                                    backgroundColor: '#d1d5db',
+                                                    backgroundColor: '#90caf9',
                                                 },
                                             }}
                                         >
