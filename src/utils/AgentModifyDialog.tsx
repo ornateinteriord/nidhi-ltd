@@ -87,6 +87,10 @@ const AgentModifyDialog: React.FC<AgentModifyDialogProps> = ({
         entered_by: '',
     });
 
+    // Validation state for contact number
+    const [, setContactError] = useState<string>('');
+    const [dobError, setDobError] = useState<string>('');
+
     // Update form data when agent data is fetched
     useEffect(() => {
         if (isEditMode && agentData?.data) {
@@ -135,6 +139,9 @@ const AgentModifyDialog: React.FC<AgentModifyDialogProps> = ({
             ...formData,
             [e.target.name]: e.target.value,
         });
+        if (e.target.name === 'dob' && dobError) {
+            setDobError('');
+        }
     };
 
     const handleSelectChange = (e: SelectChangeEvent) => {
@@ -145,6 +152,20 @@ const AgentModifyDialog: React.FC<AgentModifyDialogProps> = ({
     };
 
     const handleSave = () => {
+        // Validate contact number - must be exactly 10 digits
+        const contactRegex = /^[0-9]{10}$/;
+        if (formData.mobile && !contactRegex.test(formData.mobile)) {
+            setContactError('Please enter a valid 10-digit mobile number');
+            return;
+        }
+        setContactError('');
+
+        if (!formData.dob) {
+            setDobError('Date of birth is required');
+            return;
+        }
+        setDobError('');
+
         onSave(formData, isEditMode);
     };
 
@@ -254,6 +275,7 @@ const AgentModifyDialog: React.FC<AgentModifyDialogProps> = ({
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 fullWidth
+                                required
                                 label="Date Of Birth"
                                 name="dob"
                                 type="date"
@@ -261,6 +283,8 @@ const AgentModifyDialog: React.FC<AgentModifyDialogProps> = ({
                                 onChange={handleChange}
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
+                                error={!!dobError}
+                                helperText={dobError}
                             />
                         </Grid>
 

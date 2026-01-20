@@ -152,6 +152,7 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
     accountGroupId,
     !!accountGroupId
   );
+  console.log("intrestttt", interestsData);
 
   // Fetch agent data when introducer code is entered and onBlur triggered
   const { data: agentData, isLoading: isLoadingAgent, isError: isAgentError } = useGetAgentById(
@@ -252,6 +253,22 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
     }
   };
 
+  // Calculate age from date of birth
+  const calculateAge = (dob: string | Date): number => {
+    if (!dob) return 0;
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  // Check if member is senior citizen (60+ years)
+  const isSeniorCitizen = memberInfo?.dob ? calculateAge(memberInfo.dob) >= 60 : false;
+
   // Handle interest slab selection
   const handleInterestSlabChange = (interestId: string) => {
     setForm((prev: any) => ({ ...prev, interestSlab: interestId }));
@@ -260,8 +277,10 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
       const interest = interestsData.data.find((i) => i.interest_id === interestId);
       if (interest) {
 
-        // Auto-populate related fields
-        const interestRate = interest.interest_rate || 0;
+        // Auto-select rate based on member age (Senior Citizen if 60+ years)
+        const interestRate = isSeniorCitizen
+          ? (interest.interest_rate_senior || interest.interest_rate_general || interest.interest_rate || 0)
+          : (interest.interest_rate_general || interest.interest_rate || 0);
         const duration = interest.duration || 0;
 
         // Calculate maturity date (opening date + duration months)
@@ -277,7 +296,7 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
           interestRate: interestRate.toString(),
           duration: duration.toString(),
           maturityDate,
-          // Maturity value calculation can be added here if formula is known
+          isSeniorCitizen: isSeniorCitizen, // Store for reference
           maturityValue: '', // Placeholder for now
         }));
       }
@@ -648,7 +667,7 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
                             <MenuItem value="">Select Interest Slab</MenuItem>
                             {interests.map((interest) => (
                               <MenuItem key={interest.interest_id} value={interest.interest_id}>
-                                {interest.interest_name || `${interest.duration} Months - ${interest.interest_rate}%`}
+                                {interest.interest_name || `${interest.duration} Months`} - Gen: {interest.interest_rate_general || interest.interest_rate}% | Sr: {interest.interest_rate_senior || '-'}%
                               </MenuItem>
                             ))}
                           </Select>
@@ -657,7 +676,7 @@ const AccountOpeningForm: React.FC<Props> = ({ defaultAccountType = 'SB', title 
 
                       <Grid component="div" size={{ xs: 12, md: 6 }}>
                         <TextField
-                          label="Interest Rate"
+                          label="Interest Rate (General)"
                           fullWidth
                           size="small"
                           value={form.interestRate}

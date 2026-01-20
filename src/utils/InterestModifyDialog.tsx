@@ -25,10 +25,12 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useGetInterestById } from '../queries/admin/index';
 
 interface InterestFormData {
-    ref_id: string;
+    plan_type: string;
     interest_name: string;
-    interest_rate: string;
     duration: string;
+    interest_rate_general: string;
+    interest_rate_senior: string;
+    minimum_deposit: string;
     from_date: string;
     to_date: string;
 }
@@ -57,54 +59,51 @@ const InterestModifyDialog: React.FC<InterestModifyDialogProps> = ({
     );
 
     const [formData, setFormData] = useState<InterestFormData>({
-        ref_id: 'Loans',
+        plan_type: 'FD',
         interest_name: '',
-        interest_rate: '',
         duration: '',
+        interest_rate_general: '',
+        interest_rate_senior: '',
+        minimum_deposit: '',
         from_date: '',
         to_date: '',
     });
 
-    // Account type options
-    const accountTypes = ['Loans', 'Deposits'];
+    // Plan type options - Matches backend InterestModel enum: ["FD", "RD", "PIGMY", "SAVING"]
+    const planTypes = ['FD', 'RD', 'PIGMY', 'SAVING'];
 
-    // Interest type options based on account type
-    const loanTypes = [
-        'Gold Loan',
-        'Vehicle Loan',
-        'Education Loan',
-        'Business Loan',
-        'Mortage Loan',
-        'OverDraft',
-        'Personal Loan',
-        'Agriculture Loan'
+    // Duration-based interest slab names for deposits
+    const depositDurations = [
+        '1 YEAR',
+        '2 YEAR',
+        '3 YEAR',
+        '4 YEAR',
+        '5 YEAR'
     ];
-
-    const depositTypes = ['Fixed Deposit', 'Recurring Deposit', 'Savings'];
-
-    const getInterestTypes = () => {
-        return formData.ref_id === 'Loans' ? loanTypes : depositTypes;
-    };
 
     // Update form data when interest data is fetched
     useEffect(() => {
         if (isEditMode && interestData?.data) {
             const interest = interestData.data;
             setFormData({
-                ref_id: interest.ref_id || 'Loans',
+                plan_type: interest.plan_type || interest.ref_id || 'FD',
                 interest_name: interest.interest_name || '',
-                interest_rate: interest.interest_rate?.toString() || '',
                 duration: interest.duration?.toString() || '',
+                interest_rate_general: interest.interest_rate_general?.toString() || interest.interest_rate?.toString() || '',
+                interest_rate_senior: interest.interest_rate_senior?.toString() || '',
+                minimum_deposit: interest.minimum_deposit?.toString() || '',
                 from_date: interest.from_date ? new Date(interest.from_date).toISOString().split('T')[0] : '',
                 to_date: interest.to_date ? new Date(interest.to_date).toISOString().split('T')[0] : '',
             });
         } else if (!isEditMode || isError || !open) {
             // Reset form for create mode, error, or dialog close
             setFormData({
-                ref_id: 'Loans',
+                plan_type: 'FD',
                 interest_name: '',
-                interest_rate: '',
                 duration: '',
+                interest_rate_general: '',
+                interest_rate_senior: '',
+                minimum_deposit: '',
                 from_date: '',
                 to_date: '',
             });
@@ -123,17 +122,23 @@ const InterestModifyDialog: React.FC<InterestModifyDialogProps> = ({
         setFormData({
             ...formData,
             [name]: value,
-            // Reset interest_name if account type changes
-            ...(name === 'ref_id' ? { interest_name: '' } : {})
+            // Reset interest_name if plan type changes
+            ...(name === 'plan_type' ? { interest_name: '' } : {})
         });
     };
 
     const handleSave = () => {
         const dataToSend = {
-            ...formData,
-            interest_rate: parseFloat(formData.interest_rate) || 0,
+            plan_type: formData.plan_type,
+            interest_name: formData.interest_name,
             duration: parseInt(formData.duration) || 0,
+            interest_rate_general: parseFloat(formData.interest_rate_general) || 0,
+            interest_rate_senior: parseFloat(formData.interest_rate_senior) || 0,
+            minimum_deposit: parseFloat(formData.minimum_deposit) || 0,
+            from_date: formData.from_date || undefined,
+            to_date: formData.to_date || undefined,
         };
+        console.log('Creating interest with data:', dataToSend);
         onSave(dataToSend, isEditMode);
     };
 
@@ -174,48 +179,65 @@ const InterestModifyDialog: React.FC<InterestModifyDialogProps> = ({
                 }}>
                     <Grid container spacing={3}>
 
-                        {/* Account Type */}
+                        {/* Plan Type */}
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <FormControl fullWidth size="small">
-                                <InputLabel>Account Type</InputLabel>
+                                <InputLabel>Plan Type</InputLabel>
                                 <Select
-                                    name="ref_id"
-                                    value={formData.ref_id}
-                                    label="Account Type"
+                                    name="plan_type"
+                                    value={formData.plan_type}
+                                    label="Plan Type"
                                     onChange={handleSelectChange}
                                 >
-                                    {accountTypes.map((type) => (
+                                    {planTypes.map((type) => (
                                         <MenuItem key={type} value={type}>{type}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
                         </Grid>
 
-                        {/* Interest Type */}
+                        {/* Interest Name (Duration) */}
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <FormControl fullWidth size="small">
-                                <InputLabel>Interest Type</InputLabel>
+                                <InputLabel>Interest Name</InputLabel>
                                 <Select
                                     name="interest_name"
                                     value={formData.interest_name}
-                                    label="Interest Type"
+                                    label="Interest Name"
                                     onChange={handleSelectChange}
                                 >
-                                    {getInterestTypes().map((type) => (
+                                    {depositDurations.map((type) => (
                                         <MenuItem key={type} value={type}>{type}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
                         </Grid>
 
-                        {/* Interest Rate */}
+                        {/* Duration */}
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 fullWidth
-                                label="Interest Rate"
-                                name="interest_rate"
+                                label="Duration (Months)"
+                                name="duration"
                                 type="number"
-                                value={formData.interest_rate}
+                                value={formData.duration}
+                                onChange={handleChange}
+                                size="small"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">Months</InputAdornment>,
+                                }}
+                                inputProps={{ min: "0" }}
+                            />
+                        </Grid>
+
+                        {/* Interest Rate - General */}
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                            <TextField
+                                fullWidth
+                                label="Interest Rate (General)"
+                                name="interest_rate_general"
+                                type="number"
+                                value={formData.interest_rate_general}
                                 onChange={handleChange}
                                 size="small"
                                 InputProps={{
@@ -225,18 +247,35 @@ const InterestModifyDialog: React.FC<InterestModifyDialogProps> = ({
                             />
                         </Grid>
 
-                        {/* Duration */}
+                        {/* Interest Rate - Senior Citizen */}
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 fullWidth
-                                label="Duration"
-                                name="duration"
+                                label="Interest Rate (Senior Citizen)"
+                                name="interest_rate_senior"
                                 type="number"
-                                value={formData.duration}
+                                value={formData.interest_rate_senior}
                                 onChange={handleChange}
                                 size="small"
                                 InputProps={{
-                                    endAdornment: <InputAdornment position="end">Months</InputAdornment>,
+                                    endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                                }}
+                                inputProps={{ step: "0.1", min: "0" }}
+                            />
+                        </Grid>
+
+                        {/* Minimum Deposit */}
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                            <TextField
+                                fullWidth
+                                label="Minimum Deposit"
+                                name="minimum_deposit"
+                                type="number"
+                                value={formData.minimum_deposit}
+                                onChange={handleChange}
+                                size="small"
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">₹</InputAdornment>,
                                 }}
                                 inputProps={{ min: "0" }}
                             />

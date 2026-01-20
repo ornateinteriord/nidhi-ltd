@@ -21,9 +21,11 @@ import {
 
 interface Interest {
     id: string;
-    loanType: string;
+    planType: string;
     interestName: string;
-    interestRate: number;
+    interestRateGeneral: number;
+    interestRateSenior: number;
+    minimumDeposit: number;
     duration: number;
     date: string;
     status: 'Active' | 'Inactive';
@@ -51,9 +53,11 @@ const Interests: React.FC = () => {
     const interests: Interest[] = interestsData?.data?.map((interest: InterestType) => ({
         id: interest._id || '',
         interest_id: interest.interest_id,
-        loanType: interest.ref_id || 'N/A',
+        planType: interest.plan_type || interest.ref_id || 'N/A',
         interestName: interest.interest_name || 'N/A',
-        interestRate: interest.interest_rate || 0,
+        interestRateGeneral: interest.interest_rate_general || interest.interest_rate || 0,
+        interestRateSenior: interest.interest_rate_senior || 0,
+        minimumDeposit: interest.minimum_deposit || 0,
         duration: interest.duration || 0,
         date: interest.from_date && interest.to_date
             ? `${new Date(interest.from_date).toISOString().split('T')[0]} to ${new Date(interest.to_date).toISOString().split('T')[0]}`
@@ -63,13 +67,13 @@ const Interests: React.FC = () => {
 
     const columns = [
         {
-            id: 'loanType',
-            label: 'Loan type',
+            id: 'planType',
+            label: 'Plan Type',
             sortable: true,
-            minWidth: 150,
+            minWidth: 100,
             renderCell: (row: Interest) => (
                 <Typography variant="body2" sx={{ color: '#1e40af', fontWeight: 500 }}>
-                    {row.loanType}
+                    {row.planType}
                 </Typography>
             ),
         },
@@ -77,7 +81,7 @@ const Interests: React.FC = () => {
             id: 'interestName',
             label: 'Interest Name',
             sortable: true,
-            minWidth: 180,
+            minWidth: 120,
             renderCell: (row: Interest) => (
                 <Typography variant="body2" sx={{ color: '#7c3aed', fontWeight: 500 }}>
                     {row.interestName}
@@ -85,14 +89,26 @@ const Interests: React.FC = () => {
             ),
         },
         {
-            id: 'interestRate',
-            label: 'Interest Rate',
+            id: 'interestRateGeneral',
+            label: 'Rate (General)',
             sortable: true,
             minWidth: 120,
             align: 'center' as const,
             renderCell: (row: Interest) => (
-                <Typography variant="body2" sx={{ color: '#1e293b', fontWeight: 600 }}>
-                    {row.interestRate}
+                <Typography variant="body2" sx={{ color: '#059669', fontWeight: 600 }}>
+                    {row.interestRateGeneral}%
+                </Typography>
+            ),
+        },
+        {
+            id: 'interestRateSenior',
+            label: 'Rate (Senior)',
+            sortable: true,
+            minWidth: 120,
+            align: 'center' as const,
+            renderCell: (row: Interest) => (
+                <Typography variant="body2" sx={{ color: '#0284c7', fontWeight: 600 }}>
+                    {row.interestRateSenior}%
                 </Typography>
             ),
         },
@@ -104,7 +120,7 @@ const Interests: React.FC = () => {
             align: 'center' as const,
             renderCell: (row: Interest) => (
                 <Typography variant="body2" sx={{ color: '#475569' }}>
-                    {row.duration}
+                    {row.duration} months
                 </Typography>
             ),
         },

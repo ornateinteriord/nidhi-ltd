@@ -133,6 +133,7 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
 
   // Validation state for contact number
   const [contactError, setContactError] = useState<string>('');
+  const [dobError, setDobError] = useState<string>('');
 
   // Update form data when member data is fetched
   useEffect(() => {
@@ -253,6 +254,10 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
         }));
       }
     }
+
+    if (name === 'dob' && dobError) {
+      setDobError('');
+    }
   };
 
   // Handle onBlur for introducer field to trigger API call
@@ -280,6 +285,12 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
       return;
     }
     setContactError('');
+
+    if (!formData.dob) {
+      setDobError('Date of birth is required');
+      return;
+    }
+    setDobError('');
 
     // When updating, remove member_id from formData as it shouldn't be changed
     // The member_id comes from the URL parameter only
@@ -408,6 +419,7 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
+                required
                 label="Date Of Birth"
                 name="dob"
                 type="date"
@@ -415,6 +427,8 @@ const MemberModifyDialog: React.FC<ModifyDialogProps> = ({
                 onChange={handleChange}
                 size="small"
                 InputLabelProps={{ shrink: true }}
+                error={!!dobError}
+                helperText={dobError}
               />
             </Grid>
 
