@@ -42,6 +42,43 @@ export const useUpdateMemberProfile = () => {
         },
     });
 };
+
+// CREATE MEMBER ACCOUNT (Self-service)
+export const useCreateMemberAccount = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (accountData: any) => {
+            // Assuming the endpoint is /member/create-account based on conventions
+            return await useApi<any>("POST", "/member/create-account", accountData);
+        },
+        onSuccess: () => {
+            // Invalidate and refetch member accounts
+            queryClient.invalidateQueries({ queryKey: ["myAccounts"] });
+        },
+    });
+};
+// GET MEMBER ACCOUNT GROUPS
+export const useGetMemberAccountGroups = () => {
+    return useQuery({
+        queryKey: ["memberAccountGroups"],
+        queryFn: async () => {
+            return await useApi<any>("GET", "/member/get-account-groups");
+        },
+    });
+};
+
+// GET INTERESTS BY ACCOUNT GROUP (Member)
+export const useGetMemberInterestsByAccountGroup = (account_group_id: string, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["memberInterestsByGroup", account_group_id],
+        queryFn: async () => {
+            return await useApi<any>("GET", `/member/get-interests-by-account-group/${account_group_id}`);
+        },
+        enabled: enabled && !!account_group_id,
+    });
+};
+
 export const useGetMemberTransactions = (
     memberId: string,
     enabled: boolean = true
