@@ -79,6 +79,7 @@ const UserCollections = lazy(() => import("./pages/User/Collections"));
 const UserAddNew = lazy(() => import("./pages/User/AddNew"));
 const UserReport = lazy(() => import("./pages/User/Report"));
 const UserTransaction = lazy(() => import("./user/Transaction/UserTransaction"));
+const UserPigmyOpening = lazy(() => import("./user/Transaction/PigmyOpening"));
 const Wallet = lazy(() => import("./pages/Shared/Wallet"));
 const AccountWallet = lazy(() => import("./pages/Shared/AccountWallet"));
 import ProtectedRoute from "./routeProtecter/RouteProtecter";
@@ -321,6 +322,7 @@ const RoutesProvider = ({
               <Route path="/user/transaction" element={<UserTransaction />} />
               <Route path="/user/wallet" element={<Wallet />} />
               <Route path="/user/account-wallet" element={<AccountWallet />} />
+              <Route path="/user/pigmy-opening" element={<UserPigmyOpening />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>

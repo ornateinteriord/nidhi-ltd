@@ -1,4 +1,3 @@
-
 import { Card, CardContent, Typography, Avatar, Button, Grid, Box, CircularProgress } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
@@ -55,6 +54,11 @@ const UserDashboard = () => {
     // Get commission balance
     const commissionBalance = commissionData?.data?.summary?.availableBalance || 0;
 
+    // Check if user already has a Pigmy account
+    const hasPigmyAccount = accountsData?.data?.accountTypes?.some(
+        (type: any) => type.account_group_name === 'PIGMY' && type.accounts && type.accounts.length > 0
+    );
+
     const latestUsers = [
         { id: 1, name: 'Tracey Newman', date: '25 March 2018', time: '12:23PM', status: 'Active', subStatus: 'Premium', amount: '$403.22' },
         { id: 2, name: 'Jonathan Foster', date: '25 March 2018', time: '10:11PM', status: 'Inactive', subStatus: 'Basic', amount: '$504.15' },
@@ -63,10 +67,92 @@ const UserDashboard = () => {
 
     return (
         <div>
+            {/* Pigmy Card and Referral Link Card - Side by Side with 30/70 ratio */}
+            {!hasPigmyAccount && (
+                <Box sx={{ px: { xs: 1.5, sm: 2, md: 3 }, mt: { xs: 2, sm: 3, md: 9 }, mb: 3 }}>
+                    <Grid container spacing={3} alignItems="stretch">
+                        {/* Pigmy Account Opening Card - 30% width */}
+                        <Grid size={{ xs: 12, md: 4 }}> {/* Changed from 6 to 4 (approx 33%) */}
+                            <Card sx={{
+                                borderRadius: '16px',
+                                background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+                                color: 'white',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                boxShadow: '0 4px 20px rgba(79, 70, 229, 0.3)',
+                                '&:hover': {
+                                    transform: 'translateY(-5px)',
+                                    boxShadow: '0 8px 30px rgba(79, 70, 229, 0.4)',
+                                },
+                                height: '100%',
+                                minHeight: '160px', // Reduced height
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center'
+                            }}
+                                onClick={() => navigate('/user/pigmy-opening')}
+                            >
+                                <CardContent sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    p: 2.5, // Reduced padding
+                                }}>
+                                    <Box sx={{ flex: 1 }}>
+                                        <Typography variant="h6" style={{
+                                            fontWeight: 'bold',
+                                            color: 'white',
+                                            marginBottom: '4px',
+                                            fontSize: '1rem' // Smaller font
+                                        }}>
+                                            Open Pigmy Account 🚀
+                                        </Typography>
+                                        <Typography sx={{
+                                            color: 'rgba(255,255,255,0.9)',
+                                            fontSize: '0.8rem' // Smaller font
+                                        }}>
+                                            Start your daily savings journey.
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                        p: 1,
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backdropFilter: 'blur(10px)',
+                                        ml: 1
+                                    }}>
+                                        <AccountBalanceWalletIcon sx={{ fontSize: 28, color: 'white' }} /> {/* Smaller icon */}
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
 
+                        {/* Referral Link Card - 70% width */}
+                        <Grid size={{ xs: 12, md: 8 }}> {/* Changed from 6 to 8 (approx 67%) */}
+                            <Box sx={{ height: '100%' }}>
+                                <ReferralLinkCard />
+                            </Box>
+                        </Grid>
+                    </Grid>
+                </Box>
+            )}
+
+            {/* If user has Pigmy account, show Referral Link Card alone */}
+            {hasPigmyAccount && (
+                <Box sx={{ px: { xs: 1.5, sm: 2, md: 3 }, mt: { xs: 2, sm: 3, md: 9 }, mb: 3 }}>
+                    <Grid container>
+                        <Grid size={{ xs: 12 }}>
+                            <ReferralLinkCard />
+                        </Grid>
+                    </Grid>
+                </Box>
+            )}
 
             {/* Account Type Cards Section */}
-            <Box sx={{ px: { xs: 1.5, sm: 2, md: 3 }, mt: { xs: 2, sm: 3, md: 9 } }}>
+            <Box sx={{ px: { xs: 1.5, sm: 2, md: 3 }, mt: 2 }}>
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#4f46e5', mb: 3, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                     My Accounts
                 </Typography>
@@ -155,11 +241,6 @@ const UserDashboard = () => {
                         ))}
                     </Grid>
                 )}
-
-            </Box>
-            {/* Referral Link Card */}
-            <Box sx={{ mt: { xs: 1, sm: 1, md: 2 } }}>
-                <ReferralLinkCard />
             </Box>
 
             {/* Commission Balance and Account Balance Cards - Side by Side */}
@@ -252,7 +333,6 @@ const UserDashboard = () => {
             </Box>
 
             <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mx: { xs: 1, sm: 2 }, my: 2, pt: 3 }}>
-
                 <Grid size={{ xs: 12, sm: 12, md: 8 }}>
                     <Card sx={{
                         borderRadius: '16px',
