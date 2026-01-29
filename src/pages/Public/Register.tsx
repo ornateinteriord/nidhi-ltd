@@ -24,10 +24,12 @@ import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useGetSponsorByRef, usePublicRegister } from '../../queries/Auth';
 import Footer from '../../components/Footer/Footer';
+import TokenService from '../../queries/token/tokenService';
 
 const Register = () => {
     const [searchParams] = useSearchParams();
@@ -45,6 +47,8 @@ const Register = () => {
         dob: '',
         termsAccepted: false,
     });
+
+    const [registeredUser, setRegisteredUser] = useState<{ username: string; password?: string; email: string } | null>(null);
 
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -133,7 +137,12 @@ const Register = () => {
             });
 
             if (response.success) {
-                navigate('/login');
+                setRegisteredUser({
+                    username: response.data.member_id,
+                    password: formData.mobileNumber,
+                    email: formData.email
+                });
+                toast.success('Registration successful!');
             } else {
                 toast.error(response.message || 'Registration failed');
             }
@@ -162,255 +171,330 @@ const Register = () => {
             <Container component="main" maxWidth="md" sx={{ flex: 1, py: 4 }}>
                 <Card sx={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
                     <CardContent sx={{ p: { xs: 2, sm: 4 } }}>
-                        <Typography variant="h5" sx={{ textAlign: 'center', mb: 3, fontWeight: 600, color: '#1976d2' }}>
-                            Create New Account
-                        </Typography>
-                        <Box component="form" onSubmit={handleSubmit}>
-                            <Grid container spacing={3}>
-                                {/* Left Column */}
-                                <Grid size={{ xs: 12, md: 6 }}>
-                                    {/* Sponsor Code */}
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Sponsor Code"
-                                        name="sponsorCode"
-                                        value={formData.sponsorCode}
-                                        onChange={handleChange}
-                                        error={!!errors.sponsorCode}
-                                        helperText={errors.sponsorCode}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <PersonIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                            endAdornment: sponsorLoading ? (
-                                                <InputAdornment position="end">
-                                                    <CircularProgress size={20} />
-                                                </InputAdornment>
-                                            ) : null,
-                                        }}
-                                        placeholder="Enter sponsor code"
-                                        sx={{ mb: 3 }}
-                                    />
+                        {registeredUser ? (
+                            <Box sx={{ textAlign: 'center', py: 3 }}>
+                                <CheckCircleIcon sx={{ fontSize: 60, color: '#4caf50', mb: 2 }} />
+                                <Typography variant="h4" sx={{ fontWeight: 600, color: '#2e7d32', mb: 1 }}>
+                                    Registration Successful!
+                                </Typography>
+                                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4 }}>
+                                    Your account has been created successfully. Please save your credentials.
+                                </Typography>
 
-                                    {/* Sponsor Name */}
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Sponsor Name"
-                                        name="sponsorName"
-                                        value={formData.sponsorName}
-                                        error={!!errors.sponsorName || sponsorError}
-                                        helperText={errors.sponsorName || (sponsorError && formData.sponsorCode ? 'Sponsor not found' : '')}
-                                        InputProps={{
-                                            readOnly: true,
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <PersonIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        sx={{ mb: 3, backgroundColor: '#f8fafc' }}
-                                        placeholder="Auto-filled from sponsor code"
-                                    />
-                                </Grid>
-
-                                {/* Right Column */}
-                                <Grid size={{ xs: 12, md: 6 }}>
-                                    {/* Full Name */}
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Full Name"
-                                        name="fullName"
-                                        value={formData.fullName}
-                                        onChange={handleChange}
-                                        error={!!errors.fullName}
-                                        helperText={errors.fullName}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <PersonIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        placeholder="Enter your full name"
-                                        sx={{ mb: 3 }}
-                                    />
-
-                                    {/* Email */}
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Email"
-                                        name="email"
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        error={!!errors.email}
-                                        helperText={errors.email}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <EmailIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        placeholder="Enter your email"
-                                        sx={{ mb: 3 }}
-                                    />
-                                </Grid>
-
-
-
-                                {/* Mobile & Pin Code Row */}
-                                <Grid size={{ xs: 12, md: 6 }}>
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Mobile Number"
-                                        name="mobileNumber"
-                                        value={formData.mobileNumber}
-                                        onChange={(e) => {
-                                            const value = e.target.value.replace(/\D/g, '').slice(0, 10);
-                                            setFormData(prev => ({ ...prev, mobileNumber: value }));
-                                        }}
-                                        error={!!errors.mobileNumber}
-                                        helperText={errors.mobileNumber}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <PhoneIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        placeholder="Enter your number"
-                                    />
-                                </Grid>
-
-                                <Grid size={{ xs: 12, md: 6 }}>
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Pin Code"
-                                        name="pinCode"
-                                        value={formData.pinCode}
-                                        onChange={(e) => {
-                                            const value = e.target.value.replace(/\D/g, '').slice(0, 6);
-                                            setFormData(prev => ({ ...prev, pinCode: value }));
-                                        }}
-                                        error={!!errors.pinCode}
-                                        helperText={errors.pinCode}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <LocationOnIcon sx={{ color: '#7c3aed' }} />
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                        placeholder="Enter your pincode"
-                                    />
-                                </Grid>
-
-                                {/* Date of Birth */}
-                                <Grid size={12}>
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        label="Date of Birth"
-                                        name="dob"
-                                        type="date"
-                                        value={formData.dob}
-                                        onChange={handleChange}
-                                        error={!!errors.dob}
-                                        helperText={errors.dob}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        sx={{ mb: 3 }}
-                                    />
-                                </Grid>
-
-                                {/* Gender */}
-                                <Grid size={12}>
-                                    <FormControl component="fieldset">
-                                        <FormLabel sx={{ color: '#7c3aed', fontWeight: 600 }}>Gender:</FormLabel>
-                                        <RadioGroup
-                                            row
-                                            name="gender"
-                                            value={formData.gender}
-                                            onChange={handleChange}
-                                        >
-                                            <FormControlLabel value="Male" control={<Radio sx={{ color: '#7c3aed', '&.Mui-checked': { color: '#7c3aed' } }} />} label="Male" />
-                                            <FormControlLabel value="Female" control={<Radio sx={{ color: '#7c3aed', '&.Mui-checked': { color: '#7c3aed' } }} />} label="Female" />
-                                        </RadioGroup>
-                                    </FormControl>
-                                </Grid>
-
-                                {/* Terms & Conditions */}
-                                <Grid size={12}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                name="termsAccepted"
-                                                checked={formData.termsAccepted}
-                                                onChange={handleChange}
-                                                sx={{ color: '#7c3aed', '&.Mui-checked': { color: '#7c3aed' } }}
-                                            />
-                                        }
-                                        label={
-                                            <Typography variant="body2">
-                                                I accept the{' '}
-                                                <MuiLink component={Link} to="/terms" sx={{ color: '#7c3aed' }}>
-                                                    Terms and Conditions
-                                                </MuiLink>
+                                <Box sx={{
+                                    backgroundColor: '#f8f9fa',
+                                    p: 3,
+                                    borderRadius: 2,
+                                    border: '1px solid #e0e0e0',
+                                    maxWidth: '400px',
+                                    mx: 'auto',
+                                    mb: 4,
+                                    textAlign: 'left'
+                                }}>
+                                    <Grid container spacing={2}>
+                                        <Grid size={12}>
+                                            <Typography variant="subtitle2" color="text.secondary">
+                                                Member ID (Username)
                                             </Typography>
+                                            <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 600 }}>
+                                                {registeredUser.username}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid size={12}>
+                                            <Typography variant="subtitle2" color="text.secondary">
+                                                Password
+                                            </Typography>
+                                            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                                {registeredUser.password}
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary">
+                                                (Your mobile number is your default password)
+                                            </Typography>
+                                        </Grid>
+                                        <Grid size={12}>
+                                            <Typography variant="subtitle2" color="text.secondary">
+                                                Email
+                                            </Typography>
+                                            <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                                                {registeredUser.email}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+
+                                <Button
+                                    variant="contained"
+                                    onClick={() => {
+                                        TokenService.removeToken();
+                                        navigate('/login');
+                                    }}
+                                    sx={{
+                                        backgroundColor: '#1976d2',
+                                        px: 6,
+                                        py: 1.5,
+                                        textTransform: 'none',
+                                        fontWeight: 600,
+                                        '&:hover': {
+                                            backgroundColor: '#1565c0',
                                         }
-                                    />
-                                    {errors.termsAccepted && (
-                                        <Typography variant="caption" color="error">
-                                            {errors.termsAccepted}
-                                        </Typography>
-                                    )}
-                                </Grid>
+                                    }}
+                                >
+                                    Proceed to Login
+                                </Button>
+                            </Box>
+                        ) : (
+                            <>
+                                <Typography variant="h5" sx={{ textAlign: 'center', mb: 3, fontWeight: 600, color: '#1976d2' }}>
+                                    Create New Account
+                                </Typography>
+                                <Box component="form" onSubmit={handleSubmit}>
+                                    <Grid container spacing={3}>
+                                        {/* Left Column */}
+                                        <Grid size={{ xs: 12, md: 6 }}>
+                                            {/* Sponsor Code */}
+                                            <TextField
+                                                fullWidth
+                                                required
+                                                label="Sponsor Code"
+                                                name="sponsorCode"
+                                                value={formData.sponsorCode}
+                                                onChange={handleChange}
+                                                error={!!errors.sponsorCode}
+                                                helperText={errors.sponsorCode}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <PersonIcon sx={{ color: '#7c3aed' }} />
+                                                        </InputAdornment>
+                                                    ),
+                                                    endAdornment: sponsorLoading ? (
+                                                        <InputAdornment position="end">
+                                                            <CircularProgress size={20} />
+                                                        </InputAdornment>
+                                                    ) : null,
+                                                }}
+                                                placeholder="Enter sponsor code"
+                                                sx={{ mb: 3 }}
+                                            />
 
-                                {/* Register Button */}
-                                <Grid size={12}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <Button
-                                            type="submit"
-                                            variant="contained"
-                                            disabled={isLoading || sponsorError}
-                                            sx={{
-                                                backgroundColor: '#1976d2',
-                                                px: 6,
-                                                py: 1.5,
-                                                textTransform: 'none',
-                                                fontWeight: 600,
-                                                '&:hover': {
-                                                    backgroundColor: '#1565c0',
-                                                },
-                                                '&:disabled': {
-                                                    backgroundColor: '#90caf9',
-                                                },
-                                            }}
-                                        >
-                                            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER'}
-                                        </Button>
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                        </Box>
+                                            {/* Sponsor Name */}
+                                            <TextField
+                                                fullWidth
+                                                required
+                                                label="Sponsor Name"
+                                                name="sponsorName"
+                                                value={formData.sponsorName}
+                                                error={!!errors.sponsorName || sponsorError}
+                                                helperText={errors.sponsorName || (sponsorError && formData.sponsorCode ? 'Sponsor not found' : '')}
+                                                InputProps={{
+                                                    readOnly: true,
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <PersonIcon sx={{ color: '#7c3aed' }} />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                sx={{ mb: 3, backgroundColor: '#f8fafc' }}
+                                                placeholder="Auto-filled from sponsor code"
+                                            />
+                                        </Grid>
 
-                        {/* Login Link */}
-                        <Typography variant="body2" sx={{ textAlign: 'center', mt: 3 }}>
-                            Have an account?{' '}
-                            <MuiLink component={Link} to="/login" sx={{ color: '#7c3aed', fontWeight: 600 }}>
-                                Login
-                            </MuiLink>
-                        </Typography>
+                                        {/* Right Column */}
+                                        <Grid size={{ xs: 12, md: 6 }}>
+                                            {/* Full Name */}
+                                            <TextField
+                                                fullWidth
+                                                required
+                                                label="Full Name"
+                                                name="fullName"
+                                                value={formData.fullName}
+                                                onChange={handleChange}
+                                                error={!!errors.fullName}
+                                                helperText={errors.fullName}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <PersonIcon sx={{ color: '#7c3aed' }} />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                placeholder="Enter your full name"
+                                                sx={{ mb: 3 }}
+                                            />
+
+                                            {/* Email */}
+                                            <TextField
+                                                fullWidth
+                                                required
+                                                label="Email"
+                                                name="email"
+                                                type="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                error={!!errors.email}
+                                                helperText={errors.email}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <EmailIcon sx={{ color: '#7c3aed' }} />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                placeholder="Enter your email"
+                                                sx={{ mb: 3 }}
+                                            />
+                                        </Grid>
+
+
+
+                                        {/* Mobile & Pin Code Row */}
+                                        <Grid size={{ xs: 12, md: 6 }}>
+                                            <TextField
+                                                fullWidth
+                                                required
+                                                label="Mobile Number"
+                                                name="mobileNumber"
+                                                value={formData.mobileNumber}
+                                                onChange={(e) => {
+                                                    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                                    setFormData(prev => ({ ...prev, mobileNumber: value }));
+                                                }}
+                                                error={!!errors.mobileNumber}
+                                                helperText={errors.mobileNumber}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <PhoneIcon sx={{ color: '#7c3aed' }} />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                placeholder="Enter your number"
+                                            />
+                                        </Grid>
+
+                                        <Grid size={{ xs: 12, md: 6 }}>
+                                            <TextField
+                                                fullWidth
+                                                required
+                                                label="Pin Code"
+                                                name="pinCode"
+                                                value={formData.pinCode}
+                                                onChange={(e) => {
+                                                    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                                                    setFormData(prev => ({ ...prev, pinCode: value }));
+                                                }}
+                                                error={!!errors.pinCode}
+                                                helperText={errors.pinCode}
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <LocationOnIcon sx={{ color: '#7c3aed' }} />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                                placeholder="Enter your pincode"
+                                            />
+                                        </Grid>
+
+                                        {/* Date of Birth */}
+                                        <Grid size={12}>
+                                            <TextField
+                                                fullWidth
+                                                required
+                                                label="Date of Birth"
+                                                name="dob"
+                                                type="date"
+                                                value={formData.dob}
+                                                onChange={handleChange}
+                                                error={!!errors.dob}
+                                                helperText={errors.dob}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                sx={{ mb: 3 }}
+                                            />
+                                        </Grid>
+
+                                        {/* Gender */}
+                                        <Grid size={12}>
+                                            <FormControl component="fieldset">
+                                                <FormLabel sx={{ color: '#7c3aed', fontWeight: 600 }}>Gender:</FormLabel>
+                                                <RadioGroup
+                                                    row
+                                                    name="gender"
+                                                    value={formData.gender}
+                                                    onChange={handleChange}
+                                                >
+                                                    <FormControlLabel value="Male" control={<Radio sx={{ color: '#7c3aed', '&.Mui-checked': { color: '#7c3aed' } }} />} label="Male" />
+                                                    <FormControlLabel value="Female" control={<Radio sx={{ color: '#7c3aed', '&.Mui-checked': { color: '#7c3aed' } }} />} label="Female" />
+                                                </RadioGroup>
+                                            </FormControl>
+                                        </Grid>
+
+                                        {/* Terms & Conditions */}
+                                        <Grid size={12}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        name="termsAccepted"
+                                                        checked={formData.termsAccepted}
+                                                        onChange={handleChange}
+                                                        sx={{ color: '#7c3aed', '&.Mui-checked': { color: '#7c3aed' } }}
+                                                    />
+                                                }
+                                                label={
+                                                    <Typography variant="body2">
+                                                        I accept the{' '}
+                                                        <MuiLink component={Link} to="/terms" sx={{ color: '#7c3aed' }}>
+                                                            Terms and Conditions
+                                                        </MuiLink>
+                                                    </Typography>
+                                                }
+                                            />
+                                            {errors.termsAccepted && (
+                                                <Typography variant="caption" color="error">
+                                                    {errors.termsAccepted}
+                                                </Typography>
+                                            )}
+                                        </Grid>
+
+                                        {/* Register Button */}
+                                        <Grid size={12}>
+                                            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                <Button
+                                                    type="submit"
+                                                    variant="contained"
+                                                    disabled={isLoading || sponsorError}
+                                                    sx={{
+                                                        backgroundColor: '#1976d2',
+                                                        px: 6,
+                                                        py: 1.5,
+                                                        textTransform: 'none',
+                                                        fontWeight: 600,
+                                                        '&:hover': {
+                                                            backgroundColor: '#1565c0',
+                                                        },
+                                                        '&:disabled': {
+                                                            backgroundColor: '#90caf9',
+                                                        },
+                                                    }}
+                                                >
+                                                    {isLoading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER'}
+                                                </Button>
+                                            </Box>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+
+                                {/* Login Link */}
+                                <Typography variant="body2" sx={{ textAlign: 'center', mt: 3 }}>
+                                    Have an account?{' '}
+                                    <MuiLink component={Link} to="/login" sx={{ color: '#7c3aed', fontWeight: 600 }}>
+                                        Login
+                                    </MuiLink>
+                                </Typography>
+                            </>
+                        )}
                     </CardContent>
                 </Card>
             </Container>

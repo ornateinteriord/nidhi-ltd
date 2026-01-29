@@ -22,6 +22,7 @@ import {
     useGetMemberInterestsByAccountGroup,
     useGetMemberById
 } from '../../queries/Member';
+import { useCreatePaymentOrder } from '../../queries/Wallet/useWallet';
 import TokenService from '../../queries/token/tokenService';
 
 // Modern Input Styles
@@ -79,6 +80,7 @@ const PigmyOpening: React.FC = () => {
     const [amount, setAmount] = useState<string>('');
     const [maturityDate, setMaturityDate] = useState<string>('');
     const [openingDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [createdAccount, setCreatedAccount] = useState<any>(null); // Track created account
 
     // Fetch account groups to get PIGMY group ID
     const { data: accountGroupsData } = useGetMemberAccountGroups();
@@ -94,6 +96,7 @@ const PigmyOpening: React.FC = () => {
     );
 
     const createAccountMutation = useCreateMemberAccount();
+    const { mutate: createPaymentOrder, isPending: isPaymentPending } = useCreatePaymentOrder();
 
     useEffect(() => {
         console.log('Account Groups Data:', accountGroupsData);
@@ -158,12 +161,8 @@ const PigmyOpening: React.FC = () => {
         }
     };
 
-    const handleSubmit = async () => {
-        if (!amount || parseFloat(amount) <= 0) {
-            toast.error('Please enter a valid amount');
-            return;
-        }
-
+    // Step 1: Create account with 0 balance
+    const handleCreateAccount = async () => {
         if (!interestSlab) {
             toast.error('Please select an interest slab');
             return;
@@ -176,25 +175,70 @@ const PigmyOpening: React.FC = () => {
                 member_id: memberId,
                 account_type: accountGroupId,
                 account_operation: 'Single',
-                introducer: memberInfo?.introducer, // Use member's introducer
-                entered_by: memberId, // Self-service
+                introducer: memberInfo?.introducer,
+                entered_by: memberId,
                 interest_id: interestSlab,
                 interest_rate: parseFloat(interestRate) || 0,
                 duration: parseInt(duration) || 0,
                 date_of_maturity: maturityDate || null,
-                account_amount: parseFloat(amount),
-                // assigned_to: null, // Optional, can be left null for self-service
+                account_amount: 0, // Create with 0 balance
             };
 
             const result = await createAccountMutation.mutateAsync(accountData);
 
             if (result?.success) {
-                toast.success('Pigmy Account created successfully!');
-                navigate('/user/dashboard');
+                toast.success('Account created successfully! Now add money.');
+                setCreatedAccount(result.data);
             }
         } catch (error: any) {
             toast.error(error?.message || 'Failed to create account');
         }
+    };
+
+    // Step 2: Add money to the created account
+    const handleAddMoney = () => {
+        if (!amount || parseFloat(amount) <= 0) {
+            toast.error('Please enter a valid amount');
+            return;
+        }
+
+        const finalAmount = parseFloat(amount);
+
+        const paymentRequest = {
+            member_id: memberId,
+            amount: finalAmount,
+            mobileno: memberInfo?.contactno,
+            Name: memberInfo?.name,
+            email: memberInfo?.emailid,
+            account_id: createdAccount.account_id,
+            account_no: createdAccount.account_no,
+            account_type: createdAccount.account_type
+        };
+
+        createPaymentOrder(paymentRequest, {
+            onSuccess: (data: any) => {
+                if (data?.payment_session_id && (window as any).Cashfree) {
+                    if (typeof data.payment_session_id !== 'string' || data.payment_session_id.trim() === '') {
+                        toast.error("Invalid payment session ID received");
+                        return;
+                    }
+
+                    const cashfreeMode = data.cashfree_env || "sandbox";
+                    const cashfreeInstance = new (window as any).Cashfree({
+                        mode: cashfreeMode,
+                    });
+
+                    cashfreeInstance.checkout({
+                        paymentSessionId: data.payment_session_id
+                    });
+                } else {
+                    toast.error("Failed to initialize payment gateway");
+                }
+            },
+            onError: (error: any) => {
+                toast.error(error?.response?.data?.message || "Failed to initiate payment");
+            }
+        });
     };
 
     if (loadingMember) {
@@ -302,15 +346,31 @@ const PigmyOpening: React.FC = () => {
                                 </Grid>
 
                                 <Grid size={{ xs: 12 }}>
-                                    <TextField
-                                        label="Initial Deposit Amount (₹)"
-                                        fullWidth
-                                        type="number"
-                                        value={amount}
-                                        onChange={(e) => setAmount(e.target.value)}
-                                        sx={inputStyle}
-                                        placeholder="Enter amount"
-                                    />
+                                    {!createdAccount ? (
+                                        // Step 1: Show message and Create Account button
+                                        <Box sx={{
+                                            p: 2,
+                                            bgcolor: '#f0f9ff',
+                                            borderRadius: 2,
+                                            border: '1px dashed #4f46e5'
+                                        }}>
+                                            <Typography variant="body2" sx={{ color: '#4f46e5', fontWeight: 500 }}>
+                                                💡 Account will be created with ₹0 balance. You can add money after creation.
+                                            </Typography>
+                                        </Box>
+                                    ) : (
+                                        // Step 2: Show amount input after account is created
+                                        <TextField
+                                            label="Enter Amount to Add (₹)"
+                                            fullWidth
+                                            type="number"
+                                            value={amount}
+                                            onChange={(e) => setAmount(e.target.value)}
+                                            sx={inputStyle}
+                                            placeholder="Enter amount"
+                                            helperText={`Account ${createdAccount.account_no} created. Enter amount to add via payment gateway.`}
+                                        />
+                                    )}
                                 </Grid>
 
                                 <Grid size={{ xs: 12 }}>
@@ -320,21 +380,37 @@ const PigmyOpening: React.FC = () => {
                                             onClick={() => navigate('/user/dashboard')}
                                             sx={{ borderRadius: '8px', textTransform: 'none' }}
                                         >
-                                            Cancel
+                                            {createdAccount ? 'Skip & Go to Dashboard' : 'Cancel'}
                                         </Button>
-                                        <Button
-                                            variant="contained"
-                                            onClick={handleSubmit}
-                                            disabled={createAccountMutation.isPending}
-                                            sx={{
-                                                background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
-                                                borderRadius: '8px',
-                                                textTransform: 'none',
-                                                px: 4
-                                            }}
-                                        >
-                                            {createAccountMutation.isPending ? <CircularProgress size={24} color="inherit" /> : 'Open Account'}
-                                        </Button>
+                                        {!createdAccount ? (
+                                            <Button
+                                                variant="contained"
+                                                onClick={handleCreateAccount}
+                                                disabled={createAccountMutation.isPending}
+                                                sx={{
+                                                    background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    px: 4
+                                                }}
+                                            >
+                                                {createAccountMutation.isPending ? <CircularProgress size={24} color="inherit" /> : 'Create Account'}
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant="contained"
+                                                onClick={handleAddMoney}
+                                                disabled={isPaymentPending || !amount || parseFloat(amount) <= 0}
+                                                sx={{
+                                                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    px: 4
+                                                }}
+                                            >
+                                                {isPaymentPending ? <CircularProgress size={24} color="inherit" /> : 'Pay & Add Money'}
+                                            </Button>
+                                        )}
                                     </Box>
                                 </Grid>
                             </Grid>

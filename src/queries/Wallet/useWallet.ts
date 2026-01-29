@@ -9,3 +9,11 @@ export const useCreatePaymentOrder = () => {
         },
     });
 };
+
+export const useCheckPaymentStatus = () => {
+    return useMutation({
+        mutationFn: async (orderId: string) => {
+            return await useApi("GET", `/transaction/payment-status/${orderId}`);
+        },
+    });
+};
