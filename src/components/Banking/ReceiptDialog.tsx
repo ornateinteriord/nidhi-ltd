@@ -114,6 +114,13 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
     }, [memberInfo]);
 
     const handleChange = (field: string, value: string) => {
+        if (field === 'amount') {
+            // Allow only numbers and one decimal point
+            if (!/^\d*\.?\d*$/.test(value)) {
+                return;
+            }
+        }
+
         setFormData(prev => ({ ...prev, [field]: value }));
         // Reset fetch when member_id changes
         if (field === 'member_id') {
@@ -137,8 +144,8 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
 
     const handleSubmit = async () => {
         // Validation
-        if (!formData.received_from || !formData.amount || !formData.receipt_details) {
-            toast.error('Please fill all required fields');
+        if (!formData.received_from || !formData.amount || !formData.receipt_details || !formData.selected_account) {
+            toast.error('Please fill all required fields, including Bank Account');
             return;
         }
 
@@ -363,7 +370,7 @@ const ReceiptDialog: React.FC<ReceiptDialogProps> = ({ open, onClose, receiptId 
                         <Grid size={{ xs: 12 }}>
                             <TextField
                                 fullWidth
-                                type="number"
+                                type="text"
                                 label="Amount Received (Rs.)"
                                 value={formData.amount}
                                 onChange={(e) => handleChange('amount', e.target.value)}
