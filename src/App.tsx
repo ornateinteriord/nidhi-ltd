@@ -35,6 +35,7 @@ const AdminPayments = lazy(() => import("./pages/Admin-Pages/Banking/Payments"))
 const AdminCashTransaction = lazy(() => import("./pages/Admin-Pages/Banking/CashTransaction"));
 const AdminBankTransaction = lazy(() => import("./pages/Admin-Pages/Banking/BankTransaction"));
 const AdminJournalEntries = lazy(() => import("./pages/Admin-Pages/Banking/JournalEntries"));
+const AdminWithdrawalRequests = lazy(() => import("./pages/Admin-Pages/Withdrawal/WithdrawalRequests"));
 
 // Account Form Components
 const SBOpening = lazy(() => import("./pages/Admin-Pages/AccountForm/SBOpening"));
@@ -277,7 +278,9 @@ const RoutesProvider = ({
               <Route path="/admin/banking/payments" element={<AdminPayments />} />
               <Route path="/admin/banking/cash-transaction" element={<AdminCashTransaction />} />
               <Route path="/admin/banking/bank-transaction" element={<AdminBankTransaction />} />
+              <Route path="/admin/banking/bank-transaction" element={<AdminBankTransaction />} />
               <Route path="/admin/banking/journal-entries" element={<AdminJournalEntries />} />
+              <Route path="/admin/withdrawal-requests" element={<AdminWithdrawalRequests />} />
               <Route path="/SBaccount/sb-opening" element={<SBOpening />} />
               <Route path="/CAaccount/ca-opening" element={<CAOpening />} />
               <Route path="/SBaccount/search-sb-acc" element={<SBDetails />} />

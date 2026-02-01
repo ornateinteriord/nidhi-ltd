@@ -54,6 +54,12 @@ export const AdminSideBarMenuItems: SideBarMenuItemType[] = [
       { name: "Agents", path: "/banking/agents", icon: <MuiIcons.Person /> },
     ],
   },
+  {
+    name: "Withdrawal Requests",
+    icon: <MuiIcons.Payments />,
+    path: "/admin/withdrawal-requests",
+    isExpandable: false,
+  },
 
   {
     name: "Agent Assignment",

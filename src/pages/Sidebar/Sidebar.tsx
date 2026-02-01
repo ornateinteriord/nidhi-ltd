@@ -60,7 +60,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
     <motion.div
       className={`sidebar ${isOpen ? 'open' : 'closed'}`}
       initial={{ width: 0 }}
-      animate={{ width: isOpen ? 250 : 0 }}
+      animate={{ width: isOpen ? 260 : 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       style={{
         zIndex: 100,
@@ -124,8 +124,8 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
         height: 'calc(100vh - 100px)',
         overflowY: 'auto',
         paddingTop: '16px',
-        paddingLeft: '16px',
-        paddingRight: '16px',
+        paddingLeft: '10px',
+        paddingRight: '10px',
         paddingBottom: '80px',
       }}>
         <AnimatePresence>
@@ -167,7 +167,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                       : '1px solid transparent',
                     transition: 'all 0.3s ease',
                     backdropFilter: isSelected ? 'blur(10px)' : 'none',
-                    padding: '12px 16px',
+                    padding: '12px 12px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -215,7 +215,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                     style={{
                       background: 'rgba(255, 255, 255, 0.05)',
                       borderRadius: '8px',
-                      margin: '4px 0 4px 16px',
+                      margin: '4px 0 4px 8px',
                       overflow: 'hidden',
                       border: '1px solid rgba(255, 255, 255, 0.1)',
                     }}
@@ -253,7 +253,7 @@ const Sidebar = ({ isOpen, onClose, role }: { isOpen: boolean, onClose: () => vo
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '12px',
-                                padding: '10px 16px',
+                                padding: '10px 12px',
                                 color: isSubItemActive
                                   ? 'white'
                                   : 'rgba(255, 255, 255, 0.8)',

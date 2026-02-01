@@ -29,22 +29,21 @@ const Wallet: React.FC = () => {
 
     // Format transaction for display
     const formatTransaction = (transaction: any) => {
-        // Check if it's a credit (CREDITED status) or withdrawal (WITHDRAWN status)
-        const isCredit = transaction.status === 'CREDITED' || transaction.status === 'PENDING';
-        const amount = transaction.commission_amount || 0;
+        // Backend now returns 'type' as CREDIT or DEBIT
+        // 'commission_amount' for credits, 'amount' for debits (normalized to 'amount' in backend response usually) via the new map
 
-        // Determine description based on credit/debit
-        let description = transaction.description;
-        if (!description) {
-            description = isCredit ? 'Commission Received' : 'Commission Withdrawal';
-        }
+        // The backend `getCommissionTransactions` manually constructs these objects now.
+        // Check field names from backend map: amount, status, type, description, date
+
+        const isCredit = transaction.type === 'CREDIT';
+        const amount = transaction.amount || transaction.commission_amount || 0;
 
         return {
             id: transaction._id || transaction.transaction_id,
-            date: new Date(transaction.createdAt || transaction.transaction_date).toLocaleDateString('en-IN'),
-            description,
+            date: new Date(transaction.date || transaction.createdAt).toLocaleDateString('en-IN'),
+            description: transaction.description,
             amount: `${isCredit ? '+ ' : '- '}₹${Math.abs(amount).toFixed(2)}`,
-            status: transaction.status || 'Completed',
+            status: transaction.status,
             isCredit,
             type: isCredit ? 'commission_received' : 'commission_withdrawal'
         };
@@ -238,6 +237,8 @@ const Wallet: React.FC = () => {
             <WithdrawMoneyDialog
                 open={withdrawDialogOpen}
                 onClose={() => setWithdrawDialogOpen(false)}
+                isCommission={true}
+                availableBalance={commissionBalance}
             />
         </Box>
     );

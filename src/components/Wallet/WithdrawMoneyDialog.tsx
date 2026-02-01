@@ -17,17 +17,22 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { useWithdrawRequest } from '../../queries/transfer';
+import { useWithdrawCommission } from '../../queries/transfer/commission';
 import { useGetMyAccounts } from '../../queries/Member';
 import { toast } from 'react-toastify';
+import TokenService from '../../queries/token/tokenService';
 
 interface WithdrawMoneyDialogProps {
     open: boolean;
     onClose: () => void;
+    isCommission?: boolean;
+    availableBalance?: number;
 }
 
-const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose }) => {
+const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose, isCommission = false, availableBalance = 0 }) => {
     const { data: accountsData, isLoading: accountsLoading } = useGetMyAccounts();
     const withdrawMutation = useWithdrawRequest();
+    const withdrawCommissionMutation = useWithdrawCommission();
 
     const [selectedAccount, setSelectedAccount] = useState('');
     const [amount, setAmount] = useState('');
@@ -46,7 +51,7 @@ const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose
 
     const handleWithdraw = async () => {
         // Validation
-        if (!selectedAccount) {
+        if (!isCommission && !selectedAccount) {
             toast.error('Please select an account');
             return;
         }
@@ -54,27 +59,30 @@ const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose
             toast.error('Please enter a valid amount');
             return;
         }
-        if (!bankAccountNumber.trim()) {
-            toast.error('Please enter bank account number');
-            return;
-        }
-        if (!ifscCode.trim()) {
-            toast.error('Please enter IFSC code');
-            return;
-        }
-        if (!accountHolderName.trim()) {
-            toast.error('Please enter account holder name');
-            return;
+        if (!isCommission) {
+            if (!bankAccountNumber.trim()) {
+                toast.error('Please enter bank account number');
+                return;
+            }
+            if (!ifscCode.trim()) {
+                toast.error('Please enter IFSC code');
+                return;
+            }
+            if (!accountHolderName.trim()) {
+                toast.error('Please enter account holder name');
+                return;
+            }
         }
 
-        const selectedAcc = allAccounts.find((acc: any) => acc.account_id === selectedAccount);
-        if (!selectedAcc) {
+        const selectedAcc = !isCommission ? allAccounts.find((acc: any) => acc.account_id === selectedAccount) : null;
+        if (!isCommission && !selectedAcc) {
             toast.error('Selected account not found');
             return;
         }
 
-        if (parseFloat(amount) > selectedAcc.account_amount) {
-            toast.error('Insufficient balance in selected account');
+        const balanceCheck = isCommission ? availableBalance : selectedAcc.account_amount;
+        if (parseFloat(amount) > balanceCheck) {
+            toast.error(`Insufficient balance in ${isCommission ? 'Commission Wallet' : 'selected account'}`);
             return;
         }
 
@@ -82,16 +90,27 @@ const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose
 
         try {
             // Call withdraw request API
-            const response = await withdrawMutation.mutateAsync({
-                member_id: selectedAcc.member_id,
-                account_id: selectedAcc.account_id,
-                account_no: selectedAcc.account_no,
-                account_type: selectedAcc.account_type,
-                amount: parseFloat(amount),
-                bank_account_number: bankAccountNumber,
-                ifsc_code: ifscCode,
-                account_holder_name: accountHolderName
-            });
+            let response;
+            if (isCommission) {
+                response = await withdrawCommissionMutation.mutateAsync({
+                    member_id: TokenService.getMemberId() || '', // Ensure we get member ID
+                    amount: parseFloat(amount),
+                    bank_account_number: 'Registered Bank Account',
+                    ifsc_code: 'N/A',
+                    account_holder_name: 'Registered Member'
+                });
+            } else {
+                response = await withdrawMutation.mutateAsync({
+                    member_id: selectedAcc.member_id,
+                    account_id: selectedAcc.account_id,
+                    account_no: selectedAcc.account_no,
+                    account_type: selectedAcc.account_type,
+                    amount: parseFloat(amount),
+                    bank_account_number: bankAccountNumber,
+                    ifsc_code: ifscCode,
+                    account_holder_name: accountHolderName
+                });
+            }
 
             if (response.success) {
                 toast.success(response.message || 'Withdrawal request submitted successfully!');
@@ -154,53 +173,71 @@ const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose
             <DialogContent sx={{ mt: 3 }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     {/* From Account Section */}
-                    <Box>
-                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: '#4b5563' }}>
-                            Withdraw From
-                        </Typography>
-                        <TextField
-                            select
-                            fullWidth
-                            value={selectedAccount}
-                            onChange={(e) => setSelectedAccount(e.target.value)}
-                            disabled={accountsLoading}
-                            placeholder="Select Account"
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    borderRadius: '12px',
-                                }
-                            }}
-                        >
-                            {accountsLoading ? (
-                                <MenuItem disabled>
-                                    <CircularProgress size={20} />
-                                </MenuItem>
-                            ) : (
-                                allAccounts.map((account: any) => (
-                                    <MenuItem key={account.account_id} value={account.account_id}>
-                                        {account.account_group_name} - ₹{account.account_amount.toFixed(2)} ({account.account_no})
+                    {!isCommission && (
+                        <Box>
+                            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: '#4b5563' }}>
+                                Withdraw From
+                            </Typography>
+                            <TextField
+                                select
+                                fullWidth
+                                value={selectedAccount}
+                                onChange={(e) => setSelectedAccount(e.target.value)}
+                                disabled={accountsLoading}
+                                placeholder="Select Account"
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        borderRadius: '12px',
+                                    }
+                                }}
+                            >
+                                {accountsLoading ? (
+                                    <MenuItem disabled>
+                                        <CircularProgress size={20} />
                                     </MenuItem>
-                                ))
-                            )}
-                        </TextField>
+                                ) : (
+                                    allAccounts.map((account: any) => (
+                                        <MenuItem key={account.account_id} value={account.account_id}>
+                                            {account.account_group_name} - ₹{account.account_amount.toFixed(2)} ({account.account_no})
+                                        </MenuItem>
+                                    ))
+                                )}
+                            </TextField>
 
-                        {selectedAccountData && (
-                            <Box sx={{
-                                mt: 2,
-                                p: 2,
-                                borderRadius: '12px',
-                                background: 'rgba(99, 102, 241, 0.1)',
-                                border: '1px solid rgba(99, 102, 241, 0.2)'
-                            }}>
-                                <Typography variant="caption" sx={{ color: '#6b7280' }}>
-                                    Available Balance
-                                </Typography>
-                                <Typography variant="h6" sx={{ fontWeight: 700, color: '#6366f1' }}>
-                                    ₹{selectedAccountData.account_amount.toFixed(2)}
-                                </Typography>
-                            </Box>
-                        )}
-                    </Box>
+                            {selectedAccountData && (
+                                <Box sx={{
+                                    mt: 2,
+                                    p: 2,
+                                    borderRadius: '12px',
+                                    background: 'rgba(99, 102, 241, 0.1)',
+                                    border: '1px solid rgba(99, 102, 241, 0.2)'
+                                }}>
+                                    <Typography variant="caption" sx={{ color: '#6b7280' }}>
+                                        Available Balance
+                                    </Typography>
+                                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#6366f1' }}>
+                                        ₹{selectedAccountData.account_amount.toFixed(2)}
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+                    )}
+
+                    {isCommission && (
+                        <Box sx={{
+                            p: 2,
+                            borderRadius: '12px',
+                            background: 'rgba(99, 102, 241, 0.1)',
+                            border: '1px solid rgba(99, 102, 241, 0.2)'
+                        }}>
+                            <Typography variant="caption" sx={{ color: '#6b7280' }}>
+                                Available Commission Balance
+                            </Typography>
+                            <Typography variant="h6" sx={{ fontWeight: 700, color: '#6366f1' }}>
+                                ₹{availableBalance.toFixed(2)}
+                            </Typography>
+                        </Box>
+                    )}
 
                     {/* Amount */}
                     <Box>
@@ -209,13 +246,19 @@ const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose
                         </Typography>
                         <TextField
                             fullWidth
-                            type="number"
+                            type="text"
                             value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                // Allow only numbers and one decimal point
+                                if (value === '' || /^\d+(\.\d{0,2})?$/.test(value)) {
+                                    setAmount(value);
+                                }
+                            }}
                             placeholder="Enter amount"
-                            error={selectedAccountData && parseFloat(amount) > selectedAccountData.account_amount}
+                            error={isCommission ? parseFloat(amount || '0') > availableBalance : (selectedAccountData && parseFloat(amount || '0') > selectedAccountData.account_amount)}
                             helperText={
-                                selectedAccountData && parseFloat(amount) > selectedAccountData.account_amount
+                                selectedAccountData && parseFloat(amount || '0') > selectedAccountData.account_amount
                                     ? `Insufficient balance. Available: ₹${selectedAccountData.account_amount.toFixed(2)}`
                                     : ''
                             }
@@ -231,55 +274,57 @@ const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose
                     </Box>
 
                     {/* Bank Details Section */}
-                    <Box>
-                        <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: '#1f2937' }}>
-                            Bank Account Details
-                        </Typography>
+                    {!isCommission && (
+                        <Box>
+                            <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: '#1f2937' }}>
+                                Bank Account Details
+                            </Typography>
 
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            {/* Account Holder Name */}
-                            <TextField
-                                fullWidth
-                                label="Account Holder Name"
-                                value={accountHolderName}
-                                onChange={(e) => setAccountHolderName(e.target.value)}
-                                placeholder="Enter account holder name"
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        borderRadius: '12px',
-                                    }
-                                }}
-                            />
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                {/* Account Holder Name */}
+                                <TextField
+                                    fullWidth
+                                    label="Account Holder Name"
+                                    value={accountHolderName}
+                                    onChange={(e) => setAccountHolderName(e.target.value)}
+                                    placeholder="Enter account holder name"
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            borderRadius: '12px',
+                                        }
+                                    }}
+                                />
 
-                            {/* Bank Account Number */}
-                            <TextField
-                                fullWidth
-                                label="Bank Account Number"
-                                value={bankAccountNumber}
-                                onChange={(e) => setBankAccountNumber(e.target.value)}
-                                placeholder="Enter bank account number"
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        borderRadius: '12px',
-                                    }
-                                }}
-                            />
+                                {/* Bank Account Number */}
+                                <TextField
+                                    fullWidth
+                                    label="Bank Account Number"
+                                    value={bankAccountNumber}
+                                    onChange={(e) => setBankAccountNumber(e.target.value)}
+                                    placeholder="Enter bank account number"
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            borderRadius: '12px',
+                                        }
+                                    }}
+                                />
 
-                            {/* IFSC Code */}
-                            <TextField
-                                fullWidth
-                                label="IFSC Code"
-                                value={ifscCode}
-                                onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
-                                placeholder="Enter IFSC code"
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        borderRadius: '12px',
-                                    }
-                                }}
-                            />
+                                {/* IFSC Code */}
+                                <TextField
+                                    fullWidth
+                                    label="IFSC Code"
+                                    value={ifscCode}
+                                    onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
+                                    placeholder="Enter IFSC code"
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            borderRadius: '12px',
+                                        }
+                                    }}
+                                />
+                            </Box>
                         </Box>
-                    </Box>
+                    )}
 
                     <Alert severity="info" sx={{ borderRadius: '12px' }}>
                         Withdrawal requests are processed within 2-3 business days.
@@ -309,7 +354,7 @@ const WithdrawMoneyDialog: React.FC<WithdrawMoneyDialogProps> = ({ open, onClose
                 <Button
                     onClick={handleWithdraw}
                     variant="contained"
-                    disabled={withdrawing || !selectedAccount || !amount || !bankAccountNumber || !ifscCode || !accountHolderName}
+                    disabled={withdrawing || (!isCommission && !selectedAccount) || !amount || (!isCommission && (!bankAccountNumber || !ifscCode || !accountHolderName))}
                     sx={{
                         borderRadius: '12px',
                         textTransform: 'none',
