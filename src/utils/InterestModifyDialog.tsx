@@ -69,8 +69,8 @@ const InterestModifyDialog: React.FC<InterestModifyDialogProps> = ({
         to_date: '',
     });
 
-    // Plan type options - Matches backend InterestModel enum: ["FD", "RD", "PIGMY", "SAVING"]
-    const planTypes = ['FD', 'RD', 'PIGMY', 'SAVING'];
+    // Plan type options - Matches backend InterestModel enum: ["FD", "RD", "PIGMY", "SAVING", "PIGMY SAVING", "PIGMY LOAN", "PIGMY GOLD LOAN"]
+    const planTypes = ['FD', 'RD', 'PIGMY', 'SAVING', 'PIGMY SAVING', 'PIGMY LOAN', 'PIGMY GOLD LOAN'];
 
     // Duration-based interest slab names for deposits
     const depositDurations = [
