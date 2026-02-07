@@ -97,10 +97,9 @@ const WithdrawalRequests: React.FC = () => {
                             <TableHead sx={{ bgcolor: '#f1f5f9' }}>
                                 <TableRow>
                                     <TableCell sx={{ fontWeight: 600, color: '#475569' }}>Date</TableCell>
-                                    <TableCell sx={{ fontWeight: 600, color: '#475569' }}>Request ID</TableCell>
+                                    <TableCell sx={{ fontWeight: 600, color: '#475569' }}>Member Name</TableCell>
                                     <TableCell sx={{ fontWeight: 600, color: '#475569' }}>Member ID</TableCell>
                                     <TableCell sx={{ fontWeight: 600, color: '#475569' }}>Amount</TableCell>
-                                    <TableCell sx={{ fontWeight: 600, color: '#475569' }}>Source</TableCell>
                                     <TableCell sx={{ fontWeight: 600, color: '#475569' }}>Status</TableCell>
                                     <TableCell sx={{ fontWeight: 600, color: '#475569' }}>Action</TableCell>
                                 </TableRow>
@@ -113,22 +112,12 @@ const WithdrawalRequests: React.FC = () => {
                                                 day: '2-digit', month: 'short', year: 'numeric'
                                             })}
                                         </TableCell>
-                                        <TableCell sx={{ color: '#334155', fontFamily: 'monospace' }}>{req.withdraw_request_id}</TableCell>
+                                        <TableCell sx={{ color: '#334155', fontWeight: 600 }}>
+                                            {req.member_details?.name || 'N/A'}
+                                        </TableCell>
                                         <TableCell sx={{ color: '#334155', fontWeight: 500 }}>{req.member_id}</TableCell>
                                         <TableCell sx={{ fontWeight: 700, color: '#059669' }}>
                                             ₹{req.amount?.toFixed(2)}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Chip
-                                                label={req.source_type}
-                                                size="small"
-                                                sx={{
-                                                    bgcolor: req.source_type === 'Commission' ? '#e0e7ff' : '#f1f5f9',
-                                                    color: req.source_type === 'Commission' ? '#3730a3' : '#475569',
-                                                    fontWeight: 600,
-                                                    borderRadius: 1
-                                                }}
-                                            />
                                         </TableCell>
                                         <TableCell>
                                             <Chip

@@ -25,6 +25,14 @@ export interface Member {
     member_signature?: string;
     entered_by?: string;
     status?: string;
+    // Bank/KYC fields
+    bank_name?: string;
+    account_number?: string;
+    ifsc_code?: string;
+    kycStatus?: string;
+    beneficiaryStatus?: string;
+    beneficiaryId?: string;
+    bank_details?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 }
