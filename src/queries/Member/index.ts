@@ -127,3 +127,21 @@ export const useGetMemberCommissionTransactions = (memberId: string, enabled: bo
         enabled: enabled && !!memberId,
     });
 };
+
+export const useGetSponsers = (memberId: string | null, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["sponsers", memberId],
+        queryFn: async () => {
+            const response = await useApi<any>("GET", `/user/sponsers/${memberId}`);
+            if (response.success) {
+                return {
+                    parentUser: response.parentUser,
+                    sponsoredUsers: response.sponsoredUsers,
+                };
+            } else {
+                throw new Error(response.message || "Failed to fetch sponsers");
+            }
+        },
+        enabled: enabled && !!memberId,
+    });
+};
