@@ -30,6 +30,14 @@ export const UserSideBarMenuItems: SideBarMenuItemType[] = [
     isExpandable: false,
   },
   {
+    name: "Team",
+    icon: <MuiIcons.Group />,
+    isExpandable: true,
+    subItems: [
+      { name: "Tree", path: "/user/team/tree", icon: <MuiIcons.AccountTree /> },
+    ],
+  },
+  {
     name: "Logout",
     icon: <LucideIcons.Info />,
     path: "/",
